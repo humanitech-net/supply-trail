@@ -1,0 +1,21 @@
+{
+    "name": "@humanitech-net/supply-trail",
+    "workspaces": [
+        "libraries/*",
+        "services/*",
+        "applications/*"
+    ],
+    "private": true,
+    "version": "1.0.0",
+    "description": "Humanitech Supply Trail is an open-source supply chain management and monitoring solutions designed specifically for humanitarian ogranizations and public sector",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "Humanitech",
+        "email": "contact@humanitech.net",
+        "url": "https://humanitech.net/"
+    },
+    "license": "MIT"
+}
