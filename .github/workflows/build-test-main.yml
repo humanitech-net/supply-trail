@@ -25,7 +25,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-reports
-          path: "**/coverage/*"        
+          path: |
+                **/coverage/*
+                !**/node_modules/**
 
   sonarcloud_scan:
     name: SonarCloud
