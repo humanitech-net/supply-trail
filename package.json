@@ -7,7 +7,7 @@
     ],
     "private": true,
     "version": "1.0.0",
-    "description": "Humanitech Supply Trail is an open-source supply chain management and monitoring solutions designed specifically for humanitarian ogranizations and public sector",
+    "description": "Humanitech Supply Trail is an open-source supply chain management and monitoring solution tailored for humanitarian organizations and the public sector.",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
