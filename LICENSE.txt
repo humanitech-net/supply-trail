@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023-present Humanitech, Peter Rogov and Contributors
+Copyright (c) 2023 - present Humanitech
 
 Website: https://humanitech.net
 Contact: contact@humanitech.net.
