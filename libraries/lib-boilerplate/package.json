@@ -6,7 +6,7 @@
     "types": "build/index.d.ts",
     "scripts": {
         "build": "node esbuild.js",
-        "build:release": "npm run format && npm run lint && npm run test && npm run build",
+        "build:release": "npm run format && npm run lint && npm run build && npm run test",
         "lint": "eslint '*/**/*.{js,ts}' --quiet --fix",
         "format": "prettier --write '*/**/*.{js,ts,json,md}'",
         "test": "jest --coverage"

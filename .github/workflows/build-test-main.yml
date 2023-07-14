@@ -1,29 +1,25 @@
-name: Build and Test Master
+name: Main Build and Test Workflow
 
 on:
   push:
-    branches:
-      - 'master'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  build_project1:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - libraries/lib-boilerplate
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
+      - name: Use Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-
       - name: Install dependencies
-        run: npm ci --prefix ${{ matrix.project }}
+        run: npm ci
+        working-directory: ./libraries/lib-boilerplate
+      - name: Build project
+        run: npm run build:release
+        working-directory: ./libraries/lib-boilerplate
 
-      - name: Build and test
-        run: npm run build:release --prefix ${{ matrix.project }}
