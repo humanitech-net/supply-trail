@@ -15,5 +15,6 @@
  * @returns 0
  */
 export function dummy() {
-  return 0;
+    const t = 12 / 45;
+    return t ? 0 : 0;
 }
