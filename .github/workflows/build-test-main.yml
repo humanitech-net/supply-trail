@@ -26,8 +26,8 @@ jobs:
         with:
           name: coverage-reports
           path: |
-                **/coverage/*
-                !**/node_modules/**
+            **/coverage/*
+            !**/node_modules/**
 
   sonarcloud_scan:
     name: SonarCloud
