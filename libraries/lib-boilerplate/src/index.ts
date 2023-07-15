@@ -18,7 +18,3 @@ export function dummy() {
     return 0;
 }
 
-export function bad() {
-    const t = 34 / 56;
-    return t ? 0 : 0;
-}
