@@ -2,9 +2,9 @@ name: Main branch build and scan
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, development ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, development ]
     types: [opened, synchronize, reopened]
   workflow_dispatch:    
 
