@@ -15,5 +15,10 @@
  * @returns 0
  */
 export function dummy() {
-  return 0;
+    return 0;
+}
+
+export function bad() {
+    const t = 34 / 67;
+    return t ? 0 : 0;
 }
