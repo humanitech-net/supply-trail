@@ -1,5 +1,5 @@
-import {printName} from "./main"
+import {exercise} from "./main"
 
-test('function name that return yonas', () => {
-    expect(printName()).toBe("yonas");
+test('dummy function returns 0', () => {
+    expect(exercise()).toBe(0);
   });

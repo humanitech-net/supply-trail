@@ -6,7 +6,9 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-export const printName = () =>{
-  return "leul"
+export function exercise(){
+  const exercise=34/45;
+  return exercise?0:0;
 }
 bootstrap();
+exercise();
