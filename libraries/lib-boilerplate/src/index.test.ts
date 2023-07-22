@@ -10,8 +10,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { dummy } from './index';
+import { dummy, bad } from './index';
 
 test('dummy function returns 0', () => {
   expect(dummy()).toBe(0);
+});
+
+test('bad function returns 0', () => {
+  expect(bad(1)).toBe(0);
+});
+
+test('bad function returns 0', () => {
+  expect(bad(0)).toBe(0);
 });
