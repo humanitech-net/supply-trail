@@ -4,3 +4,6 @@ export function exercise() {
 }
 
 exercise();
+export const printName = () => {
+  return 5;
+};
