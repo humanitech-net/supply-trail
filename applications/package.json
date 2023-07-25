@@ -807,6 +807,7 @@
     "yocto-queue": "^0.1.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0"
   },
   "scripts": {
@@ -815,7 +816,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-
   "jest": {
     "moduleFileExtensions": [
       "js",
