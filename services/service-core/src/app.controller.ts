@@ -14,7 +14,7 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 export function add(a: number, b: number) {
-  return a - b;
+  return a + b;
 }
 
 console.log(add(2, 3));
