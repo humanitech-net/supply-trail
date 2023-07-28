@@ -1,7 +1,5 @@
-import {TypeOrmModuleOptions} from '@nestjs/typeorm'
 
-export const configTypeORM: TypeOrmModuleOptions = {
-    type: 'postgres',
+const configTypeORM = {
     host: 'localhost',
     port: 5432,
     username: 'postgres',
@@ -9,3 +7,5 @@ export const configTypeORM: TypeOrmModuleOptions = {
     database: 'humanitech: supply-trail',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
 }
+
+export default configTypeORM;
