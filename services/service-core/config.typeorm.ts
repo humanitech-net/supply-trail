@@ -12,12 +12,14 @@
 
 import {TypeOrmModuleOptions} from '@nestjs/typeorm'
 
+const pass = '1234';
+
 export const configTypeORM: TypeOrmModuleOptions = {
     type: 'postgres',
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: '1234',
+    password: pass,
     database: 'humanitech: supply-trail',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
 }
