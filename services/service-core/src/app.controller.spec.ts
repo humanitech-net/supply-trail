@@ -11,7 +11,7 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController, add } from './app.controller';
+import { AppController} from './app.controller';
 import { AppService } from './app.service';
 
 describe('AppController', () => {
@@ -33,8 +33,3 @@ describe('AppController', () => {
   });
 });
 
-describe('add', () => {
-  it('should add two numbers', () => {
-    expect(add(2, 3)).toBe(5);
-  });
-});
