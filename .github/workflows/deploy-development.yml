@@ -2,9 +2,9 @@ name: Publish Docker Image to Docker Hub
 
 on:
   push:
-    branches: [main]
+    branches: [development]
   pull_request:
-    branches: [main]
+    branches: [development]
     types: [closed]
   workflow_dispatch:
 
