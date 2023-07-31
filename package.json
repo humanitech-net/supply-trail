@@ -12,7 +12,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "lint": "eslint \"**/src/**/*.{ts, js, jsx, tsx}\" --fix",
-        "format": "prettier --write \"**/src/**/*.{ts, js}\" \"**/test/**/*.{ts, js}\""
+        "format": "prettier --write \"**/src/**/*.{ts, js}\" \"**/test/**/*.{ts, js}\"",
+        "prepare": "husky install"
     },
     "author": {
         "name": "Humanitech",
