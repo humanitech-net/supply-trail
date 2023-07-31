@@ -10,4 +10,3 @@ COPY . /Services
 WORKDIR /Services
 
 RUN npm install
-RUN npm run build
