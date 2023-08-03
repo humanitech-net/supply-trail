@@ -10,4 +10,7 @@ module.exports = {
   transform: {
     '\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
+  collectCoverage: true, // this will enable coverage
+  coverageReporters: ['json', 'lcov', 'text', 'clover'],
+  coverageDirectory: 'coverage',
 };
