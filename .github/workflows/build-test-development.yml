@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Disable Husky
-        run: export HUSKY_SKIP_INSTALL=true
       - name: Set script permissions
         run: chmod +x ./build-all.sh     
       - name: Use Node.js
