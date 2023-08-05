@@ -3,7 +3,7 @@
 set -e  # Fail the script if any command fails
 
 projects=(
-    "libraries/lib-boilerplate"
+    #"libraries/lib-boilerplate"
     "services/service-core"
     "applications/webapp"
 )
