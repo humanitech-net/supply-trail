@@ -10,12 +10,39 @@
     "description": "Humanitech Supply Trail is an open-source supply chain management and monitoring solution tailored for humanitarian organizations and the public sector.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint \"**/src/**/*.{ts, js, jsx, tsx}\" --fix",
+        "format": "prettier --write \"**/src/**/*.{ts, js}\" \"**/test/**/*.{ts, js}\"",
+        "prepare": "husky install"
     },
     "author": {
         "name": "Humanitech",
         "email": "contact@humanitech.net",
         "url": "https://humanitech.net/"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies":{
+        "husky": "^8.0.3",
+        "husky-init": "^8.0.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.46.0",
+        "lint": "^0.8.19",
+        "lint-staged": "^13.2.3",
+        "prettier": "^3.0.0"
+    },
+    "husky":{
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged":{
+        "**/*.{js,ts}":[
+            "npm run lint",
+            "npm run format",
+            "git add"
+        ]
+    }
+
+    
 }
