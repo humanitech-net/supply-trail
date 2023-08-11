@@ -17,6 +17,4 @@ import { UsersResolver } from './users.resolver';
 @Module({
   providers: [UsersService, UsersResolver]
 })
-export class UsersModule {
-  [x: string]: any;
-}
+export class UsersModule {}

@@ -14,7 +14,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersModule } from './users.module';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
-import { Module } from '@nestjs/common';
 
 describe('UsersModule', () => {
   let usersModule: TestingModule;
