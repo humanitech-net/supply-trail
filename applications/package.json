@@ -29,12 +29,6 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -54,6 +48,6 @@
     "@testing-library/react": "^14.0.0",
     "eslint": "^8.45.0",
     "jest": "^27.5.1",
-    "prettier": "^3.0.0"
+    "prettier": "3.0.1"
   }
 }
