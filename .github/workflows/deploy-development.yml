@@ -1,9 +1,8 @@
 name: Development branch build and scan
 
 on:
-  pull_request:
+  push:
     branches: [ development ]
-    types: [opened, synchronize, reopened]
   workflow_dispatch:    
 
 jobs:
