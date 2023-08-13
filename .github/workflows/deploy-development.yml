@@ -58,7 +58,7 @@ jobs:
   deploy:
     name: Deploy to target server
     runs-on: ubuntu-latest
-    needs: [ sonarcloud_scan ]
+    needs: [ build_projects ]
     steps:
       - name: Download deployment package
         uses: actions/download-artifact@v2
