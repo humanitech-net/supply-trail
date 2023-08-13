@@ -79,7 +79,7 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
             cd /home/peterrogov/projects/supply-trail &&
-            rm -rf * !("local")
+            find . -type f -o -type d | grep -vE 'local' | xargs rm -rf
           "
 
           # Transfer archive
