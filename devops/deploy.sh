@@ -6,3 +6,4 @@ docker build -t humanitech-supply-trail-service-core:development .
 
 cd ../..
 docker-compose -f infrastructure-dev.yml up -d
+rm package.tar.gz
