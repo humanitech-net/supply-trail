@@ -45,3 +45,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  deploy:
+    steps:
+      - name: Prepare package
+        run: ./devops/package.sh
+        
+      - name: Transfer and deploy on server
+        run: |
+          echo "$PRIVATE_KEY" > deploy_key.pem
+          chmod 600 deploy_key.pem
+
+          # Transfer archive
+          scp -o StrictHostKeyChecking=no -i deploy_key.pem package.tar.gz peterrogov@34.78.113.121:/home/peterrogov/projects/supply-trail
+          
+          # Unpack and run installation script remotely
+          ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
+            cd /home/peterrogov/projects/supply-trail &&
+            tar -xzvf package.tar.gz 
+          "
+          rm -f deploy_key.pem
+        env:
+          PRIVATE_KEY: ${{ secrets.GCP_SERVER_KEY }}
