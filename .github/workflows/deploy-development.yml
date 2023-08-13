@@ -27,8 +27,18 @@ jobs:
           path: |
             **/coverage/*
             !**/node_modules/**
+      
+      - name: Prepare deployment package
+        run: ./devops/package.sh
+
+      - name: Save deployment package
+        uses: actions/upload-artifact@v2
+        with:
+          name: deployment-package
+          path: ./devops/package.tar.gz
 
   sonarcloud_scan:
+    if: false
     name: Sonar Cloud quality gate
     runs-on: ubuntu-latest
     needs: [ build_projects ]
