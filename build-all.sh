@@ -14,6 +14,5 @@ for project in "${projects[@]}"; do
   cd $root_directory/$project
   npm install --ignore-scripts
   npm run build:release
-  npm shrinkwrap
   cd $root_directory
 done
