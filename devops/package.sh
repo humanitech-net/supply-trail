@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
+# Check if DEPLOYMENT_HOST is unset or empty
+if [ -z "${DEPLOYMENT_HOST}" ]; then
+    echo "Error: DEPLOYMENT_HOST is not set or empty." >&2
+    exit 1
+fi
+
+# Check if HTTPS_CERT_EMAIL is unset or empty
+if [ -z "${HTTPS_CERT_EMAIL}" ]; then
+    echo "Error: HTTPS_CERT_EMAIL is not set or empty." >&2
+    exit 1
+fi
+
 mkdir -p ./devops/package/services/service-core
 
 cp -R services/service-core/dist ./devops/package/services/service-core
