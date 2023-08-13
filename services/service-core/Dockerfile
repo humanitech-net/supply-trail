@@ -9,7 +9,7 @@ COPY ./package.json ./
 COPY ./package-lock.json ./
 COPY ./dist ./dist
 
-RUN npm install --ignore-script --omit=dev
+RUN npm install --ignore-scripts --omit=dev
 
 RUN chown -R $USER .
 USER $USER
