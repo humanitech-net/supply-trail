@@ -77,7 +77,10 @@ jobs:
           # Unpack and run installation script remotely
           ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
             cd /home/peterrogov/projects/supply-trail &&
-            tar -xzvf package.tar.gz 
+            rm -rf * &&
+            tar -xzvf package.tar.gz &&
+            chmod +x deploy.sh &&
+            ./deploy.sh
           "
           rm -f deploy_key.pem
         env:
