@@ -8,5 +8,5 @@ cp services/service-core/package-lock.json ./devops/package/services/service-cor
 
 cp ./devops/deploy.sh ./devops/package/deploy.sh
 
-tar -czvf ./devops/package.tar.gz -C package .
+tar -czvf ./devops/package.tar.gz -C ./devops/package .
 
