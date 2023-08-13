@@ -1,4 +1,7 @@
 #!/bin/bash
 
 cd ./services/service-core/
-npm install --ignore-script --omit=dev
+docker build -t humanitech-supply-trail-service-core:development .
+
+cd ../../devops
+docker-compose -f infrastructure-dev.yml up -d

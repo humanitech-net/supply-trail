@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  service-core:
+    image: humanitech-supply-trail-service-core:development
+    restart: always
+    ports:
+      - 30100:3000
