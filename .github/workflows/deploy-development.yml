@@ -13,14 +13,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
       - name: Set script permissions
         run: chmod +x ./build-all.sh     
+      
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
+      
       - name: Build projects
         run: ./build-all.sh 
+      
       - name: Upload coverage reports
         uses: actions/upload-artifact@v2
         with:
@@ -50,10 +54,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0        # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Download coverage reports
         uses: actions/download-artifact@v2
         with:
           name: coverage-reports
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -72,23 +78,8 @@ jobs:
           path: ./
 
       - name: Transfer and deploy on server
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-          chmod 600 deploy_key.pem
-
-          ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} "
-            cd /home/${{ secrets.SSH_USERNAME }}/projects/supply-trail &&
-            find . -mindepth 1 ! -path './local' ! -path './local/*' -delete
-          "
-
-          # Transfer archive
-          scp -o StrictHostKeyChecking=no -i deploy_key.pem package.tar.gz ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:/home/${{ secrets.SSH_USERNAME }}/projects/supply-trail
-          
-          # Unpack and run installation script remotely
-          ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} "
-            cd /home/${{ secrets.SSH_USERNAME }}/projects/supply-trail &&
-            tar -xzvf package.tar.gz &&
-            chmod +x deploy.sh &&
-            ./deploy.sh
-          "
-          rm -f deploy_key.pem
+        run: ./push-package.sh
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
