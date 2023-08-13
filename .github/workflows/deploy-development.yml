@@ -1,4 +1,4 @@
-name: Development branch build and scan
+name: DEV deployment to server
 
 on:
   push:
