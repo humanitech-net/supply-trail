@@ -31,8 +31,8 @@ jobs:
             
       - name: Prepare deployment package
         env:
-          DEPLOYMENT_HOST: {{ env.DEPLOYMENT_HOST }}
-          HTTPS_CERT_EMAIL: {{ env.HTTPS_CERT_EMAIL }}
+          DEPLOYMENT_HOST: ${{ env.DEPLOYMENT_HOST }}
+          HTTPS_CERT_EMAIL: ${{ env.HTTPS_CERT_EMAIL }}
         run: ./devops/package.sh
 
       - name: Save deployment package
