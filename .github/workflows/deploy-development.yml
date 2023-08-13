@@ -30,6 +30,9 @@ jobs:
             !**/node_modules/**
             
       - name: Prepare deployment package
+        env:
+          DEPLOYMENT_HOST: ${{ vars.DEPLOYMENT_HOST }}
+          HTTPS_CERT_EMAIL: ${{ vars.HTTPS_CERT_EMAIL }}      
         run: ./devops/package.sh
 
       - name: Save deployment package
