@@ -71,13 +71,17 @@ jobs:
           echo "$PRIVATE_KEY" > deploy_key.pem
           chmod 600 deploy_key.pem
 
+          ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
+            cd /home/peterrogov/projects/supply-trail &&
+            rm -rf *
+          "
+
           # Transfer archive
           scp -o StrictHostKeyChecking=no -i deploy_key.pem package.tar.gz peterrogov@34.78.113.121:/home/peterrogov/projects/supply-trail
           
           # Unpack and run installation script remotely
           ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
             cd /home/peterrogov/projects/supply-trail &&
-            rm -rf * &&
             tar -xzvf package.tar.gz &&
             chmod +x deploy.sh &&
             ./deploy.sh
