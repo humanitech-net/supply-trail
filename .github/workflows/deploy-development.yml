@@ -46,10 +46,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   deploy:
+    name: Deploy to target server
+    runs-on: ubuntu-latest
+    needs: [ sonarcloud_scan ]
     steps:
       - name: Prepare package
         run: ./devops/package.sh
-        
+
       - name: Transfer and deploy on server
         run: |
           echo "$PRIVATE_KEY" > deploy_key.pem
