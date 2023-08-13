@@ -57,7 +57,7 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   deploy:
     name: Deploy to target server
@@ -73,24 +73,22 @@ jobs:
 
       - name: Transfer and deploy on server
         run: |
-          echo "$PRIVATE_KEY" > deploy_key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 600 deploy_key.pem
 
-          ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
-            cd /home/peterrogov/projects/supply-trail &&
+          ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} "
+            cd /home/${{ secrets.SSH_USERNAME }}/projects/supply-trail &&
             find . -mindepth 1 ! -path './local' ! -path './local/*' -delete
           "
 
           # Transfer archive
-          scp -o StrictHostKeyChecking=no -i deploy_key.pem package.tar.gz peterrogov@34.78.113.121:/home/peterrogov/projects/supply-trail
+          scp -o StrictHostKeyChecking=no -i deploy_key.pem package.tar.gz ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:/home/${{ secrets.SSH_USERNAME }}/projects/supply-trail
           
           # Unpack and run installation script remotely
-          ssh -o StrictHostKeyChecking=no -i deploy_key.pem peterrogov@34.78.113.121 "
-            cd /home/peterrogov/projects/supply-trail &&
+          ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} "
+            cd /home/${{ secrets.SSH_USERNAME }}/projects/supply-trail &&
             tar -xzvf package.tar.gz &&
             chmod +x deploy.sh &&
             ./deploy.sh
           "
           rm -f deploy_key.pem
-        env:
-          PRIVATE_KEY: ${{ secrets.GCP_SERVER_KEY }}
