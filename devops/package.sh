@@ -9,6 +9,6 @@ cp services/service-core/package-lock.json ./devops/package/services/service-cor
 cp services/service-core/Dockerfile ./devops/package/services/service-core/Dockerfile
 
 cp ./devops/deploy.sh ./devops/package/deploy.sh
-cp ./devops/infrastructure-dev.yml ./infrastructure-dev.yml
+cp ./devops/infrastructure-dev.yml ./devops/package/infrastructure-dev.yml
 
 tar -czvf ./devops/package.tar.gz -C ./devops/package .
