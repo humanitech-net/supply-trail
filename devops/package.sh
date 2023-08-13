@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 mkdir -p ./devops/package/services/service-core
 
@@ -11,4 +12,3 @@ cp ./devops/deploy.sh ./devops/package/deploy.sh
 cp ./devops/infrastructure-dev.yml ./infrastructure-dev.yml
 
 tar -czvf ./devops/package.tar.gz -C ./devops/package .
-

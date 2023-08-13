@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 cd ./services/service-core/
 docker build -t humanitech-supply-trail-service-core:development .
