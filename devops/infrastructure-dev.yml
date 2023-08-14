@@ -12,7 +12,8 @@ services:
       - "traefik.http.routers.service-core.entrypoints=websecure"
       - "traefik.http.routers.service-core.tls.certresolver=myresolver"
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      - "traefik.http.routers.service-core.middlewares=strip-api"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.service-core.middlewares=strip-api,compress"
     networks:
       - __NETWORK_NAME__
 
@@ -27,7 +28,8 @@ services:
       - "traefik.http.routers.webapp.entrypoints=websecure"
       - "traefik.http.routers.webapp.tls.certresolver=myresolver"
       - "traefik.http.middlewares.strip-app.stripprefix.prefixes=/app"
-      - "traefik.http.routers.webapp.middlewares=strip-app"
+      - "traefik.http.middlewares.webapp-compress.compress=true"
+      - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
     networks:
       - __NETWORK_NAME__
 
