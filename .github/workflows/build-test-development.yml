@@ -1,8 +1,6 @@
 name: Development branch build and scan
 
 on:
-  push:
-    branches: [ development ]
   pull_request:
     branches: [ development ]
     types: [opened, synchronize, reopened]
