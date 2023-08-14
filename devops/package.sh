@@ -20,6 +20,12 @@ cp services/service-core/package.json ./devops/package/services/service-core/pac
 cp services/service-core/package-lock.json ./devops/package/services/service-core/package-lock.json
 cp services/service-core/Dockerfile ./devops/package/services/service-core/Dockerfile
 
+# ADD applications/webapp
+mkdir -p ./devops/package/applications/webapp
+cp -R applications/webapp/build ./devops/package/applications/webapp
+cp applications/webapp/nginx.conf ./devops/package/applications/webapp/nginx.conf
+cp applications/webapp/Dockerfile ./devops/package/applications/webapp/Dockerfile
+
 # ADD deployment script
 cp ./devops/deploy.sh ./devops/package/deploy.sh
 

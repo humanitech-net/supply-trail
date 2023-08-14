@@ -14,6 +14,19 @@ services:
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       - "traefik.http.routers.service-core.middlewares=strip-api"
 
+  webapp:
+    image: humanitech-supply-trail-webapp:development
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"      
+      - "traefik.http.routers.webapp.service=webapp"
+      - "traefik.http.services.webapp.loadbalancer.server.port=8880"
+      - "traefik.http.routers.webapp.entrypoints=websecure"
+      - "traefik.http.routers.webapp.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+      - "traefik.http.routers.webapp.middlewares=strip-api"
+
   traefik:
     image: traefik:v2.4
     ports:
