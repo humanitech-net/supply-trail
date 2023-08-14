@@ -7,9 +7,9 @@ if [ -z "${DEPLOYMENT_HOST}" ]; then
     exit 1
 fi
 
-# Check if HTTPS_CERT_EMAIL is unset or empty
-if [ -z "${HTTPS_CERT_EMAIL}" ]; then
-    echo "Error: HTTPS_CERT_EMAIL is not set or empty." >&2
+# Check if NETWORK_NAME is unset or empty
+if [ -z "${NETWORK_NAME}" ]; then
+    echo "Error: NETWORK_NAME is not set or empty." >&2
     exit 1
 fi
 
@@ -32,7 +32,7 @@ cp ./devops/deploy.sh ./devops/package/deploy.sh
 # ADD docker-compose file with injected variables
 cp ./devops/infrastructure-dev.yml ./devops/package/infrastructure-dev.yml
 sed -i "s/__DEPLOYMENT_HOST__/$DEPLOYMENT_HOST/g" ./devops/package/infrastructure-dev.yml
-sed -i "s/__SSL_CERT_EMAIL__/$HTTPS_CERT_EMAIL/g" ./devops/package/infrastructure-dev.yml
+sed -i "s/__NETWORK_NAME__/$NETWORK_NAME/g" ./devops/package/infrastructure-dev.yml
 
 # TAR all files together
 tar -czvf ./devops/package.tar.gz -C ./devops/package .
