@@ -24,8 +24,8 @@ services:
       - "traefik.http.services.webapp.loadbalancer.server.port=8880"
       - "traefik.http.routers.webapp.entrypoints=websecure"
       - "traefik.http.routers.webapp.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      - "traefik.http.routers.webapp.middlewares=strip-api"
+      - "traefik.http.middlewares.strip-app.stripprefix.prefixes=/app"
+      - "traefik.http.routers.webapp.middlewares=strip-app"
 
   traefik:
     image: traefik:v2.4
