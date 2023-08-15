@@ -12,25 +12,27 @@ services:
       - "traefik.http.routers.service-core.entrypoints=websecure"
       - "traefik.http.routers.service-core.tls.certresolver=myresolver"
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      - "traefik.http.routers.service-core.middlewares=strip-api"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.service-core.middlewares=strip-api,compress"
+    networks:
+      - __NETWORK_NAME__
 
-  traefik:
-    image: traefik:v2.4
-    ports:
-      - "30080:80"
-      - "30443:443"
-      - "30800:8080"
-    environment:
-      - TRAEFIK_API_INSECURE=true
-      - TRAEFIK_LOG_LEVEL=INFO
-      - TRAEFIK_PROVIDERS_DOCKER=true
-      - TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT=false
-      - TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=:80
-      - TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS=:443      
-      - TRAEFIK_CERTIFICATESRESOLVERS_MYRESOLVER_ACME_HTTPCHALLENGE=true
-      - TRAEFIK_CERTIFICATESRESOLVERS_MYRESOLVER_ACME_HTTPCHALLENGE_ENTRYPOINT=web
-      - TRAEFIK_CERTIFICATESRESOLVERS_MYRESOLVER_ACME_EMAIL=__SSL_CERT_EMAIL__
-      - TRAEFIK_CERTIFICATESRESOLVERS_MYRESOLVER_ACME_STORAGE=/letsencrypt/acme.json
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./local/letsencrypt:/letsencrypt
+  webapp:
+    image: humanitech-supply-trail-webapp:development
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"      
+      - "traefik.http.routers.webapp.service=webapp"
+      - "traefik.http.services.webapp.loadbalancer.server.port=8880"
+      - "traefik.http.routers.webapp.entrypoints=websecure"
+      - "traefik.http.routers.webapp.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-app.stripprefix.prefixes=/app"
+      - "traefik.http.middlewares.webapp-compress.compress=true"
+      - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
+    networks:
+      - __NETWORK_NAME__
+
+networks:
+  __NETWORK_NAME__:
+    external: true

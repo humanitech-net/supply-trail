@@ -6,6 +6,9 @@ set -e
 cd ./services/service-core/
 docker build -t humanitech-supply-trail-service-core:development .
 
+cd ../../applications/webapp
+docker build -t humanitech-supply-trail-webapp:development .
+
 # Reload infrastructure
 cd ../..
 docker-compose -f infrastructure-dev.yml down
