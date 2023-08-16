@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  service-core:
+    image: humanitech-supply-trail-service-core:development
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"      
+      - "traefik.http.routers.service-core.service=service-core"
+      - "traefik.http.services.service-core.loadbalancer.server.port=3000"
+      - "traefik.http.routers.service-core.entrypoints=websecure"
+      - "traefik.http.routers.service-core.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.service-core.middlewares=strip-api,compress"
+    networks:
+      - __NETWORK_NAME__
+
+  webapp:
+    image: humanitech-supply-trail-webapp:development
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"      
+      - "traefik.http.routers.webapp.service=webapp"
+      - "traefik.http.services.webapp.loadbalancer.server.port=8880"
+      - "traefik.http.routers.webapp.entrypoints=websecure"
+      - "traefik.http.routers.webapp.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-app.stripprefix.prefixes=/app"
+      - "traefik.http.middlewares.webapp-compress.compress=true"
+      - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
+    networks:
+      - __NETWORK_NAME__
+
+networks:
+  __NETWORK_NAME__:
+    external: true
