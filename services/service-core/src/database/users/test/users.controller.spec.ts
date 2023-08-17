@@ -14,49 +14,50 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from '../user.controller';
 import { UsersService } from '../users.service';
 import { CreateUserDto } from '../../dto/users.dto';
-import { getRepositoryToken } from "@nestjs/typeorm"
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
-  let repository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService, {
-        provide: getRepositoryToken(User),
-        useClass: Repository,
-      }],
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(User),
+          useClass: Repository
+        }
+      ]
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    repository = module.get<Repository<User>>(getRepositoryToken(User))
     service = module.get<UsersService>(UsersService);
   });
 
   describe('getUsers', () => {
     it('should return arrau of Users', async () => {
       const mockUsers: User[] = [
-        {id: 1, username: 'test', email: 'test@test.com'}
+        { id: 1, username: 'test', email: 'test@test.com' }
       ];
 
-      jest.spyOn(service, 'getUsers').mockResolvedValue(mockUsers)
+      jest.spyOn(service, 'getUsers').mockResolvedValue(mockUsers);
 
       const result = await controller.getUsers();
-      expect(result).toBe(mockUsers)
+      expect(result).toBe(mockUsers);
 
-      expect(service.getUsers).toHaveBeenCalled()
-    })
-  })
+      expect(service.getUsers).toHaveBeenCalled();
+    });
+  });
 
   describe('createUser', () => {
     it('should create and return a new user', async () => {
       const createUserDto: CreateUserDto = {
         username: 'testuser',
-        email: 'testuser@example.com',
+        email: 'testuser@example.com'
       };
 
       const createdUser = { id: 1, ...createUserDto };
