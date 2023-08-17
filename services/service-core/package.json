@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.0",
     "class-validator": "^0.14.0",
+    "highlight.js": "^11.8.0",
     "husky-init": "^8.0.0",
     "lint-staged": "^13.2.3",
     "pg": "^8.11.2",
