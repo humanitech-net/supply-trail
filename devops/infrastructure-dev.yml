@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   service-core:
@@ -6,7 +6,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"      
+      - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"
       - "traefik.http.routers.service-core.service=service-core"
       - "traefik.http.services.service-core.loadbalancer.server.port=3000"
       - "traefik.http.routers.service-core.entrypoints=websecure"
@@ -22,7 +22,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"      
+      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"
       - "traefik.http.routers.webapp.service=webapp"
       - "traefik.http.services.webapp.loadbalancer.server.port=8880"
       - "traefik.http.routers.webapp.entrypoints=websecure"
@@ -32,7 +32,7 @@ services:
       - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
     networks:
       - __NETWORK_NAME__
-  
+
     database:
       image: postgres
       restart: always
@@ -45,10 +45,7 @@ services:
       networks:
         - __NETWORK_NAME__
       volumes:
-        - PGDATA:/var/lib/postgresql/data
-networks:
-  __NETWORK_NAME__:
-    external: true
+        - /var/lib/postgresql/data:/var/lib/postgresql/data
 
 networks:
   __NETWORK_NAME__:
