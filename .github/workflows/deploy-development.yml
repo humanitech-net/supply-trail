@@ -2,8 +2,8 @@ name: DEV deployment to server
 
 on:
   push:
-    branches: [ development ]
-  workflow_dispatch:    
+    branches: [development]
+  workflow_dispatch:
 
 jobs:
   build_projects:
@@ -13,18 +13,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Set script permissions
-        run: chmod +x ./build-all.sh     
+        run: chmod +x ./build-all.sh
 
       - name: Build projects
-        run: ./build-all.sh 
-      
+        run: ./build-all.sh
+
       - name: Upload coverage reports
         uses: actions/upload-artifact@v3
         with:
@@ -32,11 +32,14 @@ jobs:
           path: |
             **/coverage/*
             !**/node_modules/**
-            
+
       - name: Prepare deployment package
         env:
           DEPLOYMENT_HOST: ${{ vars.DEPLOYMENT_HOST }}
-          NETWORK_NAME: ${{ vars.NETWORK_NAME }}      
+          NETWORK_NAME: ${{ vars.NETWORK_NAME }}
+          POSTGRES_USER: ${{ secrets.PG_USER_NAME }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_USER_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
         run: ./devops/package.sh
 
       - name: Save deployment package
@@ -49,11 +52,11 @@ jobs:
     name: Sonar Cloud quality gate
     environment: DEV
     runs-on: ubuntu-latest
-    needs: [ build_projects ]
+    needs: [build_projects]
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0        # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Download coverage reports
         uses: actions/download-artifact@v3
@@ -63,14 +66,14 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
     name: Deploy to target server
-    environment: DEV    
+    environment: DEV
     runs-on: ubuntu-latest
-    needs: [ sonarcloud_scan ]
+    needs: [sonarcloud_scan]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
