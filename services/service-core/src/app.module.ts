@@ -13,11 +13,20 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './database/users/users.module';
+import { UsersModule } from './graphql/users/users.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { DatabaseModule } from './database/database.module';
 import { TypeormConfig } from './typeorm/typeormconfig';
 
 @Module({
-  imports: [TypeormConfig, UsersModule],
+  imports: [TypeormConfig, DatabaseModule,UsersModule,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql')
+    })
+  ],
   controllers: [AppController],
   providers: [AppService]
 })

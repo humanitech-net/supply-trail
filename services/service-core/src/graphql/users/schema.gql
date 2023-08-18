@@ -1,0 +1,14 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Users {
+  id: String!
+  firstName: String!
+  lastName: String!
+  city: String
+}
+
+type Query {
+  findAll: Users!
+}
