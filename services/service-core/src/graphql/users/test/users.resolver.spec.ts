@@ -24,7 +24,7 @@ describe('UsersResolver', () => {
   });
 
   describe('findAll', () => {
-    it('', () => {
+    it('should return all users', () => {
       expect(typeof usersResolver.findAll()).toBe('object');
     });
   });
