@@ -13,11 +13,15 @@
 import { validateSync } from 'class-validator';
 import { CreateUserDto } from '../users.dto';
 
+const testUser = "test"
+const testEmail = "test@gmail.com"
+
 describe('CreateUserDto', () => {
+  
   it('should validate a valid user DTO', () => {
     const userDto = new CreateUserDto();
-    userDto.username = 'test';
-    userDto.email = 'test@gmail.com';
+    userDto.username = testUser;
+    userDto.email = testEmail;
 
     const errors = validateSync(userDto);
 
@@ -27,7 +31,7 @@ describe('CreateUserDto', () => {
   it('should fail validation when username is empty', () => {
     const userDto = new CreateUserDto();
     userDto.username = '';
-    userDto.email = 'test@gmail.com';
+    userDto.email = testEmail;
 
     const errors = validateSync(userDto);
 
@@ -38,7 +42,7 @@ describe('CreateUserDto', () => {
   it('should fail validation when username length is less than 3', () => {
     const userDto = new CreateUserDto();
     userDto.username = 'te';
-    userDto.email = 'test@gmail.com';
+    userDto.email = testEmail;
 
     const errors = validateSync(userDto);
 
@@ -48,7 +52,7 @@ describe('CreateUserDto', () => {
 
   it('should fail validation when email is not valid', () => {
     const userDto = new CreateUserDto();
-    userDto.username = 'john_doe';
+    userDto.username = testUser;
     userDto.email = 'test@gmail';
 
     const errors = validateSync(userDto);

@@ -20,11 +20,14 @@ describe('UsersService', () => {
   let service: UsersService;
   let repository: Repository<User>;
 
+  const testUser:string = "test"
+  const testEmail:string = "test@gmail.com"
+
   const mockRepository = {
     create: jest.fn().mockImplementation(dto => dto),
     save: jest.fn().mockImplementation(user => Promise.resolve({ id: Number, ...user })),
     find: jest.fn().mockImplementation(() => {
-      return Promise.resolve({ id: Number, username: 'test', email: 'test@gmail.com' })
+      return Promise.resolve({ id: Number, username: testUser, email: testEmail })
     })
   }
 
@@ -57,8 +60,8 @@ describe('UsersService', () => {
 
       expect(await service.getUsers()).toEqual({
         id: Number,
-        username: 'test',
-        email: 'test@gmail.com'
+        username: testUser,
+        email: testEmail
       })
 
       expect(repository.find).toBeCalled();
@@ -67,8 +70,8 @@ describe('UsersService', () => {
 
   describe('create users', () => {
     const dto = {
-      username: 'test',
-      email: 'test@gmail.com'
+      username: testUser,
+      email: testEmail
     }
     it('should create an object of user"', async () => {
       expect(await service.createUser({

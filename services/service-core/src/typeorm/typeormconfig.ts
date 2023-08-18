@@ -12,7 +12,7 @@
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import entities from './index';
+import entity from './index';
 
 export const TypeormConfig = TypeOrmModule.forRootAsync({
   imports: [
@@ -28,7 +28,7 @@ export const TypeormConfig = TypeOrmModule.forRootAsync({
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
-    entities: entities,
+    entities: entity,
     synchronize: true
   }),
   inject: [ConfigService]

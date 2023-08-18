@@ -21,7 +21,7 @@ import { DatabaseModule } from './database/database.module';
 import { TypeormConfig } from './typeorm/typeormconfig';
 
 @Module({
-  imports: [TypeormConfig, DatabaseModule,UsersModule,
+  imports: [TypeormConfig, DatabaseModule, UsersModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')

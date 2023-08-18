@@ -12,7 +12,7 @@
 
 import { User } from '../database/users/users.entity';
 
-const entities = [User];
+const entity = [User];
 
 export { User };
-export default entities;
+export default entity;
