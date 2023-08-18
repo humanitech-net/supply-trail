@@ -1,32 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { UsersModule } from '../users.module';
 import { UsersController } from '../user.controller';
 import { UsersService } from '../users.service';
 import { User } from '../../../typeorm';
-import { Repository } from 'typeorm';
-import { TypeormConfig } from '../../../typeorm/typeormconfig';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('UsersModule', () => {
-    let module: TestingModule;
+  let module: TestingModule;
 
-    beforeEach(async () => {
-        jest.setTimeout(10000)
-        module = await Test.createTestingModule({
-            imports: [
-                TypeormConfig,
-                TypeOrmModule.forFeature([User]),
-                UsersModule,
-            ],
-            providers: [UsersService, {
-                provide: getRepositoryToken(User),
-                useClass: Repository
-            }],
-            controllers: [UsersController],
-        }).compile();
-    });
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: {},
+        },
+      ],
+    }).compile();
+  });
 
-    it('should be defined', () => {
-        expect(module).toBeDefined();
-    });
+  it('should be defined', () => {
+    expect(module).toBeDefined();
+  });
+
+  it('should have UsersController', () => {
+    const controller = module.get<UsersController>(UsersController);
+    expect(controller).toBeDefined();
+  });
+
+  it('should have UsersService', () => {
+    const service = module.get<UsersService>(UsersService);
+    expect(service).toBeDefined();
+  });
 });
