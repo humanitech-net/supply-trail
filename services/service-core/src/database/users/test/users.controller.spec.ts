@@ -14,26 +14,27 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from '../user.controller';
 import { UsersService } from '../users.service';
 import { CreateUserDto } from '../users.dto';
-import {getRepositoryToken} from "@nestjs/typeorm"
-import { Repository} from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../users.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
-  let repository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService,{
-        provide: getRepositoryToken(User),
-        useClass:Repository,
-      }],
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(User),
+          useClass: Repository
+        }
+      ]
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    repository = module.get<Repository<User>>(getRepositoryToken(User))
     service = module.get<UsersService>(UsersService);
   });
 
@@ -41,10 +42,10 @@ describe('UsersController', () => {
     it('should create and return a new user', async () => {
       const createUserDto: CreateUserDto = {
         username: 'testuser',
-        email: 'testuser@example.com',
+        email: 'testuser@example.com'
       };
 
-      const createdUser = {id: 1, ...createUserDto};
+      const createdUser = { id: 1, ...createUserDto };
 
       jest.spyOn(service, 'createUser').mockResolvedValue(createdUser);
 
