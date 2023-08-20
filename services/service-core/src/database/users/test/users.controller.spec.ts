@@ -21,6 +21,19 @@ import { User } from '../users.entity';
 describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
+  
+  const users = [
+    {
+      id: Number,
+      username: 'test1',
+      email: 'test1@gmail.com'
+    },
+    {
+      id: Number,
+      username: 'test2',
+      email: 'test2@gmail.com'
+    }
+  ]
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +42,7 @@ describe('UsersController', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useClass: Repository
+          useValue: Repository
         }
       ]
     }).compile();
@@ -45,7 +58,7 @@ describe('UsersController', () => {
         email: 'testuser@example.com'
       };
 
-      const createdUser = { id: 1, ...createUserDto };
+      const createdUser = { id: Number, ...createUserDto };
 
       jest.spyOn(service, 'createUser').mockResolvedValue(createdUser);
 
@@ -55,4 +68,11 @@ describe('UsersController', () => {
       expect(service.createUser).toHaveBeenCalledWith(createUserDto);
     });
   });
+  
+  describe('getUsers', () => {
+    it('should retunr an array of users', async ()=>{
+      expect(service.getUsers).toHaveBeenCalled()
+      expect(await service.getUsers()).toEqual(users)
+    })
+  })
 });
