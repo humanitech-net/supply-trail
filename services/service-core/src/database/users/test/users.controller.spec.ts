@@ -72,7 +72,6 @@ describe('UsersController', () => {
     
     it('should return an array of users', async ()=>{
       jest.spyOn(service, 'getUsers').mockResolvedValue(users);
-      expect(await service.getUsers()).toHaveBeenCalled();
       expect(await service.getUsers()).toEqual(users)
     })
   })
