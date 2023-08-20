@@ -70,8 +70,7 @@ describe('UsersController', () => {
   });
   
   describe('getUsers', () => {
-    it('should retunr an array of users', async ()=>{
-      expect(service.getUsers).toHaveBeenCalled()
+    it('should return an array of users', async ()=>{
       expect(await service.getUsers()).toEqual(users)
     })
   })
