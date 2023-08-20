@@ -57,14 +57,14 @@ describe('UsersController', () => {
   });
   
   describe('getUsers', () => {
-    const users = [
+    const users: User[] = [
       {
-        id: Number,
+        id: 1,
         username: 'test1',
         email: 'test1@gmail.com' 
       },
       {
-        id: Number,
+        id: 2,
         username: 'test2',
         email: 'test2@gmail.com'
       }
@@ -72,7 +72,7 @@ describe('UsersController', () => {
     
     it('should return an array of users', async ()=>{
       jest.spyOn(service, 'getUsers').mockResolvedValue(users);
-      expext(await service.getUsers()).toHaveBeenCalled();
+      expect(await service.getUsers()).toHaveBeenCalled();
       expect(await service.getUsers()).toEqual(users)
     })
   })
