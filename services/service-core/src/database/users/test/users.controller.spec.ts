@@ -58,7 +58,7 @@ describe('UsersController', () => {
         email: 'testuser@example.com'
       };
 
-      const createdUser = { id: Number, ...createUserDto };
+      const createdUser = { id: 1, ...createUserDto };
 
       jest.spyOn(service, 'createUser').mockResolvedValue(createdUser);
 
