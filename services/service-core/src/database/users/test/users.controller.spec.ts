@@ -21,19 +21,6 @@ import { User } from '../users.entity';
 describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
-  
-  const users = [
-    {
-      id: Number,
-      username: 'test1',
-      email: 'test1@gmail.com'
-    },
-    {
-      id: Number,
-      username: 'test2',
-      email: 'test2@gmail.com'
-    }
-  ]
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -70,7 +57,22 @@ describe('UsersController', () => {
   });
   
   describe('getUsers', () => {
+    const users = [
+      {
+        id: Number,
+        username: 'test1',
+        email: 'test1@gmail.com' 
+      },
+      {
+        id: Number,
+        username: 'test2',
+        email: 'test2@gmail.com'
+      }
+    ]
+    
     it('should return an array of users', async ()=>{
+      jest.spyOn(service, 'getUsers').mockResolvedValue(users);
+      expext(await service.getUsers()).toHaveBeenCalled();
       expect(await service.getUsers()).toEqual(users)
     })
   })
