@@ -12,9 +12,11 @@
 
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
+const MinUsernameLength = 3;
+
 export class CreateUserDto {
   @IsNotEmpty()
-  @MinLength(3)
+  @MinLength(MinUsernameLength)
   username: string;
 
   @IsEmail()
