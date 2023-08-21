@@ -37,9 +37,6 @@ jobs:
         env:
           DEPLOYMENT_HOST: ${{ vars.DEPLOYMENT_HOST }}
           NETWORK_NAME: ${{ vars.NETWORK_NAME }}
-          POSTGRES_USER: ${{ secrets.PG_USER_NAME }}
-          POSTGRES_PASSWORD: ${{ secrets.PG_USER_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
         run: ./devops/package.sh
 
       - name: Save deployment package
