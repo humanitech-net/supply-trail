@@ -33,19 +33,23 @@ services:
     networks:
       - __NETWORK_NAME__
 
-    database:
-      image: postgres
-      restart: always
-      ports:
-        - "5432:5432"
-      environment:
-        - POSTGRES_USER=__PG_USER_NAME__
-        - POSTGRES_PASSWORD=__PG_USER_PASSWORD__
-        - POSTGRES_DB=__DB_NAME__
-      networks:
-        - __NETWORK_NAME__
-      volumes:
-        - /var/lib/postgresql/data:/var/lib/postgresql/data
+  database:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./../services/service-core/.local.env
+    environment:
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - "5432:5432"
+    networks:
+      - __NETWORK_NAME__
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
 
 networks:
   __NETWORK_NAME__:

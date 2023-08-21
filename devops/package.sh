@@ -34,8 +34,5 @@ cp ./devops/infrastructure-dev.yml ./devops/package/infrastructure-dev.yml
 sed -i "s/__DEPLOYMENT_HOST__/$DEPLOYMENT_HOST/g" ./devops/package/infrastructure-dev.yml
 sed -i "s/__NETWORK_NAME__/$NETWORK_NAME/g" ./devops/package/infrastructure-dev.yml
 
-sed -i "s/__PG_USER_NAME__/$PG_USER_NAME/g" ./devops/package/infrastructure-dev.yml
-sed -i "s/__PG_USER_PASSWORD__/$PG_USER_PASSWORD/g" ./devops/package/infrastructure-dev.yml
-sed -i "s/__DB_NAME__/$DB_NAME/g" ./devops/package/infrastructure-dev.yml
 # TAR all fiDB_NAMEher
 tar -czvf ./DB_NAMEe.tar.gz -C ./devops/package .
