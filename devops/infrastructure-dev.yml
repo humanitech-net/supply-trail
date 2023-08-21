@@ -36,8 +36,6 @@ services:
   database:
     image: postgres:latest
     restart: always
-    env_file:
-      - ./../services/service-core/.local.env
     environment:
       POSTGRES_HOST: ${DB_HOST}
       POSTGRES_PORT: ${DB_PORT}
