@@ -10,17 +10,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import './App.css';
-import GraphQlButton from './Components/Button';
+import React from 'react'
+import { Button } from '@mui/material';
 
-function App() {
+
+function GraphQlButton() {
   return (
-    <div className="App">
-      <h1>Hello</h1>
-      <GraphQlButton/>
+    <div>
+      <Button variant="contained">Hello From FrontEnd</Button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default GraphQlButton
