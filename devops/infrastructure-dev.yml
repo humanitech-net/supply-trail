@@ -47,7 +47,7 @@ services:
     networks:
       - __NETWORK_NAME__
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
 
 networks:
   __NETWORK_NAME__:
