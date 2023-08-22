@@ -13,13 +13,34 @@
 import React from 'react';
 import './App.css';
 import GraphQlButton from './Components/Button';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from, ApolloLink } from '@apollo/client';
+import { onError } from "@apollo/client/link/error";
+
+
+const errorLink = onError(({ networkError }) => {
+  if (networkError) {
+    console.error(`Network error: ${networkError}`);
+  }
+});
+
+const httpLink = new HttpLink({ uri: "http://localhost:8080/graphql" });
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: from([
+    errorLink,
+    httpLink
+  ]),
+});
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello</h1>
-      <GraphQlButton/>
-    </div>
+    <ApolloProvider client={client}>
+      <div className="App">
+        <h1>Hello</h1>
+        <GraphQlButton />
+      </div>
+    </ApolloProvider>
   );
 }
 

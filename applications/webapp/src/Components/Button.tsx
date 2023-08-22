@@ -10,16 +10,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react'
+import React from 'react';
 import { Button } from '@mui/material';
+import { useQuery } from '@apollo/client';
+import HelloQuery from '../GraphQL/HelloQuery';
 
 
 function GraphQlButton() {
+  const { loading, error, data } = useQuery(HELLO_QUERY);
+
+  const handleButtonClick = () => {
+    if (data && data.hello) {
+      alert(`Response from server: ${data.hello}`);
+    }
+  };
+
   return (
     <div>
-      <Button variant="contained">Hello From FrontEnd</Button>
+      <Button variant="contained" onClick={handleButtonClick}>
+        Click Me
+      </Button>
     </div>
-  )
+  );
 }
 
-export default GraphQlButton
+export default GraphQlButton;
+
