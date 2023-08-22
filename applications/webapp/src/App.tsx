@@ -13,7 +13,7 @@
 import React from 'react';
 import './App.css';
 import GraphQlButton from './Components/Button';
-import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from, ApolloLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from '@apollo/client';
 import { onError } from "@apollo/client/link/error";
 
 
