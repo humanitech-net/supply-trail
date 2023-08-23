@@ -14,20 +14,14 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
-import { HELLO_QUERY } from '../GraphQL/HelloQuery'; // Update the import path
+import { HELLO_QUERY } from '../GraphQL/HelloQuery';
 
 function GraphQlButton() {
   const { error, data } = useQuery(HELLO_QUERY);
 
   const handleButtonClick = () => {
-    if (error) {
-      alert(`Error: ${error.message}`); // Display an alert when there's an error
-      return;
-    }
-
-    if (data && data.hello) {
-      alert(data.hello); // Display the response in an alert
-    }
+    alert(`Error: ${error?.message}`);
+    alert(data?.hello);
   };
 
   return (
@@ -40,3 +34,5 @@ function GraphQlButton() {
 }
 
 export default GraphQlButton;
+
+
