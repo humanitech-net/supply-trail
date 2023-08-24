@@ -13,20 +13,31 @@
 
 import React from 'react';
 import { Button } from '@mui/material';
-import { useQuery } from '@apollo/client';
-import { HELLO_QUERY } from '../GraphQL/HelloQuery';
+import { useQuery, gql } from '@apollo/client';
+
+const Connection = gql`
+  query {
+    findAll{
+      id,
+      firstName
+    }
+  }
+`
 
 function GraphQlButton() {
-  const { error, data } = useQuery(HELLO_QUERY);
+  const { error, data } = useQuery(Connection);
 
-  const handleButtonClick = () => {
-    alert(`Error: ${error?.message}`);
-    alert(data?.hello);
-  };
+  const handleClick = () => {
+    if (data) {
+      alert('Data fetched successfully: ' + JSON.stringify(data));
+    } else if (error) {
+      alert('Error: ' + error.message);
+    }
+  }
 
   return (
     <div>
-      <Button variant="contained" onClick={handleButtonClick}>
+      <Button variant="contained" onClick={handleClick}>
         Click Me
       </Button>
     </div>
@@ -34,5 +45,4 @@ function GraphQlButton() {
 }
 
 export default GraphQlButton;
-
 
