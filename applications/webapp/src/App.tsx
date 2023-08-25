@@ -11,37 +11,45 @@
  */
 
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { ApolloClient,InMemoryCache,ApolloProvider,HttpLink,from } from '@apollo/client';
-import {onError} from "@apollo/client/link/error"
-import { GraphQLError } from 'graphql';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from '@apollo/client';
+import { onError } from "@apollo/client/link/error";
 import GetUsers from './GetUsers';
-const errorLink=onError(({graphqlErrors,networkErrors}))
-const link =from({
-  errorLink,
-  new HttpLink({uri:"http://localhost:3000/graphql"})=>
-  {
-    if(graphQLErrors){
-      graphqlErrors.map(({message,location,path})=>{
-       alert(`graphql erro ${message}`) 
-      })
-    }
+
+// Error handling link
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.error(`GraphQL error: ${message}`);
+    });
+  }
+  if (networkError) {
+    console.error(`Network error: ${networkError}`);
   }
 });
-const link=from({
-  cache:new InMemoryCache();
-  link:link,
-})
+
+// HTTP link
+const httpLink = new HttpLink({ uri: "http://localhost:3000/graphql" });
+
+const link = from([
+  errorLink,
+  httpLink
+]);
+
+// Apollo Client instance
+const client = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache()
+});
+
 function App() {
   return (
     <div className="App">
-     <ApolloProvider client={client}>
-      
-<GetUsers/>
-     </ApolloProvider>
+      <ApolloProvider client={client}>
+        <GetUsers />
+      </ApolloProvider>
     </div>
   );
 }
 
 export default App;
+
