@@ -12,9 +12,16 @@ function GetUsers() {
 
       },[data])
   return (
-    <div>{users.map(val)=>{
-        return <h1>{val.firstName}</h1>
-    }}</div>
+     <div>
+      <h1>Users</h1>
+      <ul>
+        {data.findAll.map(user => (
+          <li key={user.id}>
+            {user.firstName} {user.lastName} from {user.city}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 

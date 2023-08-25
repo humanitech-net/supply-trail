@@ -37,7 +37,7 @@ function App() {
   return (
     <div className="App">
      <ApolloProvider client={client}>
-      {" "}
+      
 <GetUsers/>
      </ApolloProvider>
     </div>
