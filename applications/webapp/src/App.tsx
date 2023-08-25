@@ -17,7 +17,7 @@ import { ApolloProvider, ApolloClient, InMemoryCache, } from '@apollo/client';
 
 
 const client = new ApolloClient({
-  uri:'http://localhost:8080/graphql',
+  uri:'https://dev.supply-trail.humanitech.net/api/graphql',
   cache: new InMemoryCache()
 });
 
