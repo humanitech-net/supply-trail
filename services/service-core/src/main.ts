@@ -15,6 +15,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: 'http://localhost:3000', // Replace with your frontend's origin
+    credentials: true // Include cookies and other credentials in requests
+  });
   const port = 3000;
   await app.listen(port);
 }
