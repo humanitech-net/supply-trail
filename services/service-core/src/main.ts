@@ -19,6 +19,7 @@ async function bootstrap() {
     origin: '*',
     credentials: true
   });
+
   const port = 3000;
   await app.listen(port);
 }
