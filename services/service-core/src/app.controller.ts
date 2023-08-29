@@ -12,6 +12,7 @@
 
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 
 @Controller()
 export class AppController {
@@ -20,5 +21,21 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Get('/public')
+  @Unprotected()
+  getpublic(): string {
+    return `${this.appService.getHello()} from public`;
+  }
+  @Get('/user')
+  @Roles({ roles: ['user'] })
+  getUser(): string {
+    return `${this.appService.getHello()} from user`;
+  }
+  @Get('/admin')
+  @Roles({ roles: ['admin'] })
+  getAdmin(): string {
+    return `${this.appService.getHello()} from admin`;
   }
 }
