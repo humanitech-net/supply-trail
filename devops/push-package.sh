@@ -23,7 +23,7 @@ chmod 600 deploy_key.pem
 
 ssh -o StrictHostKeyChecking=no -i deploy_key.pem $SSH_USER@$SSH_HOST "
     cd /home/$SSH_USER/projects/supply-trail &&
-    find . -mindepth 1 ! -path './local' ! -path './local/*' -delete
+    find . -mindepth 1 ! -path './local' ! -path './*.env' -delete
 "
 
 # Transfer archive
