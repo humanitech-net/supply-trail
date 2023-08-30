@@ -31,7 +31,7 @@ git clone git@github.com:humanitech-net/supply-trail.git
 
 2.  **Install Dependencies**
 
-    - Install the app's dependencies using npm: to every directory that contain package.json file
+    - Install the app's dependencies using npm: in the root directory
 
       ```bash
         npm install
@@ -41,6 +41,7 @@ git clone git@github.com:humanitech-net/supply-trail.git
 
     - Install and set up PostgreSQL on your machine.
     - Create a PostgreSQL database and user for the app.
+    - Make sure it is running on your local machine with the appropriate setup
 
 4.  ## **Create .local.env File**
 
@@ -53,6 +54,7 @@ git clone git@github.com:humanitech-net/supply-trail.git
       DB_DATABASE=
 
 5.  **START THE APP**
+
     - To start backend parts of the app, run the below script inside:
       <supply-trail/services/service-core> directory
 
@@ -66,5 +68,6 @@ git clone git@github.com:humanitech-net/supply-trail.git
                 ```bash
                 npm run start
             ```
+
 6.  **Access the App**
-      - Open your web browser and navigate to [http://localhost:3000] to access the locally running app.
+    - Open your web browser and navigate to [http://localhost:3000] to access the locally running app.
