@@ -11,11 +11,11 @@
  */
 
 
-import React from 'react';
+import React, {useState} from 'react';
 import { Button } from '@mui/material';
 import { useQuery, gql } from '@apollo/client';
 
-const Connection = gql`
+export const Connection = gql`
   query {
     findAll{
       id,
@@ -25,21 +25,32 @@ const Connection = gql`
 `
 
 function GraphQlButton() {
+
+  const [id, setId] = useState(1)
+  const [name, setName] = useState("John")
+
   const { error, data } = useQuery(Connection);
 
-  const handleClick = () => {
+  function handleClick()  {
     if (data) {
-      alert('Data fetched successfully: ' + JSON.stringify(data));
-    } else if (error) {
-      alert('Error: ' + error.message);
+      const id = data.findAll.id
+      const firstName = data.findAll.firstName;
+      setId(id)
+      setName(`${firstName}`)
+    } else if(error) {
+      setName("error")
     }
   }
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClick}>
+      <Button variant="contained" data-testid='button' onClick={handleClick}>
         Click Me
       </Button>
+      <div className='show'>
+        <ul data-testid='id'>{id}</ul>
+        <ul data-testid='test'>{name}</ul>
+      </div>
     </div>
   );
 }

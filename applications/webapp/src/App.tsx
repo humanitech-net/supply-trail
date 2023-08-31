@@ -13,11 +13,15 @@
 import React from 'react';
 import './App.css';
 import GraphQlButton from './Components/Button';
-import { ApolloProvider, ApolloClient, InMemoryCache, } from '@apollo/client';
+import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, } from '@apollo/client';
+import fetch from "cross-fetch"
 
 
 const client = new ApolloClient({
-  uri:'https://dev.supply-trail.humanitech.net/api/graphql',
+  link: new HttpLink({
+    uri:'https://dev.supply-trail.humanitech.net/api/graphql',
+    fetch: fetch
+  }),
   cache: new InMemoryCache()
 });
 
