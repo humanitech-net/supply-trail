@@ -15,5 +15,8 @@ import { render } from '@testing-library/react';
 import App from './App';
 
 test('renders app component', () => {
-  render(<App />);
+  const {getByText} = render(<App/>)
+  const hello = getByText(/Hello User you can.../i)
+  expect(hello).toBeInTheDocument
+
 });
