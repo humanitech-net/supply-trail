@@ -21,16 +21,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.1",
+    "@apollo/server": "^4.3.2",
     "@nestjs/apollo": "^12.0.7",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/graphql": "^12.0.8",
     "@nestjs/platform-express": "^10.0.0",
-    "@protobufjs/aspromise": "^1.1.2",
-    "@protobufjs/base64": "^1.1.2",
-    "@protobufjs/eventemitter": "^1.1.0",
-    "@protobufjs/float": "^1.0.2",
+    "apollo-server-express": "^3.12.0",
     "graphql": "^16.8.0",
     "husky-init": "^8.0.0",
     "lint-staged": "^13.2.3",
