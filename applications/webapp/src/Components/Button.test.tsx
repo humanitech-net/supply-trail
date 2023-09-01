@@ -1,40 +1,70 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+} from "@testing-library/react";
 import GraphQlButton, { Connection } from "./Button";
 import { MockedProvider } from "@apollo/client/testing";
-import { findByTestId } from "@testing-library/dom";
+import { GraphQLError } from "graphql";
 
-const mocks = [
-  {
-    request: {
-      query: Connection,
-    },
-    result: {
-      data: {
-        findAll: {
-          id: 1,
-          firstName: "John",
-        },
-      },
-    },
+const mockData = {
+  findAll: {
+    id: 1,
+    firstName: "Test",
   },
-];
+};
+
+const successMock = {
+  request: {
+    query: Connection,
+  },
+  result: {
+    data: mockData,
+  },
+};
+
+const errorMock = {
+  request: {
+    query: Connection,
+  },
+  error: new GraphQLError("the fetch was unsuccessful"),
+};
 
 describe("GraphQlButton", () => {
-  it("should update the id and name when the button is clicked", async () => {
-    const { getByTestId } = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("should render data when fetched successfully", async () => {
+    render(
+      <MockedProvider mocks={[successMock]} addTypename={false}>
         <GraphQlButton />
       </MockedProvider>,
     );
 
-    const button = getByTestId("button");
-    fireEvent.click(button);
+    fireEvent.click(screen.getByText("Click Me"));
 
-    const idElement = await findByTestId(document.documentElement, "id");
-    const nameElement = await findByTestId(document.documentElement, "test");
+    await waitFor(() => {
+      expect(screen.getByText("ID: 1")).toBeInTheDocument;
+      expect(screen.getByText("First Name: Test")).toBeInTheDocument;
+    });
+  });
 
-    expect(Number(idElement.textContent)).toBe(1);
-    expect(nameElement.textContent).toBe("John");
+  it("should render error message when fetch fails", async () => {
+    render(
+      <MockedProvider mocks={[errorMock]} addTypename={false}>
+        <GraphQlButton />
+      </MockedProvider>,
+    );
+
+    fireEvent.click(screen.getByText("Click Me"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Error: the fetch was unsuccessful"))
+        .toBeInTheDocument;
+    });
   });
 });
