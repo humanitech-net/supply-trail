@@ -1,59 +1,45 @@
-/**
- * Humanitech Supply Trail
- *
- * Copyright (c) Humanitech, Peter Rogov and Contributors
- *
- * Website: https://humanitech.net
- * Repository: https://github.com/humanitech-net/supply-trail
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
-import React, {useState} from 'react';
-import { Button } from '@mui/material';
-import { useQuery, gql } from '@apollo/client';
+import React, { useState } from "react";
+import { useQuery, gql } from "@apollo/client";
+import { Button } from "@mui/material";
 
 export const Connection = gql`
   query {
-    findAll{
-      id,
+    findAll {
+      id
       firstName
     }
   }
-`
+`;
 
-function GraphQlButton() {
+const GraphQlButton: React.FC = () => {
+  const [isDataFetched, setIsDataFetched] = useState(false);
 
-  const [id, setId] = useState(1)
-  const [name, setName] = useState("John")
+  const { error, data, refetch } = useQuery(Connection, {
+    skip: !isDataFetched,
+  });
 
-  const { error, data } = useQuery(Connection);
+  const handleButtonClick = () => {
+    setIsDataFetched(true);
+    refetch();
+  };
 
-  function handleClick()  {
-    if (data) {
-      const id = data.findAll.id
-      const firstName = data.findAll.firstName;
-      setId(id)
-      setName(`${firstName}`)
-    } else if(error) {
-      setName("error")
-    }
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
 
   return (
     <div>
-      <Button variant="contained" data-testid='button' onClick={handleClick}>
+      <Button variant="contained" onClick={handleButtonClick}>
         Click Me
       </Button>
-      <div className='show'>
-        <ul data-testid='id'>{id}</ul>
-        <ul data-testid='test'>{name}</ul>
-      </div>
+      {isDataFetched && (
+        <div className="show">
+          <ul>ID: {data?.findAll?.id}</ul>
+          <ul>First Name: {data?.findAll?.firstName}</ul>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default GraphQlButton;
-
