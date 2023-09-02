@@ -1,9 +1,29 @@
 version: "3.8"
 
 services:
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    networks:
+      - __NETWORK_NAME__
+    volumes:
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
+
   service-core:
     image: humanitech-supply-trail-service-core:development
     restart: always
+    environment:
+      DB_HOST: database
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"
@@ -14,6 +34,8 @@ services:
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.compress.compress=true"
       - "traefik.http.routers.service-core.middlewares=strip-api,compress"
+    depends_on:
+      - database
     networks:
       - __NETWORK_NAME__
 
@@ -32,22 +54,6 @@ services:
       - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
     networks:
       - __NETWORK_NAME__
-
-  database:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_HOST: ${DB_HOST}
-      POSTGRES_PORT: ${DB_PORT}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
-    ports:
-      - "5432:5432"
-    networks:
-      - __NETWORK_NAME__
-    volumes:
-      - ${POSTGRES_DATA}:/var/lib/postgresql/data
 
 networks:
   __NETWORK_NAME__:
