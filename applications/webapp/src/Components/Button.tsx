@@ -36,7 +36,14 @@ const GraphQlButton: React.FC = () => {
   };
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div>
+        <Button variant="contained" onClick={handleButtonClick}>
+          Click Me
+        </Button>
+        <div className="show">Error: {error.message}</div>
+      </div>
+    );
   }
 
   return (
