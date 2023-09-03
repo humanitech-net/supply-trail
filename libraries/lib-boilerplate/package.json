@@ -4,6 +4,7 @@
     "description": "A boilerplate project for a shared library for the Supply Trail project",
     "main": "build/index.js",
     "types": "build/index.d.ts",
+    "private": true,
     "scripts": {
         "build": "node esbuild.js",
         "build:release": "npm run format && npm run lint && npm run build && npm run test",
