@@ -1,38 +1,42 @@
-/**
- * Humanitech Supply Trail
- *
- * Copyright (c) Humanitech, Peter Rogov and Contributors
- *
- * Website: https://humanitech.net
- * Repository: https://github.com/humanitech-net/supply-trail
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+import React, { useEffect, useState } from "react";
+import keycloak from "./keycloak";
 
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+const App = () => {
+  const [authenticated, setAuthenticated] = useState(keycloak.authenticated);
 
-function App() {
+  useEffect(() => {
+    const checkAuthentication = () => {
+      setAuthenticated(keycloak.authenticated);
+    };
+
+    keycloak.onAuthSuccess = checkAuthentication;
+    keycloak.onAuthError = checkAuthentication;
+    keycloak.onAuthRefreshSuccess = checkAuthentication;
+    keycloak.onAuthRefreshError = checkAuthentication;
+
+    return () => {
+      keycloak.onAuthSuccess = undefined;
+      keycloak.onAuthError = undefined;
+      keycloak.onAuthRefreshSuccess = undefined;
+      keycloak.onAuthRefreshError = undefined;
+    };
+  }, []);
+
+  // const login = () => {
+  //   keycloak.login();
+  // };
+
+  const logout = () => {
+    keycloak.logout();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Welcome to Humanitech</h1>
+      {authenticated ? <button onClick={logout}>Logout</button> : <div></div>}
+      <p>User is {authenticated ? "authenticated" : "not authenticated"}</p>
     </div>
   );
-}
+};
 
 export default App;

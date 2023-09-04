@@ -1,31 +1,31 @@
-/**
- * Humanitech Supply Trail
- *
- * Copyright (c) Humanitech, Peter Rogov and Contributors
- *
- * Website: https://humanitech.net
- * Repository: https://github.com/humanitech-net/supply-trail
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import keycloak from "./keycloak";
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+const renderApp = () => {
+  // eslint-disable-next-line react/no-deprecated
+  ReactDOM.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    document.getElementById("root"),
+  );
+};
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement,
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+keycloak
+  .init({ onLoad: "login-required" })
+  .then((authenticated) => {
+    if (authenticated) {
+      console.log("User is authenticated");
+      renderApp();
+    } else {
+      console.log("User is not authenticated");
+    }
+  })
+  .catch((error) => {
+    console.error("Keycloak initialization error:", error);
+  });
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+renderApp();
