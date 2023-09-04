@@ -22,9 +22,9 @@ const App = () => {
     };
   }, []);
 
-  // const login = () => {
-  //   keycloak.login();
-  // };
+  const login = () => {
+    keycloak.login();
+  };
 
   const logout = () => {
     keycloak.logout();
@@ -33,7 +33,11 @@ const App = () => {
   return (
     <div>
       <h1>Welcome to Humanitech</h1>
-      {authenticated ? <button onClick={logout}>Logout</button> : <div></div>}
+      {authenticated ? (
+        <button onClick={logout}>Logout</button>
+      ) : (
+        <button onClick={login}>Login</button>
+      )}
       <p>User is {authenticated ? "authenticated" : "not authenticated"}</p>
     </div>
   );

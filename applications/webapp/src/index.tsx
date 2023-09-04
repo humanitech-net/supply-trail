@@ -15,14 +15,14 @@ const renderApp = () => {
 };
 
 keycloak
-  .init({ onLoad: "login-required" })
+  .init({}) // Remove the 'onLoad' configuration or set it to 'check-sso'
   .then((authenticated) => {
     if (authenticated) {
       console.log("User is authenticated");
-      renderApp();
     } else {
       console.log("User is not authenticated");
     }
+    renderApp(); // Move renderApp inside the 'then' block
   })
   .catch((error) => {
     console.error("Keycloak initialization error:", error);
