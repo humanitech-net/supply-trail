@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import keycloak from "./keycloak";
+import keycloak from "./auth/keycloak";
 
 const renderApp = () => {
   // eslint-disable-next-line react/no-deprecated
