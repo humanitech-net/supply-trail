@@ -14,18 +14,29 @@ const renderApp = () => {
   );
 };
 
-keycloak
-  .init({}) // Remove the 'onLoad' configuration or set it to 'check-sso'
-  .then((authenticated) => {
-    if (authenticated) {
-      console.log("User is authenticated");
-    } else {
-      console.log("User is not authenticated");
-    }
-    renderApp(); // Move renderApp inside the 'then' block
+const initKeycloak = () => {
+  return new Promise<void>((resolve, reject) => {
+    keycloak
+      .init({
+        onLoad: "check-sso",
+      })
+      .then((authenticated) => {
+        if (authenticated) {
+          localStorage.setItem("token", JSON.stringify(keycloak.token));
+        }
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+initKeycloak()
+  .then(() => {
+    renderApp();
   })
   .catch((error) => {
-    console.error("Keycloak initialization error:", error);
+    console.log(error);
+    // Handle initialization error
   });
-
-renderApp();

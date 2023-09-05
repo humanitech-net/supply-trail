@@ -27,18 +27,25 @@ const App = () => {
   };
 
   const logout = () => {
+    localStorage.removeItem("token");
     keycloak.logout();
   };
 
   return (
     <div>
       <h1>Welcome to Humanitech</h1>
-      {authenticated ? (
-        <button onClick={logout}>Logout</button>
+
+      {!authenticated ? (
+        <div>
+          <p>User is not authenticated</p>
+          <button onClick={login}>Login</button>
+        </div>
       ) : (
-        <button onClick={login}>Login</button>
+        <div>
+          <p>User is authenticated</p>
+          <button onClick={logout}>Logout</button>
+        </div>
       )}
-      <p>User is {authenticated ? "authenticated" : "not authenticated"}</p>
     </div>
   );
 };
