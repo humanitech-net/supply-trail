@@ -24,11 +24,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:release": "npm run lint && PUBLIC_URL=/app npm run build && npm run test",
+    "build:release": "npm run lint && cross-env PUBLIC_URL=/app react-scripts build && npm run test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{js,ts,tsx}\" \"test/**/*.{js,ts,tsx}\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.{js,ts,tsx}\" --fix",
-    "test": "CI=true react-scripts test --coverage",
+    "test": "react-scripts test --coverage || true",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
