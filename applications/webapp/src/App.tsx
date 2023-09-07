@@ -11,27 +11,28 @@
  */
 
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import GraphQlButton from './Components/Button';
+import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, } from '@apollo/client';
+import fetch from "cross-fetch"
+
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri:'https://dev.supply-trail.humanitech.net/api/graphql',
+    fetch: fetch
+  }),
+  cache: new InMemoryCache()
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <div className="App">
+        <h3>Hello User you can...</h3>
+        <GraphQlButton />
+      </div>
+    </ApolloProvider>
   );
 }
 
