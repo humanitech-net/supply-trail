@@ -36,7 +36,9 @@
     "lint-staged": "^13.2.3",
     "pg": "^8.11.2",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "rxjs": "^7.8.1",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
