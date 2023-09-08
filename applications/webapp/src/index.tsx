@@ -32,11 +32,24 @@ const initKeycloak = () => {
   });
 };
 
+const refreshToken = () => {
+  keycloak
+    .updateToken(300)
+    .then((refreshed) => {
+      if (refreshed) {
+        localStorage.setItem("token", JSON.stringify(keycloak.token));
+      }
+    })
+    .catch((error) => {
+      console.log("Failed to refresh token:", error);
+    });
+};
+
 initKeycloak()
   .then(() => {
     renderApp();
+    setInterval(refreshToken, 300000);
   })
   .catch((error) => {
     console.log(error);
-    // Handle initialization error
   });
