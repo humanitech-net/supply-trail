@@ -11,26 +11,13 @@
  */
 
 import React from "react";
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-} from "@apollo/client";
-import fetch from "cross-fetch";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "../client";
 import useKeycloak from "../auth/useKeycloak";
 import GraphQlButton from "./button";
 
 function User() {
   const { logout } = useKeycloak();
-
-  const client = new ApolloClient({
-    link: new HttpLink({
-      uri: "http://localhost:8000/graphql",
-      fetch: fetch,
-    }),
-    cache: new InMemoryCache(),
-  });
 
   return (
     <ApolloProvider client={client}>
