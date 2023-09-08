@@ -17,12 +17,7 @@ import { UsersModule } from './graphql/users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import {
-  KeycloakConnectModule,
-  ResourceGuard,
-  RoleGuard,
-  AuthGuard
-} from 'nest-keycloak-connect';
+import { KeycloakConnectModule, AuthGuard } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -36,25 +31,20 @@ import { APP_GUARD } from '@nestjs/core';
     KeycloakConnectModule.register({
       authServerUrl: 'http://localhost:8080/',
       realm: 'Humanitech',
-      clientId: 'nest-app',
-      secret: '83790b4f-48cd-4b6c-ac60-451a918be4b9'
-      // Secret key of the client taken from keycloak server
+      resource: 'nest-app',
+      secret: 'bJ8rWgqAjP22IWU7u0USGZd58BKodkpt',
+      'public-client': true,
+      verifyTokenAudience: true,
+      'confidential-port': 0
     })
   ],
+
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ResourceGuard
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard
     }
   ]
 })
