@@ -13,19 +13,18 @@
 import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 
-export const Connection = gql`
-  query {
-    findAll {
-      id
-      firstName
-    }
-  }
-`;
-
 const GraphQlButton: React.FC = () => {
+  const query = gql`
+    query {
+      findAll {
+        id
+        firstName
+      }
+    }
+  `;
   const [isDataFetched, setIsDataFetched] = useState(false);
 
-  const { error, data, refetch } = useQuery(Connection, {
+  const { error, data, refetch } = useQuery(query, {
     skip: !isDataFetched,
   });
 
