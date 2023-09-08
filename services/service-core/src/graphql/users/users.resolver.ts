@@ -18,7 +18,7 @@ import { UseGuards } from '@nestjs/common';
 @Resolver(() => Users)
 export class UsersResolver {
   @Query(() => Users)
-  @UseGuards(KeycloakAuthGuard)
+  @UseGuards(KeycloakAuthGuard) //protects the end point using the KeyclaokAuthGuard class
   findAll() {
     return { id: '123', firstName: 'Test' };
   }

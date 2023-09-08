@@ -9,11 +9,13 @@ const useKeycloak = () => {
       setAuthenticated(keycloak.authenticated);
     };
 
+    // Set up event listeners
     keycloak.onAuthSuccess = checkAuthentication;
     keycloak.onAuthError = checkAuthentication;
     keycloak.onAuthRefreshSuccess = checkAuthentication;
     keycloak.onAuthRefreshError = checkAuthentication;
 
+    // Clean up event listeners
     return () => {
       keycloak.onAuthSuccess = undefined;
       keycloak.onAuthError = undefined;
