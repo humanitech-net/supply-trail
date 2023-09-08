@@ -22,7 +22,7 @@ import useKeycloak from "../auth/useKeycloak";
 import GraphQlButton from "./button";
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "https://dev.supply-trail.humanitech.net/api/graphql",
+    uri: "http://localhost:8000/graphql",
     fetch: fetch,
   }),
   cache: new InMemoryCache(),
