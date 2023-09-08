@@ -18,7 +18,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { KeycloakConnectModule, AuthGuard } from 'nest-keycloak-connect';
-import { APP_GUARD } from '@nestjs/core';
+import { KeycloakAuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -40,12 +40,6 @@ import { APP_GUARD } from '@nestjs/core';
   ],
 
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard
-    }
-  ]
+  providers: [AppService, KeycloakAuthGuard]
 })
 export class AppModule {}

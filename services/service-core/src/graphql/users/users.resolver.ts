@@ -12,10 +12,13 @@
 
 import { Query, Resolver } from '@nestjs/graphql';
 import { Users } from './users.entity';
+import { KeycloakAuthGuard } from 'src/auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Users)
 export class UsersResolver {
   @Query(() => Users)
+  @UseGuards(KeycloakAuthGuard)
   findAll() {
     return { id: '123', firstName: 'Test' };
   }
