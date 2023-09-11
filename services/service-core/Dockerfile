@@ -6,7 +6,6 @@ RUN adduser -D -s /sbin/nologin $USER
 WORKDIR /app
 
 COPY ./package.json ./
-COPY ./package-lock.json ./
 COPY ./dist ./dist
 
 RUN npm install --ignore-scripts --omit=dev
