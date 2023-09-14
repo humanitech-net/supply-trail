@@ -17,6 +17,8 @@ services:
 
   service-core:
     image: humanitech-supply-trail-service-core:development
+    depends_on:
+      - database
     restart: always
     environment:
       DB_HOST: database
@@ -34,8 +36,6 @@ services:
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.compress.compress=true"
       - "traefik.http.routers.service-core.middlewares=strip-api,compress"
-    depends_on:
-      - database
     networks:
       - __NETWORK_NAME__
 
@@ -56,16 +56,19 @@ services:
       - __NETWORK_NAME__
 
   keycloak:
-    image: jboss/keycloak
+    image: jboss/keycloak:latest
+    depends_on:
+      - database
     restart: always
     container_name: keycloak
     environment:
       KEYCLOAK_USER: ${KEYCLOAK_USER}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
-      DB_VENDOR: postgres
+      DB_VENDOR: POSTGRES
       DB_ADDR: database
-    volumes:
-      - ${KEYCLOAK-DATA}:/opt/jboss/keycloak/standalone/data
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/keycloak`)"
@@ -73,8 +76,8 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       - "traefik.http.routers.keycloak.entrypoints=websecure"
       - "traefik.http.routers.keycloak.tls.certresolver=myresolver"
-    depends_on:
-      - database
+    volumes:
+      - ${KEYCLOAK_DATA}:/opt/jboss/keycloak/standalone/data
     networks:
       - __NETWORK_NAME__
 
