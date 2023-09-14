@@ -55,6 +55,29 @@ services:
     networks:
       - __NETWORK_NAME__
 
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    container_name: keycloak
+    environment:
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      DB_VENDOR: postgres
+      DB_ADDR: database
+    volumes:
+      - ${KEYCLOAK-DATA}:/opt/jboss/keycloak/standalone/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/keycloak`)"
+      - "traefik.http.routers.keycloak.service=keycloak"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.routers.keycloak.tls.certresolver=myresolver"
+    depends_on:
+      - database
+    networks:
+      - __NETWORK_NAME__
+
 networks:
   __NETWORK_NAME__:
     external: true
