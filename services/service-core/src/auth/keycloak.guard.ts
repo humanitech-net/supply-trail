@@ -8,23 +8,41 @@ export class KeycloakAuthGuard implements CanActivate {
   constructor(private configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const GraphQlcontext = GqlExecutionContext.create(context);
+    const isHttpContext = context.getType() === 'http';
+    if (isHttpContext) {
+      const request = context.switchToHttp().getRequest();
 
-    const { req } = GraphQlcontext.getContext();
+      const authorizationHeader = request.headers.authorization;
+
+      const publicKey = this.configService.get<string>('PUBLIC_KEY');
+
+      if (authorizationHeader) {
+        return this.validateToken(authorizationHeader, publicKey);
+      }
+      return false;
+    }
+
+    const GraphQlContext = GqlExecutionContext.create(context);
+
+    const { req } = GraphQlContext.getContext();
 
     const authorizationHeader = req.headers.authorization;
 
     const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
     if (authorizationHeader) {
-      const token = authorizationHeader.split(' ')[1];
-      try {
-        const decode = jwt.verify(token, publicKey, { algorithm: ['RS256'] });
-        return true;
-      } catch (error) {
-        return false;
-      }
+      this.validateToken(authorizationHeader, publicKey);
     }
     return false;
+  }
+
+  validateToken(authorizationHeader: string, publicKey: string): boolean {
+    const token = authorizationHeader.split(' ')[1];
+    try {
+      jwt.verify(token, publicKey, { algorithms: ['RS256'] });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
