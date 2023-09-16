@@ -64,6 +64,6 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
     UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, KeycloakAuthGuard]
 })
 export class AppModule {}
