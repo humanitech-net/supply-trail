@@ -34,7 +34,9 @@
     "graphql": "^16.8.0",
     "highlight.js": "^11.8.0",
     "jsonwebtoken": "^9.0.2",
+    "keycloak-connect": "^21.1.2",
     "lint-staged": "^13.2.3",
+    "nest-keycloak-connect": "^1.9.2",
     "pg": "^8.11.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17"
