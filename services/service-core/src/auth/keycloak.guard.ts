@@ -11,9 +11,7 @@ export class KeycloakAuthGuard implements CanActivate {
     const isHttpContext = context.getType() === 'http';
     if (isHttpContext) {
       const request = context.switchToHttp().getRequest();
-
       const authorizationHeader = request.headers.authorization;
-
       const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
       if (authorizationHeader) {
@@ -23,15 +21,12 @@ export class KeycloakAuthGuard implements CanActivate {
     }
 
     const GraphQlContext = GqlExecutionContext.create(context);
-
-    const { req } = GraphQlContext.getContext();
-
-    const authorizationHeader = req.headers.authorization;
-
+    const request = GraphQlContext.getContext().req;
+    const authorizationHeader = request.headers.authorization;
     const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
     if (authorizationHeader) {
-      this.validateToken(authorizationHeader, publicKey);
+      return this.validateToken(authorizationHeader, publicKey);
     }
     return false;
   }
