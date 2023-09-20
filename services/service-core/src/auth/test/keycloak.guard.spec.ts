@@ -78,7 +78,7 @@ describe('KeycloakAuthGuard', () => {
 
   describe('canActivate for http context', () => {
     it('should return false if there is no header', () => {
-      httpContext.switchToHttp().getRequest().headers.authorization = undefined;
+      httpContext.switchToHttp().getRequest().headers.authorization = null;
       expect(keycloakGuard.canActivate(httpContext)).toBeFalsy();
     });
 

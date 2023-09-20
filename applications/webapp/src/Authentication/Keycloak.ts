@@ -37,8 +37,9 @@ export const initKeycloak = () => {
 };
 
 export const refreshToken = () => {
+  const updateTokenStates = 300;
   keycloak
-    .updateToken(300)
+    .updateToken(updateTokenStates)
     .then((refreshed) => {
       if (refreshed) {
         localStorage.setItem("token", JSON.stringify(keycloak.token));

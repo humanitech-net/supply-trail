@@ -21,7 +21,7 @@ import { DatabaseModule } from './database/database.module';
 import { User } from './database/users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { KeycloakConnectModule, AuthGuard } from 'nest-keycloak-connect';
+import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
 
 @Module({

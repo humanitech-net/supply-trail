@@ -32,7 +32,9 @@ const renderRoot = () => {
 initKeycloak()
   .then(() => {
     renderRoot();
-    setInterval(refreshToken, 300000);
+
+    const intervalTime = 300000;
+    setInterval(refreshToken, intervalTime);
   })
   .catch((error) => {
     console.log(error);
