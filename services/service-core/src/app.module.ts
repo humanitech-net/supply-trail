@@ -50,14 +50,18 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
 
-    KeycloakConnectModule.register({
-      authServerUrl: 'http://localhost:8080/',
-      realm: 'Humanitech',
-      resource: 'nest-app',
-      secret: 'bJ8rWgqAjP22IWU7u0USGZd58BKodkpt',
-      'public-client': true,
-      verifyTokenAudience: true,
-      'confidential-port': 0
+    KeycloakConnectModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        authServerUrl: configService.get<string>('KEYCLOAK_SERVER_URL'),
+        realm: 'Humanitech',
+        resource: 'nest-app',
+        secret: configService.get<string>('KEYCLOAK_SECRET'),
+        'public-client': true,
+        verifyTokenAudience: true,
+        'confidential-port': 0
+      }),
+      inject: [ConfigService]
     }),
 
     DatabaseModule,

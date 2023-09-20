@@ -26,6 +26,8 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
+      KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"
@@ -42,6 +44,8 @@ services:
   webapp:
     image: humanitech-supply-trail-webapp:development
     restart: always
+    environment:
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"

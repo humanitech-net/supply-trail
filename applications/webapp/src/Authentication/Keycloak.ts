@@ -2,7 +2,7 @@ import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
   realm: "realm-name",
-  url: "https://keycloak-server/auth",
+  url: process.env.KEYCLOAK_SERVER_URL,
   clientId: "client-id",
 });
 
