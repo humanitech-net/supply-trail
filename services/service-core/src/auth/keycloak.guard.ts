@@ -17,17 +17,17 @@ import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class KeycloakAuthGuard implements CanActivate {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
+    const publicKey = this.configService.get<string>('PUBLIC_KEY');
     const isHttpContext = context.getType() === 'http';
     if (isHttpContext) {
       const request = context.switchToHttp().getRequest();
-      const authorizationHeader = request.headers.authorization;
-      const publicKey = this.configService.get<string>('PUBLIC_KEY');
+      const httpAuthorizationHeader = request.headers.authorization;
 
-      if (authorizationHeader) {
-        return this.validateToken(authorizationHeader, publicKey);
+      if (httpAuthorizationHeader) {
+        return this.validateToken(httpAuthorizationHeader, publicKey);
       }
       return false;
     }
@@ -35,7 +35,6 @@ export class KeycloakAuthGuard implements CanActivate {
     const GraphQlContext = GqlExecutionContext.create(context);
     const request = GraphQlContext.getContext().req;
     const authorizationHeader = request.headers.authorization;
-    const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
     if (authorizationHeader) {
       return this.validateToken(authorizationHeader, publicKey);
