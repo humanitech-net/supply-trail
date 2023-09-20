@@ -1,3 +1,15 @@
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ConfigService } from '@nestjs/config';
@@ -11,9 +23,7 @@ export class KeycloakAuthGuard implements CanActivate {
     const isHttpContext = context.getType() === 'http';
     if (isHttpContext) {
       const request = context.switchToHttp().getRequest();
-
       const authorizationHeader = request.headers.authorization;
-
       const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
       if (authorizationHeader) {
@@ -23,15 +33,12 @@ export class KeycloakAuthGuard implements CanActivate {
     }
 
     const GraphQlContext = GqlExecutionContext.create(context);
-
-    const { req } = GraphQlContext.getContext();
-
-    const authorizationHeader = req.headers.authorization;
-
+    const request = GraphQlContext.getContext().req;
+    const authorizationHeader = request.headers.authorization;
     const publicKey = this.configService.get<string>('PUBLIC_KEY');
 
     if (authorizationHeader) {
-      this.validateToken(authorizationHeader, publicKey);
+      return this.validateToken(authorizationHeader, publicKey);
     }
     return false;
   }
