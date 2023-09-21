@@ -78,6 +78,9 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       - "traefik.http.routers.keycloak.entrypoints=websecure"
       - "traefik.http.routers.keycloak.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-keycloak.stripprefix.prefixes=/keycloak"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.keycloak.middlewares=strip-keycloak,compress"
     volumes:
       - ${KEYCLOAK_DATA}:/opt/jboss/keycloak/standalone/data
     networks:
