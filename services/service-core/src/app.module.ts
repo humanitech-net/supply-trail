@@ -56,7 +56,7 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
         authServerUrl: 'https://dev.supply-trail.humanitech.net/keycloak',
         realm: 'Humanitech',
         resource: 'nest-app',
-        secret: configService.get<string>('KEYCLOAK_SECRET'),
+        secret: '48ifj8fj8f38fh38hf3fkdfdnfdf39',
         'public-client': true,
         verifyTokenAudience: true,
         'confidential-port': 0
