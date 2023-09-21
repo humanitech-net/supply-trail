@@ -21,6 +21,8 @@ import { DatabaseModule } from './database/database.module';
 import { User } from './database/users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { KeycloakConnectModule } from 'nest-keycloak-connect';
+import { KeycloakAuthGuard } from './auth/keycloak.guard';
 
 @Module({
   imports: [
@@ -47,10 +49,25 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql')
     }),
+
+    KeycloakConnectModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        authServerUrl: 'https://dev.supply-trail.humanitech.net/keycloak',
+        realm: 'Humanitech',
+        resource: 'nest-app',
+        secret: configService.get<string>('KEYCLOAK_SECRET'),
+        'public-client': true,
+        verifyTokenAudience: true,
+        'confidential-port': 0
+      }),
+      inject: [ConfigService]
+    }),
+
     DatabaseModule,
     UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, KeycloakAuthGuard]
 })
 export class AppModule {}

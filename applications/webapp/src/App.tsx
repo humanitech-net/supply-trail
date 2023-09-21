@@ -10,19 +10,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import './App.css';
-import GraphQlButton from './Components/Button';
-import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, } from '@apollo/client';
-import fetch from "cross-fetch"
-
+import React from "react";
+import "./App.css";
+import GraphQlButton from "./Components/Button";
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+} from "@apollo/client";
+import fetch from "cross-fetch";
+import { Button } from "@mui/material";
+import { logout } from "./Authentication/Keycloak";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri:'https://dev.supply-trail.humanitech.net/api/graphql',
-    fetch: fetch
+    uri: "https://dev.supply-trail.humanitech.net/api/graphql",
+    fetch: fetch,
   }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 function App() {
@@ -31,6 +37,9 @@ function App() {
       <div className="App">
         <h3>Hello User you can...</h3>
         <GraphQlButton />
+        <Button variant="contained" color="warning" onClick={logout}>
+          Logout
+        </Button>
       </div>
     </ApolloProvider>
   );
