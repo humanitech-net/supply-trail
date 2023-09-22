@@ -58,14 +58,15 @@ services:
       - __NETWORK_NAME__
 
   keycloak:
-    image: jboss/keycloak:latest
+    image: quay.io/keycloak/keycloak:22.0.0
     depends_on:
       - database
+    command: start-dev
     restart: always
     container_name: keycloak
     environment:
-      KEYCLOAK_USER: humanitech
-      KEYCLOAK_PASSWORD: humanitech
+      KEYCLOAK_ADMIN: adminleu
+      KEYCLOAK_ADMIN_PASSWORD: adminleu
       DB_VENDOR: POSTGRES
       DB_ADDR: database
       DB_DATABASE: ${DB_DATABASE}
