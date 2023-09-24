@@ -13,14 +13,16 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ConfigService } from '@nestjs/config';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class KeycloakAuthGuard implements CanActivate {
   constructor(private readonly configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const publicKey = this.configService.get<string>('PUBLIC_KEY');
+    const publicKey = this.configService
+      .get('PUBLIC_KEY')
+      .replace(/\\n/g, '\n');
     const isHttpContext = context.getType() === 'http';
     if (isHttpContext) {
       const request = context.switchToHttp().getRequest();
@@ -33,8 +35,8 @@ export class KeycloakAuthGuard implements CanActivate {
     }
 
     const GraphQlContext = GqlExecutionContext.create(context);
-    const request = GraphQlContext.getContext().req;
-    const authorizationHeader = request.headers.authorization;
+    const { req } = GraphQlContext.getContext();
+    const authorizationHeader = req.headers.authorization;
 
     if (authorizationHeader) {
       return this.validateToken(authorizationHeader, publicKey);
