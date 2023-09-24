@@ -13,8 +13,8 @@
 import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
-  realm: "Humanitech",
-  url: "http://localhost:8080",
+  realm: "humanitech",
+  url: "http://localhost:8080/",
   clientId: "supply-trail-app",
 });
 
@@ -25,7 +25,7 @@ export const initKeycloak = () => {
         onLoad: "login-required",
       })
       .then(() => {
-        localStorage.setItem("token", JSON.stringify(keycloak.token));
+        // localStorage.setItem("token", JSON.stringify(keycloak.token));
         resolve();
       })
       .catch((error) => {
