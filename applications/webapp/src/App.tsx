@@ -25,7 +25,7 @@ import { logout } from "./Authentication/Keycloak";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:3000/graphql",
+    uri: "https://dev.supply-trail.humanitech.net/api/graphql",
     fetch: fetch,
   }),
   cache: new InMemoryCache(),

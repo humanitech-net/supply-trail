@@ -38,16 +38,12 @@ services:
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       - "traefik.http.middlewares.compress.compress=true"
       - "traefik.http.routers.service-core.middlewares=strip-api,compress"
-    ports:
-      - 3000:3000
     networks:
       - __NETWORK_NAME__
 
   webapp:
     image: humanitech-supply-trail-webapp:development
     restart: always
-    ports:
-      - 8880:8880
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"

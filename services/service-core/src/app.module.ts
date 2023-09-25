@@ -53,10 +53,10 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
     KeycloakConnectModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        authServerUrl: 'http://keycloak:8080/',
+        authServerUrl: configService.get('KEYCLOAK_SERVER_URL'),
         realm: 'humanitech',
         resource: 'nest-application',
-        secret: 'RMjk7PofElBD1a0HAvyIFv2C1Pc8Fgoh',
+        secret: configService.get('KEYCLOAK_SECRET'),
         'public-client': true,
         verifyTokenAudience: true,
         'confidential-port': 0

@@ -21,7 +21,7 @@ export class KeycloakAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const publicKey = this.configService
-      .get('PUBLIC_KEY')
+      .get('KEYCLOAK_PUBLIC_KEY')
       .replace(/\\n/g, '\n');
     const isHttpContext = context.getType() === 'http';
     if (isHttpContext) {
