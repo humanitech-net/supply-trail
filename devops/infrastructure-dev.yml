@@ -58,19 +58,22 @@ services:
       - __NETWORK_NAME__
 
   keycloak:
-    image: jboss/keycloak:latest
+    image: quay.io/keycloak/keycloak:22.0.0
     depends_on:
       - database
+    command: start-dev
     restart: always
     container_name: keycloak
     environment:
-      KEYCLOAK_USER: humanitech
-      KEYCLOAK_PASSWORD: humanitech
-      DB_VENDOR: POSTGRES
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      DB_VENDOR: postgresql
       DB_ADDR: database
       DB_DATABASE: ${DB_DATABASE}
       DB_USER: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 8080:8080
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/keycloak`)"
@@ -78,6 +81,9 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       - "traefik.http.routers.keycloak.entrypoints=websecure"
       - "traefik.http.routers.keycloak.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-keycloak.stripprefix.prefixes=/keycloak"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.keycloak.middlewares=strip-keycloak,compress"
     volumes:
       - ${KEYCLOAK_DATA}:/opt/jboss/keycloak/standalone/data
     networks:

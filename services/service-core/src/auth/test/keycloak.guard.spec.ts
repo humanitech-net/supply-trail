@@ -31,7 +31,7 @@ describe('KeycloakAuthGuard', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn()
+            get: jest.fn().mockReturnValue(mockPublicKey)
           }
         }
       ]
