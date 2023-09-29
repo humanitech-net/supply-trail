@@ -10,39 +10,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import "./App.css";
-import GraphQlButton from "./Components/Button";
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-} from "@apollo/client";
-import fetch from "cross-fetch";
-import { Button } from "@mui/material";
-import { logout } from "./Authentication/Keycloak";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Navbar from "./Components/navbar";
 
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: "https://dev.supply-trail.humanitech.net/api/graphql",
-    fetch: fetch,
-  }),
-  cache: new InMemoryCache(),
-});
+export default function App() {
+  const [open, setOpen] = React.useState(false);
 
-function App() {
+  const openDrawer = () => {
+    setOpen(true);
+  };
+
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <h3>Hello User you can...</h3>
-        <GraphQlButton />
-        <Button variant="contained" color="warning" onClick={logout}>
-          Logout
-        </Button>
-      </div>
-    </ApolloProvider>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <Navbar open={open} openDrawer={openDrawer} />
+    </Box>
   );
 }
-
-export default App;
