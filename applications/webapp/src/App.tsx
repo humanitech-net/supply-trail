@@ -14,6 +14,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Navbar from "./Components/navbar";
+import LeftDrawer from "./Components/drawer";
 
 export default function App() {
   const [open, setOpen] = React.useState(false);
@@ -22,10 +23,15 @@ export default function App() {
     setOpen(true);
   };
 
+  const closeDrawer = () => {
+    setOpen(false);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Navbar open={open} openDrawer={openDrawer} />
+      <LeftDrawer open={open} closeDrawer={closeDrawer} />
     </Box>
   );
 }
