@@ -82,6 +82,7 @@ services:
       - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/auth"
       - "traefik.http.middlewares.forwardedheaders.headers.sslProxyHeaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.keycloak.middlewares=forwardedheaders,strip-prefix,compress"
     networks:
       - __NETWORK_NAME__
 networks:
