@@ -1,3 +1,15 @@
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Drawer from "@mui/material/Drawer";
@@ -6,8 +18,9 @@ import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-
 import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface drawerProps {
   open: boolean;
@@ -16,6 +29,8 @@ interface drawerProps {
 
 export default function LeftDrawer({ open, closeDrawer }: drawerProps) {
   const drawerWidth = 240;
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const menu = [
     "Supply",
     "Tracking",
@@ -47,7 +62,7 @@ export default function LeftDrawer({ open, closeDrawer }: drawerProps) {
           backgroundColor: "#011C27",
         },
       }}
-      variant="persistent"
+      variant={isDesktop ? "persistent" : "temporary"}
       anchor="left"
       open={open}
     >

@@ -1,3 +1,15 @@
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
@@ -63,18 +75,10 @@ export default function NavBar({ open, openDrawer }: handleDrawer) {
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <IconButton
-            size="large"
-            aria-label="show 4 new mails"
-            color="inherit"
-          >
+          <IconButton size="large" color="inherit">
             <Brightness4Icon />
           </IconButton>
-          <IconButton
-            size="large"
-            aria-label="show 17 new notifications"
-            color="inherit"
-          >
+          <IconButton size="large" color="inherit">
             <NotificationsIcon />
           </IconButton>
           <IconButton
@@ -82,6 +86,17 @@ export default function NavBar({ open, openDrawer }: handleDrawer) {
             edge="end"
             aria-label="account of current user"
             aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <AccountCircle />
+          </IconButton>
+        </Box>
+        <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          <IconButton
+            size="large"
+            aria-label="show more"
+            aria-controls="primary-search-account-menu-mobile"
             aria-haspopup="true"
             color="inherit"
           >
