@@ -12,8 +12,11 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import App from "./App";
+import NavBar from "../navbar";
 
-test("renders app component", () => {
-  render(<App />);
+describe("NavBar", () => {
+  test("renders NavBar component", () => {
+    const openDrawerMock = jest.fn();
+    render(<NavBar open={false} openDrawer={openDrawerMock} />);
+  });
 });

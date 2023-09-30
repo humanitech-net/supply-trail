@@ -12,8 +12,11 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import App from "./App";
+import LeftDrawer from "../drawer";
 
-test("renders app component", () => {
-  render(<App />);
+describe("LeftDrawer", () => {
+  test("renders LeftDrawer component", () => {
+    const closeDrawerMock = jest.fn();
+    render(<LeftDrawer open={false} closeDrawer={closeDrawerMock} />);
+  });
 });
