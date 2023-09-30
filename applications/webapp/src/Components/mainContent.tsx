@@ -10,17 +10,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from "react";
+import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-interface handleDrawer {
+interface HandleDrawer {
   open: boolean;
 }
 
-export default function MainContent({ open }: handleDrawer) {
+export default function MainContent({ open }: HandleDrawer) {
   const drawerWidth = 240;
-
+  const spacing = 3;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -38,7 +38,7 @@ export default function MainContent({ open }: handleDrawer) {
     open?: boolean;
   }>(({ theme }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(spacing),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
