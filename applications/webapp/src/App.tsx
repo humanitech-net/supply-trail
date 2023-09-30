@@ -10,22 +10,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Navbar from "./Components/navbar";
-import LeftDrawer from "./Components/drawer";
+import LeftDrawer from "./Components/leftDrawer";
 
 export default function App() {
   const [open, setOpen] = React.useState(false);
 
-  const openDrawer = () => {
+  function openDrawer() {
     setOpen(true);
-  };
+  }
 
-  const closeDrawer = () => {
+  function closeDrawer() {
     setOpen(false);
-  };
+  }
 
   return (
     <Box sx={{ display: "flex" }}>

@@ -10,8 +10,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from "react";
-import { styled } from "@mui/material/styles";
+import React from "react";
+import { styled, useTheme } from "@mui/material/styles";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import IconButton from "@mui/material/IconButton";
@@ -19,15 +19,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-interface drawerProps {
+interface DrawerProps {
   open: boolean;
   closeDrawer: () => void;
 }
 
-export default function LeftDrawer({ open, closeDrawer }: drawerProps) {
+export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
   const drawerWidth = 240;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));

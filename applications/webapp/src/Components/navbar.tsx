@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -24,7 +24,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const drawerWidth = 240;
 
-interface handleDrawer {
+interface HandleDrawer {
   open: boolean;
   openDrawer: () => void;
 }
@@ -50,7 +50,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function NavBar({ open, openDrawer }: handleDrawer) {
+export default function NavBar({ open, openDrawer }: HandleDrawer) {
   return (
     <AppBar
       position="fixed"
