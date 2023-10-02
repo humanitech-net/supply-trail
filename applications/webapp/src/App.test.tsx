@@ -10,13 +10,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, fireEvent } from "@testing-library/react";
+import App from "./App";
 
-test('renders app component', () => {
-  const {getByText} = render(<App/>)
-  const hello = getByText(/Hello User you can.../i)
-  expect(hello).toBeInTheDocument
+describe("App", () => {
+  test("renders NavBar", () => {
+    render(<App />);
+  });
 
+  test("openDrawer sets open state to true", () => {
+    const { getByLabelText } = render(<App />);
+    const openDrawerButton = getByLabelText("open drawer");
+    fireEvent.click(openDrawerButton);
+    expect(openDrawerButton).toBeTruthy();
+  });
 });

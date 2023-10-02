@@ -11,38 +11,31 @@
  */
 
 import React from "react";
-import "./App.css";
-import GraphQlButton from "./Components/Button";
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-} from "@apollo/client";
-import fetch from "cross-fetch";
-import { Button } from "@mui/material";
-import { logout } from "./Authentication/Keycloak";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import NavBar from "./Components/navbar";
+import LeftDrawer from "./Components/leftDrawer";
+import MainContent from "./Components/mainContent";
+import Footer from "./Components/footer";
 
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: "https://dev.supply-trail.humanitech.net/api/graphql",
-    fetch: fetch,
-  }),
-  cache: new InMemoryCache(),
-});
+export default function App() {
+  const [open, setOpen] = React.useState(false);
 
-function App() {
+  function openDrawer() {
+    setOpen(true);
+  }
+
+  function closeDrawer() {
+    setOpen(false);
+  }
+
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <h3>Hello User you can...</h3>
-        <GraphQlButton />
-        <Button variant="contained" color="warning" onClick={logout}>
-          Logout
-        </Button>
-      </div>
-    </ApolloProvider>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <CssBaseline />
+      <NavBar open={open} openDrawer={openDrawer} />
+      <LeftDrawer open={open} closeDrawer={closeDrawer} />
+      <MainContent open={open} />
+      <Footer />
+    </Box>
   );
 }
-
-export default App;
