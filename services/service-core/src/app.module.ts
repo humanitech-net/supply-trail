@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
+import { UserProfileModule } from './user-profile/user-profile.module';
 
 @Module({
   imports: [
@@ -65,7 +66,8 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
     }),
 
     DatabaseModule,
-    UsersModule
+    UsersModule,
+    UserProfileModule
   ],
   controllers: [AppController],
   providers: [AppService, KeycloakAuthGuard]
