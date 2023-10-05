@@ -20,11 +20,12 @@ export class KeycloakService {
     try {
       const publicKey = await this.getPUblicKey();
 
-      const keyss = `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
-      const decodedToken = jwt.verify(token, keyss, { algorithms: ['RS256'] });
+      const key = `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
+      const decodedToken = jwt.verify(token, key, { algorithms: ['RS256'] });
+      console.log(decodedToken)
       return decodedToken;
     } catch (error) {
-      throw new Error('Invald Token');
+      throw new Error('Invalid Token');
     }
   }
 }
