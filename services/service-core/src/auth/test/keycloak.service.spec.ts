@@ -50,7 +50,7 @@ describe('KeycloakService', () => {
     });
 
     // Mock jwt.verify to return a decoded token
-    jwtVerify.mockReturnValue({ someData: 'example' });
+    jwtVerify.mockReturnValue({ someData: 'example' } as any);
 
     const result = await keycloakService.getUser(validToken);
 
