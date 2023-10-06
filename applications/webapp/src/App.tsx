@@ -11,31 +11,13 @@
  */
 
 import React from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import NavBar from "./Components/navbar";
-import LeftDrawer from "./Components/leftDrawer";
-import MainContent from "./Components/mainContent";
-import Footer from "./Components/footer";
+import { BrowserRouter } from "react-router-dom";
+import Home from "./Pages/Home/home";
 
 export default function App() {
-  const [open, setOpen] = React.useState(false);
-
-  function openDrawer() {
-    setOpen(true);
-  }
-
-  function closeDrawer() {
-    setOpen(false);
-  }
-
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <CssBaseline />
-      <NavBar open={open} openDrawer={openDrawer} />
-      <LeftDrawer open={open} closeDrawer={closeDrawer} />
-      <MainContent open={open} />
-      <Footer />
-    </Box>
+    <BrowserRouter>
+      <Home />
+    </BrowserRouter>
   );
 }
