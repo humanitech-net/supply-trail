@@ -9,21 +9,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 
-// Mock axios.get to simulate API calls
 jest.mock('axios');
-
-// Mock jwt.verify using jest.spyOn
-const jwtVerify = jest.spyOn(jwt, 'verify');
+jest.mock('jsonwebtoken');
 
 describe('KeycloakService', () => {
   let keycloakService: KeycloakService;
 
   beforeEach(async () => {
+    jest.clearAllMocks(); // Clear all mock calls before each test
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [KeycloakService]
     }).compile();
@@ -31,65 +31,102 @@ describe('KeycloakService', () => {
     keycloakService = module.get<KeycloakService>(KeycloakService);
   });
 
-  afterEach(() => {
-    // Clear the mock after each test
-    jest.clearAllMocks();
-  });
+  describe('getPublicKey', () => {
+    it('should fetch and return public key', async () => {
+      const mockPublicKey = 'your_mocked_public_key';
+      (axios.get as jest.Mock).mockResolvedValue({
+        data: { public_key: mockPublicKey }
+      });
 
-  it('should be defined', () => {
-    expect(keycloakService).toBeDefined();
-  });
+      const publicKey = await keycloakService.getPublicKey();
 
-  it('should decode a valid token', async () => {
-    const validToken = 'valid_token';
-    const publicKey = 'mocked_public_key';
-
-    // Mock the axios.get function to return a specific response
-    (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValue({
-      data: { public_key: publicKey }
-    });
-
-    // Mock jwt.verify to return a decoded token
-    jwtVerify.mockReturnValue({ someData: 'example' } as any);
-
-    const result = await keycloakService.getUser(validToken);
-
-    // Verify that the axios.get and jwt.verify functions were called
-    expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
-    expect(jwtVerify).toHaveBeenCalledWith(
-      validToken,
-      `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`,
-      { algorithms: ['RS256'] }
-    );
-
-    // Verify that the result matches the decoded token
-    expect(result).toEqual({ someData: 'example' });
-  });
-
-  it('should throw an error for an invalid token', async () => {
-    const invalidToken = 'invalid_token';
-    const publicKey = 'mocked_public_key';
-
-    // Mock the axios.get function to return a specific response
-    (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValue({
-      data: { public_key: publicKey }
-    });
-
-    // Mock jwt.verify to throw an error
-    jwtVerify.mockImplementation(() => {
-      throw new Error('Invalid Token');
-    });
-
-    try {
-      await keycloakService.getUser(invalidToken);
-    } catch (error) {
       expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
-      expect(jwtVerify).toHaveBeenCalledWith(
-        invalidToken,
-        `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`,
-        { algorithms: ['RS256'] }
+      expect(publicKey).toBe(
+        `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`
       );
-      expect(error.message).toBe('Invalid Token');
-    }
+    });
+
+    it('should throw an error if fetching public key fails', async () => {
+      (axios.get as jest.Mock).mockRejectedValue(
+        new Error('Failed to fetch JWKS')
+      );
+
+      await expect(keycloakService.getPublicKey()).rejects.toThrow(
+        'Failed to fetch JWKS'
+      );
+    });
+  });
+
+  describe('getUser', () => {
+    it('should decode a valid token and return user data', async () => {
+      const mockToken = 'your_mocked_valid_token';
+      const mockPublicKey = 'your_mocked_public_key';
+
+      // Mock the axios response for fetching the public key
+      (axios.get as jest.Mock).mockResolvedValue({
+        data: { public_key: mockPublicKey }
+      });
+
+      // Mock the jwt.verify function to return a decoded token
+      const decodedToken = {
+        sid: 'sample_sid',
+        given_name: 'John',
+        family_name: 'Doe',
+        email: 'john.doe@example.com',
+        preferred_username: 'johndoe'
+      };
+      (jwt.verify as jest.Mock).mockReturnValue(decodedToken);
+
+      const userData = await keycloakService.getUser(mockToken);
+
+      expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
+      expect(jwt.verify).toHaveBeenCalledWith(
+        mockToken,
+        `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`,
+        {
+          algorithms: ['RS256']
+        }
+      );
+
+      expect(userData).toEqual({
+        id: 'sample_sid',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        username: 'johndoe'
+      });
+    });
+
+    it('should throw an error for an invalid token', async () => {
+      const mockToken = 'your_mocked_invalid_token';
+      const mockPublicKey = 'your_mocked_public_key';
+
+      // Mock the axios response for fetching the public key
+      (axios.get as jest.Mock).mockResolvedValue({
+        data: { public_key: mockPublicKey }
+      });
+
+      // Mock the jwt.verify function to throw an error
+      (jwt.verify as jest.Mock).mockImplementation(() => {
+        throw new Error('Invalid Token');
+      });
+
+      await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
+        'Invalid Token'
+      );
+    });
+
+    it('should throw an error if fetching public key fails', async () => {
+      const mockToken = 'your_mocked_valid_token';
+
+      // Mock axios to reject with an error
+      (axios.get as jest.Mock).mockRejectedValue(
+        new Error('Failed to fetch JWKS')
+      );
+
+      await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
+        'Failed to fetch JWKS'
+      );
+    });
   });
 });

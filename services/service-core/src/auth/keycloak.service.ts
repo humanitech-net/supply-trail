@@ -7,25 +7,33 @@ export class KeycloakService {
   public realmUrl =
     'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
 
-  async getPUblicKey() {
+  async getPublicKey() {
     try {
       const response = await axios.get(this.realmUrl);
       const publicKey = response.data.public_key;
-      return publicKey;
+      return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
-      throw new Error('Failed to fetch JWKS');
+      throw new Error('Failed to fetch JWKS'); // Propagate the error here
     }
   }
+
   async getUser(token: string) {
     try {
-      const publicKey = await this.getPUblicKey();
+      const publicKey = await this.getPublicKey();
+      const decodedToken = jwt.verify(token, publicKey, {
+        algorithms: ['RS256']
+      });
 
-      const key = `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
-      const decodedToken = jwt.verify(token, key, { algorithms: ['RS256'] });
-      console.log(decodedToken)
-      return decodedToken;
+      const data = {
+        id: decodedToken['sid'],
+        firstName: decodedToken['given_name'],
+        lastName: decodedToken['family_name'],
+        email: decodedToken['email'],
+        username: decodedToken['preferred_username']
+      };
+      return data;
     } catch (error) {
-      throw new Error('Invalid Token');
+      throw error; // Propagate the error here
     }
   }
 }
