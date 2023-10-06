@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
+
+  service-core:
+    image: humanitech-supply-trail-service-core:development
+    depends_on:
+      - database
+    restart: always
+    environment:
+      DB_HOST: database
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
+    ports:
+      - 3000:3000
+
+  webapp:
+    image: humanitech-supply-trail-webapp:development
+    restart: always
+    ports:
+      - 8880:8880
+    environment:
+      REACT_APP_KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.0
+    depends_on:
+      - database
+    command: start-dev
+    restart: always
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://database/${DB_DATABASE}
+      - KC_DB_USERNAME=${DB_USERNAME}
+      - KC_DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 8080:8080
