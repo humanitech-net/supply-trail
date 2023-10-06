@@ -11,13 +11,12 @@
  */
 
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import Home from "./Pages/Home/home";
+import { Card, CardContent } from "@mui/material";
 
-export default function App() {
+export default function DetailHolder() {
   return (
-    <BrowserRouter>
-      <Home />
-    </BrowserRouter>
+    <Card sx={{ height: "260px" }}>
+      <CardContent>user detail</CardContent>
+    </Card>
   );
 }

@@ -11,6 +11,7 @@
  */
 
 import React from "react";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -89,7 +90,9 @@ export default function NavBar({ open, openDrawer }: HandleDrawer) {
             aria-haspopup="true"
             color="inherit"
           >
-            <AccountCircle />
+            <Link to="/profile">
+              <AccountCircle />
+            </Link>
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
