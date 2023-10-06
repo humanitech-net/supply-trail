@@ -33,8 +33,6 @@ services:
     restart: always
     ports:
       - 8880:8880
-    environment:
-      REACT_APP_KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
 
   keycloak:
     image: quay.io/keycloak/keycloak:22.0.0
