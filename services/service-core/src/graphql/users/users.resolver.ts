@@ -19,7 +19,7 @@ export class UsersResolver {
   constructor(private readonly keycloakService: KeycloakService) {}
 
   @Query(() => Users)
-  async findAll(@Args('token') token: string) {
+  async getUser(@Args('token') token: string) {
     return this.keycloakService.getUser(token);
   }
 }
