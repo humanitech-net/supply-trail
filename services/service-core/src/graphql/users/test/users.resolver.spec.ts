@@ -10,8 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersResolver } from '../users.resolver';
-import { UsersService } from '../users.service';
+import { UsersResolver } from '../users.resolver'; // Adjust the import path as needed
 import { KeycloakService } from '../../../auth/keycloak.service';
 
 describe('UsersResolver', () => {
@@ -22,8 +21,12 @@ describe('UsersResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersResolver,
-        UsersService,
-        KeycloakService // Mock or provide a stub if necessary
+        {
+          provide: KeycloakService,
+          useValue: {
+            getUser: jest.fn() // Mock the keycloakService.getUser method
+          }
+        }
       ]
     }).compile();
 
@@ -31,27 +34,24 @@ describe('UsersResolver', () => {
     keycloakService = module.get<KeycloakService>(KeycloakService);
   });
 
-  it('should be defined', () => {
-    expect(usersResolver).toBeDefined();
-  });
+  it('should return user data based on the provided token', async () => {
+    // Mock the keycloakService.getUser method to return sample data
+    const mockUserData = {
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      username: 'johndoe'
+    };
+    const token = 'YOUR_SAMPLE_TOKEN';
 
-  describe('getUser', () => {
-    it('should return a user', async () => {
-      // Mock the behavior of keycloakService.getUser
-      const mockUser = {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        username: 'testuser'
-      };
-      jest.spyOn(keycloakService, 'getUser').mockResolvedValue(mockUser);
+    // Set up the mock behavior
+    (keycloakService.getUser as jest.Mock).mockResolvedValue(mockUserData);
 
-      // Call the resolver method
-      const result = await usersResolver.getUser('token');
+    // Call the resolver function
+    const result = await usersResolver.getUser(token);
 
-      // Verify that the result matches the expected user
-      expect(result).toEqual(mockUser);
-    });
+    // Expect the result to match the mock user data
+    expect(result).toEqual(mockUserData);
   });
 });

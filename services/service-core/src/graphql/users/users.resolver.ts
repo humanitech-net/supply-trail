@@ -11,7 +11,7 @@
  */
 
 import { Query, Resolver, Args } from '@nestjs/graphql';
-import { Users } from './users.entity';
+import { Users } from './users.entity'; // Assuming you rename your entity to 'user.entity' to match the type name
 import { KeycloakService } from '../../auth/keycloak.service';
 
 @Resolver(() => Users)
@@ -20,6 +20,13 @@ export class UsersResolver {
 
   @Query(() => Users)
   async getUser(@Args('token') token: string) {
-    return this.keycloakService.getUser(token);
+    const data = await this.keycloakService.getUser(token);
+    return {
+      id: data.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      username: data.username
+    };
   }
 }

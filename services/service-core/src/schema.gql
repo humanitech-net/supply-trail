@@ -6,7 +6,8 @@ type Users {
   id: String!
   firstName: String!
   lastName: String!
-  city: String
+  username: String!
+  email: String!
 }
 
 type Query {
