@@ -103,7 +103,9 @@ export default function NavBar({ open, openDrawer }: HandleDrawer) {
             aria-haspopup="true"
             color="inherit"
           >
-            <AccountCircle />
+            <Link to="/profile">
+              <AccountCircle />
+            </Link>
           </IconButton>
         </Box>
       </Toolbar>
