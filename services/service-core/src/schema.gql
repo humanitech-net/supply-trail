@@ -11,5 +11,5 @@ type Users {
 }
 
 type Query {
-  getUser(token: String!): Users!
+  getUser: Users!
 }

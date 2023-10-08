@@ -10,12 +10,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersResolver } from '../users.resolver'; // Adjust the import path as needed
+import { UsersResolver } from '../users.resolver';
 import { KeycloakService } from '../../../auth/keycloak.service';
+import { Request } from 'express';
+
+const mockKeycloakService = {
+  getUser: jest.fn(async (token) => {
+    return {
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'johndoe@example.com',
+      username: 'johndoe'
+    };
+  })
+};
 
 describe('UsersResolver', () => {
-  let usersResolver: UsersResolver;
-  let keycloakService: KeycloakService;
+  let resolver: UsersResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,35 +35,28 @@ describe('UsersResolver', () => {
         UsersResolver,
         {
           provide: KeycloakService,
-          useValue: {
-            getUser: jest.fn() // Mock the keycloakService.getUser method
-          }
+          useValue: mockKeycloakService
         }
       ]
     }).compile();
 
-    usersResolver = module.get<UsersResolver>(UsersResolver);
-    keycloakService = module.get<KeycloakService>(KeycloakService);
+    resolver = module.get<UsersResolver>(UsersResolver);
   });
 
-  it('should return user data based on the provided token', async () => {
-    // Mock the keycloakService.getUser method to return sample data
-    const mockUserData = {
+  it('should return the user data', async () => {
+    const req = {
+      headers: { authorization: 'Bearer token' }
+    } as Request<{}, any, any, {}, {}>; // Type assertion
+
+    const context = { req };
+    const user = await resolver.getUser(context);
+
+    expect(user).toEqual({
       id: '1',
       firstName: 'John',
       lastName: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'johndoe@example.com',
       username: 'johndoe'
-    };
-    const token = 'YOUR_SAMPLE_TOKEN';
-
-    // Set up the mock behavior
-    (keycloakService.getUser as jest.Mock).mockResolvedValue(mockUserData);
-
-    // Call the resolver function
-    const result = await usersResolver.getUser(token);
-
-    // Expect the result to match the mock user data
-    expect(result).toEqual(mockUserData);
+    });
   });
 });

@@ -9,24 +9,22 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import { Query, Resolver, Args } from '@nestjs/graphql';
-import { Users } from './users.entity'; // Assuming you rename your entity to 'user.entity' to match the type name
+import { Query, Resolver, Context } from '@nestjs/graphql';
+import { Users } from './users.entity';
 import { KeycloakService } from '../../auth/keycloak.service';
+import { Request } from 'express'; // Import Request from express
 
 @Resolver(() => Users)
 export class UsersResolver {
   constructor(private readonly keycloakService: KeycloakService) {}
 
   @Query(() => Users)
-  async getUser(@Args('token') token: string) {
+  async getUser(@Context() context: { req: Request }) {
+    const { req } = context as { req: Request<{}, any, any, {}, {}> };
+
+    const token = req.headers['authorization'].split(' ')[1];
     const data = await this.keycloakService.getUser(token);
-    return {
-      id: data.id,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      username: data.username
-    };
+
+    return data;
   }
 }
