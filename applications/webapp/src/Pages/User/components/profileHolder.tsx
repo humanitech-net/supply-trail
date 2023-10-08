@@ -11,27 +11,52 @@
  */
 
 import React from "react";
-import { Avatar, Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
-export default function ProfileHolder() {
+import { styles } from "../styles/style";
+
+interface ProfileHolderProps {
+  username: string;
+  description: string;
+}
+
+export default function ProfileHolder({
+  username,
+  description,
+}: ProfileHolderProps) {
+  const theme = useTheme();
+  const style = styles(theme).profileholder;
+
   return (
-    <Card
-      elevation={4}
-      sx={{
-        height: "300px",
-      }}
-    >
+    <Card elevation={0} sx={style.card}>
       <CardContent>
-        <Avatar alt="user" src="" sx={{ width: 70, height: 70 }} />
-        <Typography variant="h6">User</Typography>
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima velit
-          delectus cum
-        </Typography>
-        <Typography>Addis Ababa</Typography>
-        <Button variant="contained" color="primary">
-          Edit Profile
-        </Button>
+        <Box sx={style.box}>
+          <Grid container spacing={1} xs={14} sx={style.grid}>
+            <Grid item xs={10} sx={style.grid}>
+              <Avatar alt="user" src="" sx={style.avatar} />
+            </Grid>
+            <Grid item xs={10}>
+              <Typography variant="h6">{username}</Typography>
+            </Grid>
+            <Grid item xs={10} sx={style.grid}>
+              <Typography>{description}</Typography>
+            </Grid>
+            <Grid item xs={10} md={10}>
+              <Button variant="contained" color="primary">
+                Edit Profile
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       </CardContent>
     </Card>
   );
