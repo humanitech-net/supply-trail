@@ -20,7 +20,7 @@ export class UsersResolver {
 
   @Query(() => Users)
   async getUser(@Context() context: { req: Request }) {
-    const { req } = context as { req: Request<{}, any, any, {}, {}> };
+    const { req } = context;
 
     const token = req.headers['authorization'].split(' ')[1];
     const data = await this.keycloakService.getUser(token);

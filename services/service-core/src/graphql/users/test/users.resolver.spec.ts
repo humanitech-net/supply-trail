@@ -9,13 +9,15 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+// Import necessary modules and dependencies
+// Import necessary modules and dependencies
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersResolver } from '../users.resolver';
 import { KeycloakService } from '../../../auth/keycloak.service';
 import { Request } from 'express';
 
-const mockKeycloakService = {
-  getUser: jest.fn(async (token) => {
+const mockKeycloakService: Partial<KeycloakService> = {
+  getUser: jest.fn(async () => {
     return {
       id: '1',
       firstName: 'John',
@@ -27,7 +29,7 @@ const mockKeycloakService = {
 };
 
 describe('UsersResolver', () => {
-  let resolver: UsersResolver;
+  let usersResolver: UsersResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,17 +42,16 @@ describe('UsersResolver', () => {
       ]
     }).compile();
 
-    resolver = module.get<UsersResolver>(UsersResolver);
+    usersResolver = module.get<UsersResolver>(UsersResolver);
   });
 
-  it('should return the user data', async () => {
-    const req = {
-      headers: { authorization: 'Bearer token' }
-    } as Request<{}, any, any, {}, {}>; // Type assertion
+  it('should return user data', async () => {
+    const context = {
+      req: { headers: { authorization: 'Bearer token' } } as Request
+    };
 
-    const context = { req };
-    const user = await resolver.getUser(context);
-
+    const user = await usersResolver.getUser(context);
+    expect(mockKeycloakService.getUser).toHaveBeenCalledWith('token');
     expect(user).toEqual({
       id: '1',
       firstName: 'John',
