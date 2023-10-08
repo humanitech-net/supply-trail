@@ -13,7 +13,7 @@ export class KeycloakService {
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
-      throw new Error('Failed to fetch JWKS'); // Propagate the error here
+      throw new Error('Failed to fetch Public Key');
     }
   }
 
@@ -25,15 +25,16 @@ export class KeycloakService {
       });
 
       const data = {
-        id: decodedToken['sid'],
+        id: decodedToken['sub'],
         firstName: decodedToken['given_name'],
         lastName: decodedToken['family_name'],
         email: decodedToken['email'],
         username: decodedToken['preferred_username']
       };
+
       return data;
     } catch (error) {
-      throw error; // Propagate the error here
+      throw error;
     }
   }
 }

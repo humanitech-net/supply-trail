@@ -48,11 +48,11 @@ describe('KeycloakService', () => {
 
     it('should throw an error if fetching public key fails', async () => {
       (axios.get as jest.Mock).mockRejectedValue(
-        new Error('Failed to fetch JWKS')
+        new Error('Failed to fetch Public Key')
       );
 
       await expect(keycloakService.getPublicKey()).rejects.toThrow(
-        'Failed to fetch JWKS'
+        'Failed to fetch Public Key'
       );
     });
   });
@@ -69,7 +69,7 @@ describe('KeycloakService', () => {
 
       // Mock the jwt.verify function to return a decoded token
       const decodedToken = {
-        sid: 'sample_sid',
+        sub: 'sample_sid',
         given_name: 'John',
         family_name: 'Doe',
         email: 'john.doe@example.com',
@@ -121,11 +121,11 @@ describe('KeycloakService', () => {
 
       // Mock axios to reject with an error
       (axios.get as jest.Mock).mockRejectedValue(
-        new Error('Failed to fetch JWKS')
+        new Error('Failed to fetch Public Key')
       );
 
       await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
-        'Failed to fetch JWKS'
+        'Failed to fetch Public Key'
       );
     });
   });
