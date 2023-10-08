@@ -11,59 +11,50 @@
  */
 
 import React from "react";
-import { Box, Card } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
+import { styles } from "./styles/style";
 
 export default function UserPage() {
+  const theme = useTheme();
+  const style = styles(theme).userPage;
+
+  const mockUser = {
+    username: "Yonas",
+    firstname: "Yonas",
+    lastname: "Seyoum",
+    email: "yonasseyoum24@gmail.com",
+    phonenumber: "123456789",
+    address: "Addis Ababa",
+    birthDate: "April 19 2001",
+    description: "Hi I am Yonas",
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: ["column", "column", "row"],
-        width: "100%",
-        height: "86vh",
-        margin: "75px 30px 0 30px",
+        margin: "0 20px 0 20px",
       }}
     >
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateRows: ["auto", "auto", "repeat(2, 0.2fr)"],
-          gap: [1, 1, 2],
-          width: ["100%", "100%", "30%"],
-          margin: ["0 0 20px", "0 0 20px", "0 20px 0 0"],
-        }}
-      >
-        <ProfileHolder />
-        <Card sx={{ height: "200px" }}>empty one</Card>
+      <Box sx={style.profilePageHolder}>
+        <ProfileHolder
+          username={mockUser.username}
+          description={mockUser.description}
+        />
       </Box>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateRows: ["1fr", "auto", "repeat(2, 0.2fr)"],
-          gap: [1, 1, 2],
-          width: ["100%", "100%", "70%"],
-        }}
-      >
-        <DetailHolder />
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: ["1fr", "auto", "repeat(2, 1fr)"],
-            gap: [1, 1, 2],
-            height: "180px",
-          }}
-        >
-          <Card
-            sx={{
-              height: "100%",
-            }}
-          >
-            empty two
-          </Card>
-          <Card sx={{ height: "100%" }}>empty three</Card>
-        </Box>
+
+      <Box sx={style.DetailHolderContainer}>
+        <DetailHolder
+          firstName={mockUser.firstname}
+          lastName={mockUser.lastname}
+          email={mockUser.email}
+          phoneNumber={mockUser.phonenumber}
+          address={mockUser.address}
+          birthdate={mockUser.birthDate}
+        />
       </Box>
     </Box>
   );

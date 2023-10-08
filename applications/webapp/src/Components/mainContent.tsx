@@ -23,7 +23,6 @@ interface HandleDrawer {
 
 export default function MainContent({ open }: HandleDrawer) {
   const drawerWidth = 240;
-  const spacing = 3;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -32,8 +31,8 @@ export default function MainContent({ open }: HandleDrawer) {
   })<{
     open?: boolean;
   }>(({ theme }) => ({
+    marginTop: 80,
     flexGrow: 1,
-    padding: theme.spacing(spacing),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -48,14 +47,9 @@ export default function MainContent({ open }: HandleDrawer) {
         }),
       }),
     }),
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f4eeee",
   }));
   return (
-    <Main open={open} sx={{ padding: "1rem 1rem 0rem 0" }}>
+    <Main open={open}>
       <Routes>
         <Route path="/profile" element={<UserPage />} />
       </Routes>
