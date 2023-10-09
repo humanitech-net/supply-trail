@@ -15,7 +15,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { Routes, Route } from "react-router-dom";
-import UserPage from "src/Pages/User/userPage";
+import UserPage from "../Pages/User/userPage";
 
 interface HandleDrawer {
   open: boolean;
