@@ -16,9 +16,8 @@ import {
   CardContent,
   FormControl,
   Grid,
-  InputLabel,
-  OutlinedInput,
   useTheme,
+  TextField,
 } from "@mui/material";
 import { styles } from "../styles/style";
 
@@ -47,41 +46,29 @@ export default function DetailHolder({
         <Grid container spacing={2} marginTop={1} sx={style.grid}>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>First Name</InputLabel>
-              <OutlinedInput
-                defaultValue={firstName}
-                label="First Name"
-                disabled
-              />
+              <TextField label="First Name" defaultValue={firstName} disabled />
             </FormControl>
           </Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Last Name</InputLabel>
-              <OutlinedInput
-                defaultValue={lastName}
-                label="Last Name"
-                disabled
-              />
+              <TextField label="Last Name" disabled defaultValue={lastName} />
             </FormControl>
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
+        <Grid container spacing={2} sx={style.grid}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Email</InputLabel>
-              <OutlinedInput defaultValue={email} label="Email" disabled />
+              <TextField label="Email" defaultValue={email} disabled />
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Phone Number</InputLabel>
-              <OutlinedInput
-                defaultValue={phoneNumber}
+              <TextField
                 label="Phone Number"
+                defaultValue={phoneNumber}
                 disabled
               />
             </FormControl>
@@ -91,17 +78,15 @@ export default function DetailHolder({
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Address</InputLabel>
-              <OutlinedInput defaultValue={address} label="Address" disabled />
+              <TextField label="Address" defaultValue={address} disabled />
             </FormControl>
           </Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Date of Birth</InputLabel>
-              <OutlinedInput
-                defaultValue={birthdate}
+              <TextField
                 label="Date of Birth"
+                defaultValue={birthdate}
                 disabled
               />
             </FormControl>
