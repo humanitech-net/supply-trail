@@ -15,21 +15,28 @@ import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
 import { styles } from "./styles/style";
+import { useQuery } from "@apollo/client";
+import { query } from "./graphql/userQuery";
 
 export default function UserPage() {
   const theme = useTheme();
   const style = styles(theme).userPage;
 
   const mockUser = {
-    username: "Yonas",
-    firstname: "Yonas",
-    lastname: "Seyoum",
-    email: "yonasseyoum24@gmail.com",
     phonenumber: "123456789",
     address: "Addis Ababa",
     birthDate: "April 19 2001",
     description: "Hi I am Yonas",
   };
+
+  const { data } = useQuery(query);
+
+  const { getUser } = data || {};
+
+  const Username = getUser?.username;
+  const FirstName = getUser?.firstName;
+  const LastName = getUser?.lastName;
+  const Email = getUser?.email;
 
   return (
     <Box
@@ -40,21 +47,25 @@ export default function UserPage() {
       }}
     >
       <Box sx={style.profilePageHolder}>
-        <ProfileHolder
-          username={mockUser.username}
-          description={mockUser.description}
-        />
+        {data && (
+          <ProfileHolder
+            username={Username}
+            description={mockUser.description}
+          />
+        )}
       </Box>
 
       <Box sx={style.DetailHolderContainer}>
-        <DetailHolder
-          firstName={mockUser.firstname}
-          lastName={mockUser.lastname}
-          email={mockUser.email}
-          phoneNumber={mockUser.phonenumber}
-          address={mockUser.address}
-          birthdate={mockUser.birthDate}
-        />
+        {data && (
+          <DetailHolder
+            firstName={FirstName}
+            lastName={LastName}
+            email={Email}
+            phoneNumber={mockUser.phonenumber}
+            address={mockUser.address}
+            birthdate={mockUser.birthDate}
+          />
+        )}
       </Box>
     </Box>
   );

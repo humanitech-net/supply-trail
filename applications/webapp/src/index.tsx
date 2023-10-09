@@ -15,6 +15,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { client } from "./graphql/client";
+import { ApolloProvider } from "@apollo/client";
 import { initKeycloak, refreshToken } from "./Authentication/Keycloak";
 
 const root = ReactDOM.createRoot(
@@ -24,7 +26,9 @@ const root = ReactDOM.createRoot(
 const renderRoot = () => {
   return root.render(
     <React.StrictMode>
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </React.StrictMode>,
   );
 };
