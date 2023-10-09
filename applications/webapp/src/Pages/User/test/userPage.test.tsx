@@ -12,15 +12,34 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import UserPage from "../userPage";
+import { MockedProvider } from "@apollo/client/testing";
+import { query } from "../graphql/userQuery";
 
 describe("UserPage", () => {
-  test("renders user page", () => {
+  const mockData = {
+    getUser: {
+      username: "username",
+      firstName: "firstName",
+      lastName: "lastName",
+      email: "email@email.com",
+    },
+  };
+
+  const mockClient = {
+    request: {
+      query: query,
+    },
+    result: {
+      data: mockData,
+    },
+  };
+
+  test("render data when successfully fetched", () => {
     render(
-      <MemoryRouter>
+      <MockedProvider mocks={[mockClient]}>
         <UserPage />
-      </MemoryRouter>,
+      </MockedProvider>,
     );
   });
 });
