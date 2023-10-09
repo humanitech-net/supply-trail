@@ -12,14 +12,14 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import MainContent from "../mainContent";
 import { MemoryRouter } from "react-router-dom";
+import Home from "../home";
 
-describe("MainContent", () => {
-  test("renders MainContent component", () => {
+describe("HomePage", () => {
+  test("renders NavBar component", () => {
     render(
       <MemoryRouter>
-        <MainContent open={false} />
+        <Home />
       </MemoryRouter>,
     );
   });

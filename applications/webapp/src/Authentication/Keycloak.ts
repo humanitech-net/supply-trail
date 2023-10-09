@@ -12,10 +12,9 @@
 
 import Keycloak from "keycloak-js";
 
-const kc_url = process.env.REACT_APP_KEYCLOAK_SERVER_URL;
 const keycloak = new Keycloak({
   realm: "humanitech",
-  url: `http://localhost:8080`,
+  url: `https://dev.supply-trail.humanitech.net/auth`,
   clientId: "supply-trail-app",
 });
 
@@ -26,7 +25,7 @@ export const initKeycloak = () => {
         onLoad: "login-required",
       })
       .then(() => {
-        // localStorage.setItem("token", JSON.stringify(keycloak.token));
+        localStorage.setItem("token", JSON.stringify(keycloak.token));
         resolve();
       })
       .catch((error) => {
