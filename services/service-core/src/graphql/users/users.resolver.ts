@@ -24,6 +24,6 @@ export class UsersResolver {
 
     const token = req.headers['authorization'].split(' ')[1];
 
-    return await this.keycloakService.getUser(token);
+    return this.keycloakService.getUser(token);
   }
 }

@@ -11,7 +11,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 
 @Injectable()
@@ -30,21 +30,17 @@ export class KeycloakService {
   }
 
   async getUser(token: string) {
-    try {
-      const publicKey = await this.getPublicKey();
-      const decodedToken = jwt.verify(token, publicKey, {
-        algorithms: ['RS256']
-      });
+    const publicKey = await this.getPublicKey();
+    const decodedToken = verify(token, publicKey, {
+      algorithms: ['RS256']
+    });
 
-      return {
-        id: decodedToken['sub'],
-        firstName: decodedToken['given_name'],
-        lastName: decodedToken['family_name'],
-        email: decodedToken['email'],
-        username: decodedToken['preferred_username']
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      id: decodedToken['sub'],
+      firstName: decodedToken['given_name'],
+      lastName: decodedToken['family_name'],
+      email: decodedToken['email'],
+      username: decodedToken['preferred_username']
+    };
   }
 }

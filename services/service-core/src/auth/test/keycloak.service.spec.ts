@@ -13,7 +13,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
-import * as jwt from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
@@ -75,12 +75,12 @@ describe('KeycloakService', () => {
         email: 'john.doe@example.com',
         preferred_username: 'johndoe'
       };
-      (jwt.verify as jest.Mock).mockReturnValue(decodedToken);
+      (verify as jest.Mock).mockReturnValue(decodedToken);
 
       const userData = await keycloakService.getUser(mockToken);
 
       expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
-      expect(jwt.verify).toHaveBeenCalledWith(
+      expect(verify).toHaveBeenCalledWith(
         mockToken,
         `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`,
         {
@@ -107,7 +107,7 @@ describe('KeycloakService', () => {
       });
 
       // Mock the jwt.verify function to throw an error
-      (jwt.verify as jest.Mock).mockImplementation(() => {
+      (verify as jest.Mock).mockImplementation(() => {
         throw new Error('Invalid Token');
       });
 
