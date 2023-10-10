@@ -11,7 +11,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 @Injectable()

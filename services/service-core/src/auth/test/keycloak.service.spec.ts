@@ -13,7 +13,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
