@@ -37,7 +37,7 @@ export default function DetailHolder({
   phoneNumber,
   address,
   birthdate,
-}: DetailHolderProps) {
+}: Readonly<DetailHolderProps>) {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
   return (

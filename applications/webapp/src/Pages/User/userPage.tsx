@@ -16,7 +16,7 @@ import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
 import { styles } from "./styles/style";
 import { useQuery } from "@apollo/client";
-import { query } from "./graphql/userQuery";
+import { getUserQuery } from "./graphql/userQuery";
 
 export default function UserPage() {
   const theme = useTheme();
@@ -29,7 +29,7 @@ export default function UserPage() {
     description: "Hi I am Yonas",
   };
 
-  const { data } = useQuery(query);
+  const { data } = useQuery(getUserQuery);
 
   const { getUser } = data || {};
 

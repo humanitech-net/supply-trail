@@ -32,7 +32,7 @@ interface ProfileHolderProps {
 export default function ProfileHolder({
   username,
   description,
-}: ProfileHolderProps) {
+}: Readonly<ProfileHolderProps>) {
   const theme = useTheme();
   const style = styles(theme).profileholder;
 

@@ -13,7 +13,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
@@ -21,8 +21,10 @@ jest.mock('jsonwebtoken');
 describe('KeycloakService', () => {
   let keycloakService: KeycloakService;
 
+  const errorMessage = 'Failed to fetch Public Key';
+
   beforeEach(async () => {
-    jest.clearAllMocks(); // Clear all mock calls before each test
+    jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [KeycloakService]
@@ -47,12 +49,10 @@ describe('KeycloakService', () => {
     });
 
     it('should throw an error if fetching public key fails', async () => {
-      (axios.get as jest.Mock).mockRejectedValue(
-        new Error('Failed to fetch Public Key')
-      );
+      (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
 
       await expect(keycloakService.getPublicKey()).rejects.toThrow(
-        'Failed to fetch Public Key'
+        errorMessage
       );
     });
   });
@@ -120,12 +120,10 @@ describe('KeycloakService', () => {
       const mockToken = 'your_mocked_valid_token';
 
       // Mock axios to reject with an error
-      (axios.get as jest.Mock).mockRejectedValue(
-        new Error('Failed to fetch Public Key')
-      );
+      (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
 
       await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
-        'Failed to fetch Public Key'
+        errorMessage
       );
     });
   });

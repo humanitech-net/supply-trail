@@ -68,7 +68,7 @@ export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
       <DrawerHeader>
         <IconButton
           color="inherit"
-          aria-label="open drawer"
+          aria-label="close drawer"
           onClick={closeDrawer}
           edge="start"
           sx={{ color: "white" }}

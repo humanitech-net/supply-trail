@@ -1,5 +1,17 @@
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 @Injectable()
@@ -24,15 +36,13 @@ export class KeycloakService {
         algorithms: ['RS256']
       });
 
-      const data = {
+      return {
         id: decodedToken['sub'],
         firstName: decodedToken['given_name'],
         lastName: decodedToken['family_name'],
         email: decodedToken['email'],
         username: decodedToken['preferred_username']
       };
-
-      return data;
     } catch (error) {
       throw error;
     }
