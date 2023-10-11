@@ -10,53 +10,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// import React from "react";
-// import { render } from "@testing-library/react";
-// import { MemoryRouter } from "react-router-dom";
-// import Home from "../home";
-
-// describe("HomePage", () => {
-//   test("renders NavBar component", () => {
-//     render(
-//       <MemoryRouter>
-//         <Home />
-//       </MemoryRouter>,
-//     );
-//   });
-// });
-
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Home from "../home";
 
 describe("Home", () => {
-  // test("opens and closes drawer", () => {
-  //   const { getByLabelText, getByRole } = render(
-  //     <MemoryRouter>
-  //       <Home />
-  //     </MemoryRouter>
-  //   );
-
-  //   // Initially, the drawer should be closed
-  //   const drawer = getByRole("navigation");
-  //   expect(drawer).toHaveStyle("display: none");
-
-  //   // Find the open drawer IconButton and click it
-  //   const openDrawerIconButton = getByLabelText("open drawer");
-  //   fireEvent.click(openDrawerIconButton);
-
-  //   // After clicking the open drawer IconButton, the drawer should be open
-  //   expect(drawer).not.toHaveStyle("display: none");
-
-  //   // Find the close drawer IconButton and click it
-  //   const closeDrawerIconButton = getByLabelText("close drawer");
-  //   fireEvent.click(closeDrawerIconButton);
-
-  //   // After clicking the close drawer IconButton, the drawer should be closed again
-  //   expect(drawer).toHaveStyle("display: none");
-  // });
-
   test("renders navbar", () => {
     const { getByLabelText } = render(
       <MemoryRouter>
