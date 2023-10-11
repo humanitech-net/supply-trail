@@ -12,6 +12,9 @@
 
 import { Theme } from "@mui/material/styles";
 
+const minGap: number = 1;
+const maxGap: number = 2;
+
 export const styles = (theme: Theme) => ({
   profileholder: {
     box: {
@@ -59,14 +62,14 @@ export const styles = (theme: Theme) => ({
     profilePageHolder: {
       display: "grid",
       gridTemplateRows: ["auto", "auto", "repeat(2, 0.2fr)"],
-      gap: [1, 1, 2],
+      gap: [minGap, minGap, maxGap],
       width: ["100%", "100%", "30%"],
       margin: ["0 0 20px", "0 0 20px", "0 20px 0 0"],
     },
     DetailHolderContainer: {
       display: "grid",
       gridTemplateRows: ["auto", "auto", "repeat(2, 0.2fr)"],
-      gap: [1, 1, 2],
+      gap: [minGap, minGap, maxGap],
       width: ["100%", "100%", "70%"],
     },
   },

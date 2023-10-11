@@ -21,7 +21,7 @@ interface HandleDrawer {
   open: boolean;
 }
 
-export default function MainContent({ open }: HandleDrawer) {
+export default function MainContent({ open }: Readonly<HandleDrawer>) {
   const drawerWidth = 240;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));

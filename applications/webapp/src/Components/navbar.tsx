@@ -51,7 +51,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function NavBar({ open, openDrawer }: HandleDrawer) {
+export default function NavBar({ open, openDrawer }: Readonly<HandleDrawer>) {
   return (
     <AppBar
       position="fixed"

@@ -26,7 +26,10 @@ interface DrawerProps {
   closeDrawer: () => void;
 }
 
-export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
+export default function LeftDrawer({
+  open,
+  closeDrawer,
+}: Readonly<DrawerProps>) {
   const drawerWidth = 240;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
