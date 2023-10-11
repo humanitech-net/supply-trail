@@ -57,6 +57,7 @@ export default function NavBar({ open, openDrawer }: HandleDrawer) {
       position="fixed"
       open={open}
       sx={{ color: "black", backgroundColor: "white" }}
+      aria-label="navigation-bar"
     >
       <Toolbar>
         <IconButton

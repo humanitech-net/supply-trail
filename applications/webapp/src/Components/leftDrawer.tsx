@@ -52,6 +52,7 @@ export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
 
   return (
     <Drawer
+      aria-label="drawer"
       sx={{
         width: drawerWidth,
         flexShrink: 0,

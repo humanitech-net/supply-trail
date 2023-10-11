@@ -49,6 +49,7 @@ export default function UserPage() {
       <Box sx={style.profilePageHolder}>
         {data && (
           <ProfileHolder
+            aria-label="profile holder"
             username={Username}
             description={mockUser.description}
           />
@@ -58,6 +59,7 @@ export default function UserPage() {
       <Box sx={style.DetailHolderContainer}>
         {data && (
           <DetailHolder
+            aria-label="detail holder"
             firstName={FirstName}
             lastName={LastName}
             email={Email}
