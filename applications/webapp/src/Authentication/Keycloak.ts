@@ -25,7 +25,9 @@ export const initKeycloak = () => {
         onLoad: "login-required",
       })
       .then(() => {
-        if (keycloak.token) localStorage.setItem("token", keycloak.token);
+        if (keycloak.token) {
+          localStorage.setItem("token", keycloak.token);
+        }
         resolve();
       })
       .catch((error) => {
@@ -39,7 +41,9 @@ export const refreshToken = () => {
   keycloak
     .updateToken(updateTokenStates)
     .then(() => {
-      if (keycloak.token) localStorage.setItem("token", keycloak.token);
+      if (keycloak.token) {
+        localStorage.setItem("token", keycloak.token);
+      }
     })
     .catch((error) => {
       console.log(`Failed to refresh token:, ${error}`);
