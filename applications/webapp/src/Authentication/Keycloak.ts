@@ -13,8 +13,8 @@
 import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
-  realm: "humanitech",
-  url: "https://dev.supply-trail.humanitech.net/auth",
+  realm: "Humanitech",
+  url: "http://localhost:8080",
   clientId: "supply-trail-app",
 });
 
@@ -25,7 +25,7 @@ export const initKeycloak = () => {
         onLoad: "login-required",
       })
       .then(() => {
-        // localStorage.setItem("token", JSON.stringify(keycloak.token));
+        if (keycloak.token) localStorage.setItem("token", keycloak.token);
         resolve();
       })
       .catch((error) => {
@@ -39,7 +39,7 @@ export const refreshToken = () => {
   keycloak
     .updateToken(updateTokenStates)
     .then(() => {
-      localStorage.setItem("token", JSON.stringify(keycloak.token));
+      if (keycloak.token) localStorage.setItem("token", keycloak.token);
     })
     .catch((error) => {
       console.log(`Failed to refresh token:, ${error}`);
