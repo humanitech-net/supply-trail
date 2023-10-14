@@ -2,13 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Users {
+type User {
   id: String!
   firstName: String!
   lastName: String!
-  city: String
+  email: String!
+  username: String!
 }
 
 type Query {
-  findAll: Users!
+  getUser(token: String!): User
 }

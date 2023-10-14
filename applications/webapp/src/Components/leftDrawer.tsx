@@ -26,7 +26,10 @@ interface DrawerProps {
   closeDrawer: () => void;
 }
 
-export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
+export default function LeftDrawer({
+  open,
+  closeDrawer,
+}: Readonly<DrawerProps>) {
   const drawerWidth = 240;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -52,6 +55,7 @@ export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
 
   return (
     <Drawer
+      aria-label="drawer"
       sx={{
         width: drawerWidth,
         flexShrink: 0,
@@ -68,7 +72,7 @@ export default function LeftDrawer({ open, closeDrawer }: DrawerProps) {
       <DrawerHeader>
         <IconButton
           color="inherit"
-          aria-label="open drawer"
+          aria-label="close drawer"
           onClick={closeDrawer}
           edge="start"
           sx={{ color: "white" }}

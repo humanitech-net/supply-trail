@@ -14,7 +14,7 @@ import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
   realm: "humanitech",
-  url: "https://dev.supply-trail.humanitech.net/auth",
+  url: `https://dev.supply-trail.humanitech.net/auth`,
   clientId: "supply-trail-app",
 });
 

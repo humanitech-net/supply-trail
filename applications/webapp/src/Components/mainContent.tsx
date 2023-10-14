@@ -14,56 +14,45 @@ import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import { Routes, Route } from "react-router-dom";
+import UserPage from "../Pages/User/userPage";
+
 interface HandleDrawer {
   open: boolean;
 }
 
-export default function MainContent({ open }: HandleDrawer) {
+export default function MainContent({ open }: Readonly<HandleDrawer>) {
   const drawerWidth = 240;
-  const spacing = 3;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-
-  const DrawerHeader = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  }));
 
   const Main = styled("main", {
     shouldForwardProp: (prop) => prop !== "open",
   })<{
     open?: boolean;
   }>(({ theme }) => ({
+    marginTop: 80,
     flexGrow: 1,
-    padding: theme.spacing(spacing),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
 
     ...(isDesktop && {
-      marginLeft: `-${drawerWidth}px`,
       ...(open && {
+        marginLeft: drawerWidth,
         transition: theme.transitions.create("margin", {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: 0,
       }),
     }),
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "92vh",
-    width: "100%",
   }));
   return (
     <Main open={open}>
-      <DrawerHeader />
+      <Routes>
+        <Route path="/profile" element={<UserPage />} />
+      </Routes>
     </Main>
   );
 }

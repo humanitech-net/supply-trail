@@ -9,14 +9,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import { Query, Resolver } from '@nestjs/graphql';
+import { Query, Resolver, Context } from '@nestjs/graphql';
 import { Users } from './users.entity';
+import { KeycloakService } from '../../auth/keycloak.service';
+import { Request } from 'express'; // Import Request from express
 
 @Resolver(() => Users)
 export class UsersResolver {
+  constructor(private readonly keycloakService: KeycloakService) {}
+
   @Query(() => Users)
-  findAll() {
-    return { id: '123', firstName: 'Test' };
+  async getUser(@Context() context: { req: Request }) {
+    const { req } = context;
+
+    const token = req.headers['authorization'].split(' ')[1];
+
+    return this.keycloakService.getUser(token);
   }
 }

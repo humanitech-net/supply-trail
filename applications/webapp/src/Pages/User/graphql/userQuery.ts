@@ -9,22 +9,16 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
-export class Users {
-  @Field()
-  id: string;
+import { gql } from "@apollo/client";
 
-  @Field()
-  firstName: string;
-
-  @Field()
-  lastName: string;
-
-  @Field()
-  username: string;
-
-  @Field()
-  email: string;
-}
+export const getUserQuery = gql`
+  query {
+    getUser {
+      username
+      firstName
+      lastName
+      email
+    }
+  }
+`;

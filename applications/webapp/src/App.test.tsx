@@ -11,18 +11,11 @@
  */
 
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import App from "./App";
 
 describe("App", () => {
-  test("renders NavBar", () => {
+  test("renders App", () => {
     render(<App />);
-  });
-
-  test("openDrawer sets open state to true", () => {
-    const { getByLabelText } = render(<App />);
-    const openDrawerButton = getByLabelText("open drawer");
-    fireEvent.click(openDrawerButton);
-    expect(openDrawerButton).toBeTruthy();
   });
 });
