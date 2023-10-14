@@ -11,6 +11,7 @@ Before you begin, make sure you have the following software installed on your ma
 - [npm](https://www.npmjs.com/): A package manager for installing and managing app dependencies.
 - [Git](https://git-scm.com/): A version control system for cloning the repository.
 - [PostgreSQL](https://www.postgresql.org/): A powerful, open-source relational database system.
+- [Keycloak](https://www.keycloak.org/): An open-source identity and access management system that allows you to secure your applications and services with ease.
 
 ## Clone the Repository
 
@@ -43,7 +44,16 @@ git clone git@github.com:humanitech-net/supply-trail.git
     - Create a PostgreSQL database and user for the app.
     - Make sure it is running on your local machine with the appropriate setup
 
-4.  ## **Create .local.env File**
+4.  **Keycloak Setup**
+
+    - Install and set up Keycloak on your machine.
+    - Make sure it is running on your local machine with the appropriate setup
+    - Create a necessary realm and clients such that:
+      - a realm called "humanitech"
+      - clients called "supply-trail-app" and "nest-application"
+    - set up the necessary access settings for clients
+
+5.  ## **Create .local.env File**
 
     - create .local.env file inside inside supply-trial/services/service-core directory
     - add those necessary environment variables
@@ -53,7 +63,7 @@ git clone git@github.com:humanitech-net/supply-trail.git
       DB_PASSWORD=
       DB_DATABASE=
 
-5.  **START THE APP**
+6.  **START THE APP**
 
     - To start backend parts of the app, run the below script inside:
       <supply-trail/services/service-core> directory
@@ -69,5 +79,5 @@ git clone git@github.com:humanitech-net/supply-trail.git
                 npm run start
             ```
 
-6.  **Access the App**
+7.  **Access the App**
     - Open your web browser and navigate to [http://localhost:3000] to access the locally running app.
