@@ -12,14 +12,22 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import MainContent from "../mainContent";
 import { MemoryRouter } from "react-router-dom";
 
-describe("MainContent", () => {
-  test("renders MainContent component", () => {
+import ProfileHolder from "../components/profileHolder";
+
+describe("ProfileHolder", () => {
+  test("renders profileHolder", () => {
+    const mockProps = {
+      username: "name",
+      description: "description",
+    };
     render(
       <MemoryRouter>
-        <MainContent open={false} />
+        <ProfileHolder
+          username={mockProps.username}
+          description={mockProps.description}
+        />
       </MemoryRouter>,
     );
   });
