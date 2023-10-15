@@ -14,6 +14,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
 import { verify } from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
@@ -27,7 +28,7 @@ describe('KeycloakService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [KeycloakService]
+      providers: [KeycloakService, ConfigService]
     }).compile();
 
     keycloakService = module.get<KeycloakService>(KeycloakService);
