@@ -13,3 +13,13 @@ type Users {
 type Query {
   getUser: Users!
 }
+
+type Mutation {
+  editUser(userInput: updateUser!): String!
+}
+
+input updateUser {
+  firstName: String!
+  lastName: String!
+  username: String!
+}
