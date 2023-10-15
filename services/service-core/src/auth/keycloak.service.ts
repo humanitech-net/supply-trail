@@ -11,6 +11,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 
@@ -18,6 +19,8 @@ import axios from 'axios';
 export class KeycloakService {
   public realmUrl =
     'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
+
+  constructor(private configService: ConfigService) {}
 
   async getPublicKey() {
     try {
@@ -42,5 +45,60 @@ export class KeycloakService {
       email: decodedToken['email'],
       username: decodedToken['preferred_username']
     };
+  }
+
+  async changeUserPasswordByAdmin(
+    adminToken: string,
+    userId: string,
+    newPassword: string
+  ): Promise<void> {
+    try {
+      // Make an HTTP request to reset the user's password using the admin token.
+      const resetPasswordUrl = `https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech/users/${userId}/reset-password`;
+      const passwordData = { newPassword };
+      const headers = {
+        Authorization: `Bearer ${adminToken}`,
+        'Content-Type': 'application/json'
+      };
+
+      await axios.put(resetPasswordUrl, passwordData, { headers });
+
+      // Handle success or errors as needed
+    } catch (error) {
+      throw new Error("Failed to change the user's password: " + error.message);
+    }
+  }
+
+  async getAdminToken(): Promise<string> {
+    try {
+      const adminUsername = this.configService.get<string>('KEYCLOAK_ADMIN');
+      const adminPassword = this.configService.get<string>(
+        'KEYCLOAK_ADMIN_PASSWORD'
+      );
+      const keycloakBaseUrl = 'https://dev.supply-trail.humanitech.net/auth';
+      const realm = 'master';
+      const clientId = 'admin-cli';
+      const clientSecret = this.configService.get<string>(
+        'ADMIN_CLIENT_SECRET'
+      );
+
+      const tokenResponse = await axios.post(
+        `${keycloakBaseUrl}/realms/${realm}/protocol/openid-connect/token`,
+        `grant_type=password&username=${adminUsername}&password=${adminPassword}&client_id=${clientId}&client_secret=${clientSecret}`,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      );
+
+      if (tokenResponse.data.access_token) {
+        return tokenResponse.data.access_token;
+      } else {
+        throw new Error('Failed to obtain an admin token.');
+      }
+    } catch (error) {
+      throw new Error('Failed to obtain an admin token: ' + error.message);
+    }
   }
 }
