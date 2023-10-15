@@ -13,11 +13,15 @@
 import { Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class KeycloakService {
-  public realmUrl =
-    'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
+  constructor(private readonly configService: ConfigService) {}
+
+  realmUrl = 'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
+  adminUrl =
+    'https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech';
 
   async getPublicKey() {
     try {
@@ -26,6 +30,37 @@ export class KeycloakService {
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
       throw new Error('Failed to fetch Public Key');
+    }
+  }
+
+  async getAdminToken() {
+    const params = new URLSearchParams({
+      username: this.configService.get('ADMIN'),
+      password: this.configService.get('ADMIN_PASSWORD'),
+      grant_type: 'password',
+      client_id: 'nest-application',
+      client_secret: this.configService.get('CLIENT_SECRET')
+    });
+
+    const requestBody = params.toString();
+
+    try {
+      const GetTokenData = await fetch(
+        `${this.realmUrl}/protocol/openid-connect/token`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: requestBody
+        }
+      );
+
+      const TokenData = await GetTokenData.json();
+      return TokenData.access_token;
+    } catch (error) {
+      console.error('Error fetching admin token:', error);
+      throw new Error(error);
     }
   }
 
@@ -42,5 +77,20 @@ export class KeycloakService {
       email: decodedToken['email'],
       username: decodedToken['preferred_username']
     };
+  }
+
+  async editUser(id: string, userInput: object) {
+    const AccessToken = await this.getAdminToken();
+
+    const updateUser = await fetch(`${this.adminUrl}/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${AccessToken}`
+      },
+      body: JSON.stringify(userInput)
+    });
+
+    return updateUser.ok ? 'Succesfully Updated' : 'Try again failed to update';
   }
 }
