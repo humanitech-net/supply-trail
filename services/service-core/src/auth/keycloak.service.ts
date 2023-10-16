@@ -91,6 +91,8 @@ export class KeycloakService {
       body: JSON.stringify(userInput)
     });
 
-    return updateUser.ok ? 'Succesfully Updated' : 'Try again failed to update';
+    return updateUser.ok
+      ? 'Successfully Updated'
+      : 'Try again failed to update';
   }
 }

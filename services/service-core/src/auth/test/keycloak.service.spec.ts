@@ -128,4 +128,72 @@ describe('KeycloakService', () => {
       );
     });
   });
+
+  describe('getAdminToken', () => {
+    it.todo('returns access token when fetch is successfull');
+    it.todo('throws error when it fails to fetch');
+  });
+
+  describe('editUser', () => {
+    const MockID = 'ID';
+    const MockToken = 'mock-token';
+    const MockUserInput = {
+      firstName: 'user'
+    };
+    const MockSuccesfullResponse = new Response(null, {
+      status: 200,
+      statusText: 'OK'
+    });
+
+    const MockFailedResponse = new Response(null, {
+      status: 500,
+      statusText: ''
+    });
+
+    it('calls getAdminToken and update user', async () => {
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(MockToken);
+      jest.spyOn(global, 'fetch').mockResolvedValue(MockSuccesfullResponse);
+
+      const editUser = await keycloakService.editUser(MockID, MockUserInput);
+
+      expect(keycloakService.getAdminToken).toHaveBeenCalled();
+
+      expect(fetch).toHaveBeenCalledWith(
+        `${keycloakService.adminUrl}/users/${MockID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${MockToken}`
+          },
+          body: JSON.stringify(MockUserInput)
+        }
+      );
+
+      expect(editUser).toBe('Successfully Updated');
+    });
+
+    it('returns Try again failed to update if fails to update', async () => {
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(MockToken);
+      jest.spyOn(global, 'fetch').mockResolvedValue(MockFailedResponse);
+
+      const editUser = await keycloakService.editUser(MockID, MockUserInput);
+
+      expect(keycloakService.getAdminToken).toHaveBeenCalled();
+
+      expect(fetch).toHaveBeenCalledWith(
+        `${keycloakService.adminUrl}/users/${MockID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${MockToken}`
+          },
+          body: JSON.stringify(MockUserInput)
+        }
+      );
+
+      expect(editUser).toBe('Try again failed to update');
+    });
+  });
 });
