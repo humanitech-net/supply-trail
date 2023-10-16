@@ -47,27 +47,27 @@ export class KeycloakService {
     };
   }
 
-  async changeUserPasswordByAdmin(
-    adminToken: string,
-    userId: string,
-    newPassword: string
-  ): Promise<void> {
-    try {
-      // Make an HTTP request to reset the user's password using the admin token.
-      const resetPasswordUrl = `https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech/users/${userId}/reset-password`;
-      const passwordData = { newPassword };
-      const headers = {
-        Authorization: `Bearer ${adminToken}`,
-        'Content-Type': 'application/json'
-      };
-
-      await axios.put(resetPasswordUrl, passwordData, { headers });
-
-      // Handle success or errors as needed
-    } catch (error) {
-      throw new Error("Failed to change the user's password: " + error.message);
-    }
-  }
+  // async changeUserPasswordByAdmin(
+  //   token: string,
+  //   // currentPassword: string,
+  //   newPassword: string
+  // ): Promise<String> {
+  //   const adminToken = await this.getAdminToken();
+  //   const userId = await this.getUser(token)['id'];
+  //   try {
+  //     // Make an HTTP request to reset the user's password using the admin token.
+  //     const resetPasswordUrl = `https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech/users/${userId}/reset-password`;
+  //     const passwordData = { newPassword };
+  //     const headers = {
+  //       Authorization: `Bearer ${adminToken}`,
+  //       'Content-Type': 'application/json'
+  //     };
+  //     await axios.put(resetPasswordUrl, passwordData, { headers });
+  //     return 'password change secussfully';
+  //   } catch (error) {
+  //     throw new Error("Failed to change the user's password: " + error.message);
+  //   }
+  // }
 
   async getAdminToken(): Promise<string> {
     try {

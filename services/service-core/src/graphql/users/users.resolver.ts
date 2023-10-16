@@ -23,7 +23,11 @@ export class UsersResolver {
     const { req } = context;
 
     const token = req.headers['authorization'].split(' ')[1];
-
+    // const changepa = await this.keycloakService.changeUserPasswordByAdmin(
+    //   token,
+    //   'leul'
+    // );
+    // console.log(changepa);
     return this.keycloakService.getUser(token);
   }
 }
