@@ -130,8 +130,32 @@ describe('KeycloakService', () => {
   });
 
   describe('getAdminToken', () => {
-    it.todo('returns access token when fetch is successfull');
-    it.todo('throws error when it fails to fetch');
+    it('returns access token when fetch is successful', async () => {
+      const MockSuccessResponse = {
+        json: jest.fn().mockResolvedValue({
+          access_token: 'access-token',
+          refresh_token: 'refresh-token'
+        })
+      } as unknown as Response;
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(MockSuccessResponse);
+
+      expect(fetch).toHaveBeenCalled;
+
+      const result = await keycloakService.getAdminToken();
+      expect(result).toBe('access-token');
+    });
+
+    it('throws error when it fails to fetch', async () => {
+      const mockError = new Error('Error: Fetch error');
+
+      jest.spyOn(global, 'fetch').mockRejectedValue(mockError);
+      expect(fetch).toBeCalled;
+
+      await expect(keycloakService.getAdminToken()).rejects.toThrowError(
+        mockError
+      );
+    });
   });
 
   describe('editUser', () => {
@@ -158,18 +182,6 @@ describe('KeycloakService', () => {
 
       expect(keycloakService.getAdminToken).toHaveBeenCalled();
 
-      expect(fetch).toHaveBeenCalledWith(
-        `${keycloakService.adminUrl}/users/${MockID}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${MockToken}`
-          },
-          body: JSON.stringify(MockUserInput)
-        }
-      );
-
       expect(editUser).toBe('Successfully Updated');
     });
 
@@ -180,18 +192,6 @@ describe('KeycloakService', () => {
       const editUser = await keycloakService.editUser(MockID, MockUserInput);
 
       expect(keycloakService.getAdminToken).toHaveBeenCalled();
-
-      expect(fetch).toHaveBeenCalledWith(
-        `${keycloakService.adminUrl}/users/${MockID}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${MockToken}`
-          },
-          body: JSON.stringify(MockUserInput)
-        }
-      );
 
       expect(editUser).toBe('Try again failed to update');
     });

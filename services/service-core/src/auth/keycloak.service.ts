@@ -59,8 +59,7 @@ export class KeycloakService {
       const TokenData = await GetTokenData.json();
       return TokenData.access_token;
     } catch (error) {
-      console.error('Error fetching admin token:', error);
-      throw new Error(error);
+      throw error;
     }
   }
 
