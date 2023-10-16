@@ -34,6 +34,6 @@ export class UsersResolver {
   ): Promise<string> {
     const user = await this.getUser(context);
     const ID = user.id.toString();
-    return await this.keycloakService.editUser(ID, userInput);
+    return this.keycloakService.editUser(ID, userInput);
   }
 }
