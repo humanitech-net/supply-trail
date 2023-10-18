@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,41 +18,74 @@ import {
   Grid,
   useTheme,
   TextField,
+  Button,
+  Box,
 } from "@mui/material";
 import { styles } from "../styles/style";
-
-interface DetailHolderProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  birthdate: string;
-}
+import { useMutation } from "@apollo/client";
+import { EditUserMutation } from "../graphql/mutation";
+import { DetailHolderProps } from "../../../Pages/interface";
 
 export default function DetailHolder({
-  firstName,
-  lastName,
-  email,
-  phoneNumber,
-  address,
-  birthdate,
+  user,
+  card,
 }: Readonly<DetailHolderProps>) {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
+
+  const [firstname, setFirstName] = useState(user.firstName);
+  const [lastname, setLastName] = useState(user.lastName);
+
+  const [editUser] = useMutation(EditUserMutation);
+
+  const userInput = {
+    username: user.username,
+    firstName: firstname,
+    lastName: lastname,
+  };
+  const updateUser = async () => {
+    const zeroElevation = 0;
+    try {
+      const { data } = await editUser({
+        variables: {
+          userInput,
+        },
+      });
+      console.log("User:", data.editUser);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    card.setEditable(true);
+    card.setElevation(zeroElevation);
+  };
+
   return (
-    <Card elevation={0} sx={style.card}>
+    <Card elevation={card.elevation} sx={style.card}>
       <CardContent>
         <Grid container spacing={2} marginTop={1} sx={style.grid}>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <TextField label="First Name" defaultValue={firstName} disabled />
+              <TextField
+                label="First Name"
+                defaultValue={user.firstName}
+                disabled={card.editable}
+                onChange={(event) => {
+                  setFirstName(event.target.value);
+                }}
+              />
             </FormControl>
           </Grid>
 
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <TextField label="Last Name" disabled defaultValue={lastName} />
+              <TextField
+                label="Last Name"
+                disabled={card.editable}
+                defaultValue={user.lastName}
+                onChange={(event) => {
+                  setLastName(event.target.value);
+                }}
+              />
             </FormControl>
           </Grid>
         </Grid>
@@ -60,7 +93,7 @@ export default function DetailHolder({
         <Grid container spacing={2} sx={style.grid}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <TextField label="Email" defaultValue={email} disabled />
+              <TextField label="Email" defaultValue={user.email} disabled />
             </FormControl>
           </Grid>
 
@@ -68,7 +101,7 @@ export default function DetailHolder({
             <FormControl fullWidth>
               <TextField
                 label="Phone Number"
-                defaultValue={phoneNumber}
+                defaultValue={user.phoneNumber}
                 disabled
               />
             </FormControl>
@@ -78,7 +111,7 @@ export default function DetailHolder({
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <TextField label="Address" defaultValue={address} disabled />
+              <TextField label="Address" defaultValue={user.address} disabled />
             </FormControl>
           </Grid>
 
@@ -86,12 +119,24 @@ export default function DetailHolder({
             <FormControl fullWidth>
               <TextField
                 label="Date of Birth"
-                defaultValue={birthdate}
+                defaultValue={user.birthdate}
                 disabled
               />
             </FormControl>
           </Grid>
         </Grid>
+        {!card.editable && (
+          <Box sx={style.box}>
+            <Box sx={style.buttonHolder}>
+              <Button variant="contained" onClick={updateUser}>
+                Update
+              </Button>
+              <Button variant="contained" color="warning">
+                Change Password
+              </Button>
+            </Box>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
