@@ -23,15 +23,12 @@ import {
 } from "@mui/material";
 
 import { styles } from "../styles/style";
-
-interface ProfileHolderProps {
-  username: string;
-  description: string;
-}
+import { ProfileHolderProps } from "../../../Pages/interface";
 
 export default function ProfileHolder({
   username,
   description,
+  editUser,
 }: Readonly<ProfileHolderProps>) {
   const theme = useTheme();
   const style = styles(theme).profileholder;
@@ -51,7 +48,7 @@ export default function ProfileHolder({
               <Typography>{description}</Typography>
             </Grid>
             <Grid item xs={10} md={10}>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={editUser}>
                 Edit Profile
               </Button>
             </Grid>

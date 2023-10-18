@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
@@ -22,21 +22,44 @@ export default function UserPage() {
   const theme = useTheme();
   const style = styles(theme).userPage;
 
+  const [enabled, setEnabled] = useState(true);
+  const [elevation, setElevation] = useState(0);
+
+  const editUser = () => {
+    const elevate = 5;
+    const zeroElevation = 0;
+    setEnabled((enabled) => !enabled);
+    setElevation((elevation) =>
+      elevation === zeroElevation ? elevate : zeroElevation,
+    );
+  };
+
+  const { data } = useQuery(getUserQuery);
+  const { getUser } = data || {};
+
   const mockUser = {
     phonenumber: "123456789",
     address: "Addis Ababa",
     birthDate: "April 19 2001",
-    description: "Hi I am Yonas",
+    description: `Hi I am ${getUser?.username}`,
   };
 
-  const { data } = useQuery(getUserQuery);
+  const userDetail = {
+    username: getUser?.username,
+    firstName: getUser?.firstName,
+    lastName: getUser?.lastName,
+    email: getUser?.email,
+    phoneNumber: mockUser["phonenumber"],
+    address: mockUser.address,
+    birthdate: mockUser.birthDate,
+  };
 
-  const { getUser } = data || {};
-
-  const Username = getUser?.username;
-  const FirstName = getUser?.firstName;
-  const LastName = getUser?.lastName;
-  const Email = getUser?.email;
+  const card = {
+    editable: enabled,
+    setEditable: setEnabled,
+    elevation: elevation,
+    setElevation: setElevation,
+  };
 
   return (
     <Box
@@ -50,8 +73,9 @@ export default function UserPage() {
         {data && (
           <ProfileHolder
             aria-label="profile holder"
-            username={Username}
+            username={userDetail.username}
             description={mockUser.description}
+            editUser={editUser}
           />
         )}
       </Box>
@@ -60,12 +84,8 @@ export default function UserPage() {
         {data && (
           <DetailHolder
             aria-label="detail holder"
-            firstName={FirstName}
-            lastName={LastName}
-            email={Email}
-            phoneNumber={mockUser.phonenumber}
-            address={mockUser.address}
-            birthdate={mockUser.birthDate}
+            user={userDetail}
+            card={card}
           />
         )}
       </Box>
