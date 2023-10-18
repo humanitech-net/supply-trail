@@ -21,12 +21,14 @@ describe("ProfileHolder", () => {
     const mockProps = {
       username: "name",
       description: "description",
+      editUser: () => {},
     };
     render(
       <MemoryRouter>
         <ProfileHolder
           username={mockProps.username}
           description={mockProps.description}
+          editUser={mockProps.editUser}
         />
       </MemoryRouter>,
     );
