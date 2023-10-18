@@ -48,7 +48,12 @@ export default function ProfileHolder({
               <Typography>{description}</Typography>
             </Grid>
             <Grid item xs={10} md={10}>
-              <Button variant="contained" color="primary" onClick={editUser}>
+              <Button
+                aria-label="edit user"
+                variant="contained"
+                color="primary"
+                onClick={editUser}
+              >
                 Edit Profile
               </Button>
             </Grid>
