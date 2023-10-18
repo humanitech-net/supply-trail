@@ -40,8 +40,19 @@ export const styles = (theme: Theme) => ({
   },
 
   detailHolder: {
+    box: {
+      display: "flex",
+      justifyContent: "center",
+      paddingTop: "1em",
+      width: "100%",
+    },
+    buttonHolder: {
+      display: "flex",
+      justifyContent: "space-evenly",
+      width: ["100%", "100%", "40%"],
+    },
     card: {
-      height: "260px",
+      height: "310px",
       [theme.breakpoints.down("sm")]: {
         height: "auto",
       },
