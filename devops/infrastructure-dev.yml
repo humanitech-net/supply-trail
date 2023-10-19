@@ -1,0 +1,90 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    networks:
+      - __NETWORK_NAME__
+    volumes:
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
+  service-core:
+    image: humanitech-supply-trail-service-core:development
+    depends_on:
+      - database
+    restart: always
+    environment:
+      DB_HOST: database
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.service-core.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.service-core.service=service-core"
+      - "traefik.http.services.service-core.loadbalancer.server.port=3000"
+      - "traefik.http.routers.service-core.entrypoints=websecure"
+      - "traefik.http.routers.service-core.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.service-core.middlewares=strip-api,compress"
+    networks:
+      - __NETWORK_NAME__
+  webapp:
+    image: humanitech-supply-trail-webapp:development
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webapp.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/app`)"
+      - "traefik.http.routers.webapp.service=webapp"
+      - "traefik.http.services.webapp.loadbalancer.server.port=8880"
+      - "traefik.http.routers.webapp.entrypoints=websecure"
+      - "traefik.http.routers.webapp.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-app.stripprefix.prefixes=/app"
+      - "traefik.http.middlewares.webapp-compress.compress=true"
+      - "traefik.http.routers.webapp.middlewares=strip-app,webapp-compress"
+    networks:
+      - __NETWORK_NAME__
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.0
+    depends_on:
+      - database
+    command: start-dev
+    restart: always
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://database/${DB_DATABASE}
+      - KC_DB_USERNAME=${DB_USERNAME}
+      - KC_DB_PASSWORD=${DB_PASSWORD}
+      - PROXY_ADDRESS_FORWARDING=true
+      - KC_HOSTNAME_URL=https://__DEPLOYMENT_HOST__/auth
+      - KC_HOSTNAME_ADMIN_URL=https://__DEPLOYMENT_HOST__/auth
+    ports:
+      - 8080:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=Host(`__DEPLOYMENT_HOST__`) && PathPrefix(`/auth`)"
+      - "traefik.http.routers.keycloak.service=keycloak"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.routers.keycloak.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.strip-prefix.stripprefix.prefixes=/auth"
+      - "traefik.http.middlewares.forwardedheaders.headers.sslProxyHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.keycloak.middlewares=forwardedheaders,strip-prefix,compress"
+    networks:
+      - __NETWORK_NAME__
+networks:
+  __NETWORK_NAME__:
+    external: true
