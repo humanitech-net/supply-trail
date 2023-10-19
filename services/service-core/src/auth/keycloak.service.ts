@@ -35,11 +35,11 @@ export class KeycloakService {
 
   async getAdminToken() {
     const params = new URLSearchParams({
-      username: this.configService.get('ADMIN'),
-      password: this.configService.get('ADMIN_PASSWORD'),
+      username: this.configService.get('KEYCLOAK_ADMIN'),
+      password: this.configService.get('KEYCLOAK_ADMIN_PASSWORD'),
       grant_type: 'password',
-      client_id: 'nest-application',
-      client_secret: this.configService.get('CLIENT_SECRET')
+      client_id: 'admin-cli',
+      client_secret: this.configService.get('ADMIN_CLIENT_SECRET')
     });
 
     const requestBody = params.toString();
