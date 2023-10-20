@@ -17,6 +17,7 @@ import DetailHolder from "./components/detailHolder";
 import { styles } from "./styles/style";
 import { useQuery } from "@apollo/client";
 import { getUserQuery } from "./graphql/userQuery";
+import { CardContext, UserContext } from "./context";
 
 export default function UserPage() {
   const theme = useTheme();
@@ -25,33 +26,23 @@ export default function UserPage() {
   const [enabled, setEnabled] = useState(true);
   const [elevation, setElevation] = useState(0);
 
-  const editUser = () => {
-    const elevate = 5;
-    const zeroElevation = 0;
-    setEnabled((enabled) => !enabled);
-    setElevation((elevation) =>
-      elevation === zeroElevation ? elevate : zeroElevation,
-    );
-  };
-
   const { data } = useQuery(getUserQuery);
   const { getUser } = data || {};
 
-  const mockUser = {
-    phonenumber: "123456789",
-    address: "Addis Ababa",
-    birthDate: "April 19 2001",
-    description: `Hi I am ${getUser?.username}`,
-  };
-
-  const userDetail = {
+  const user = {
     username: getUser?.username,
     firstName: getUser?.firstName,
     lastName: getUser?.lastName,
     email: getUser?.email,
-    phoneNumber: mockUser["phonenumber"],
-    address: mockUser.address,
-    birthdate: mockUser.birthDate,
+    phoneNumber: "123456789",
+    address: "Addis Ababa",
+    birthdate: "April 19 2001",
+    description: `Hi I am ${getUser?.username}`,
+  };
+
+  const editUser = () => {
+    setEnabled((enabled) => !enabled);
+    setElevation((elevation) => (elevation === 0 ? 5 : 0));
   };
 
   const card = {
@@ -59,36 +50,24 @@ export default function UserPage() {
     setEditable: setEnabled,
     elevation: elevation,
     setElevation: setElevation,
+    editUser: editUser,
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: ["column", "column", "row"],
-        margin: "0 20px 0 20px",
-      }}
-    >
-      <Box sx={style.profilePageHolder}>
-        {data && (
-          <ProfileHolder
-            aria-label="profile holder"
-            username={userDetail.username}
-            description={mockUser.description}
-            editUser={editUser}
-          />
-        )}
-      </Box>
+    <UserContext.Provider value={user}>
+      <CardContext.Provider value={card}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: ["column", "column", "row"],
+            margin: "0 20px 0 20px",
+          }}
+        >
+          <Box sx={style.profilePageHolder}>{data && <ProfileHolder />}</Box>
 
-      <Box sx={style.DetailHolderContainer}>
-        {data && (
-          <DetailHolder
-            aria-label="detail holder"
-            user={userDetail}
-            card={card}
-          />
-        )}
-      </Box>
-    </Box>
+          <Box sx={style.DetailHolderContainer}>{data && <DetailHolder />}</Box>
+        </Box>
+      </CardContext.Provider>
+    </UserContext.Provider>
   );
 }

@@ -24,14 +24,14 @@ import {
 import { styles } from "../styles/style";
 import { useMutation } from "@apollo/client";
 import { EditUserMutation } from "../graphql/mutation";
-import { DetailHolderProps } from "../../../Pages/interface";
+import { useCardContext, useUserContext } from "../context";
 
-export default function DetailHolder({
-  user,
-  card,
-}: Readonly<DetailHolderProps>) {
+export default function DetailHolder() {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
+
+  const user = useUserContext();
+  const card = useCardContext();
 
   const [firstname, setFirstName] = useState(user.firstName);
   const [lastname, setLastName] = useState(user.lastName);
@@ -44,7 +44,6 @@ export default function DetailHolder({
     lastName: lastname,
   };
   const updateUser = async () => {
-    const zeroElevation = 0;
     try {
       const { data } = await editUser({
         variables: {
@@ -55,8 +54,8 @@ export default function DetailHolder({
     } catch (error) {
       console.error("Error:", error);
     }
-    card.setEditable(true);
-    card.setElevation(zeroElevation);
+    card.setEditable(!card.editable);
+    card.setElevation(0);
   };
 
   return (

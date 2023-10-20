@@ -23,36 +23,35 @@ import {
 } from "@mui/material";
 
 import { styles } from "../styles/style";
-import { ProfileHolderProps } from "../../../Pages/interface";
+import { useCardContext, useUserContext } from "../context";
 
-export default function ProfileHolder({
-  username,
-  description,
-  editUser,
-}: Readonly<ProfileHolderProps>) {
+export default function ProfileHolder() {
   const theme = useTheme();
   const style = styles(theme).profileholder;
+
+  const user = useUserContext();
+  const card = useCardContext();
 
   return (
     <Card elevation={0} sx={style.card}>
       <CardContent>
         <Box sx={style.box}>
-          <Grid container spacing={1} xs={14} sx={style.grid}>
+          <Grid container spacing={1} sx={style.grid}>
             <Grid item xs={10} sx={style.grid}>
               <Avatar alt="user" src="" sx={style.avatar} />
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="h6">{username}</Typography>
+              <Typography variant="h6">{user.username}</Typography>
             </Grid>
             <Grid item xs={10} sx={style.grid}>
-              <Typography>{description}</Typography>
+              <Typography>{user.description}</Typography>
             </Grid>
             <Grid item xs={10} md={10}>
               <Button
                 aria-label="edit user"
                 variant="contained"
                 color="primary"
-                onClick={editUser}
+                onClick={card.editUser}
               >
                 Edit Profile
               </Button>
