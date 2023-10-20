@@ -10,26 +10,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export interface DetailHolderProps {
-  user: {
-    username: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    birthdate: string;
-  };
-  card: {
-    editable: boolean;
-    elevation: number;
-    setEditable: (enabled: boolean) => void;
-    setElevation: (elevation: number) => void;
-  };
+export interface User {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  birthdate: string;
+  description: string;
 }
 
-export interface ProfileHolderProps {
-  username: string;
-  description: string;
+export interface Card {
+  editable: boolean;
+  setEditable: (editable: boolean) => void;
+  elevation: number;
+  setElevation: (elevation: number) => void;
   editUser: () => void;
 }
