@@ -14,18 +14,15 @@ import { Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { Config } from './config';
 
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: ConfigService) {}
 
-  realmUrl = 'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
-  adminUrl =
-    'https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech';
-
   async getPublicKey() {
     try {
-      const response = await axios.get(this.realmUrl);
+      const response = await axios.get(Config.realmUrl);
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
@@ -35,18 +32,18 @@ export class KeycloakService {
 
   async getAdminToken() {
     const params = new URLSearchParams({
-      username: this.configService.get('KEYCLOAK_ADMIN'),
-      password: this.configService.get('KEYCLOAK_ADMIN_PASSWORD'),
-      grant_type: 'password',
-      client_id: 'admin-cli',
-      client_secret: this.configService.get('ADMIN_CLIENT_SECRET')
+      username: this.configService.get(Config.keycloakAdmin),
+      password: this.configService.get(Config.keycloakAdminPassword),
+      grant_type: Config.grantType,
+      client_id: Config.clientId,
+      client_secret: this.configService.get(Config.adminClientSecret)
     });
 
     const requestBody = params.toString();
 
     try {
-      const GetTokenData = await fetch(
-        `${this.realmUrl}/protocol/openid-connect/token`,
+      const getTokenData = await fetch(
+        `${Config.realmUrl}/protocol/openid-connect/token`,
         {
           method: 'POST',
           headers: {
@@ -56,8 +53,8 @@ export class KeycloakService {
         }
       );
 
-      const TokenData = await GetTokenData.json();
-      return TokenData.access_token;
+      const tokenData = await getTokenData.json();
+      return tokenData.access_token;
     } catch (error) {
       throw error;
     }
@@ -79,19 +76,18 @@ export class KeycloakService {
   }
 
   async editUser(id: string, userInput: object) {
-    const AccessToken = await this.getAdminToken();
-
-    const updateUser = await fetch(`${this.adminUrl}/users/${id}`, {
+    const accessToken = await this.getAdminToken();
+    const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${AccessToken}`
+        Authorization: `Bearer ${accessToken}`
       },
       body: JSON.stringify(userInput)
     });
 
     return updateUser.ok
       ? 'Successfully Updated'
-      : 'Try again failed to update';
+      : 'Try again, failed to update';
   }
 }
