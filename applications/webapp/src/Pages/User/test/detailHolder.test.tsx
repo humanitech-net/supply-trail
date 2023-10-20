@@ -15,9 +15,10 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import DetailHolder from "../components/detailHolder";
 import { EditUserMutation } from "../graphql/mutation";
+import { CardContext, UserContext } from "../context";
 
 describe("DetailHolder", () => {
-  const mockProps = {
+  const mockUser = {
     username: "username",
     firstName: "name",
     lastName: "fname",
@@ -25,6 +26,7 @@ describe("DetailHolder", () => {
     phoneNumber: "123456",
     address: "address",
     birthdate: "test",
+    description: "description",
   };
 
   const mockCard = {
@@ -32,16 +34,20 @@ describe("DetailHolder", () => {
     elevation: 0,
     setEditable: jest.fn(),
     setElevation: jest.fn(),
+    editUser: jest.fn(),
   };
+
+  const mockNewFirstName = "new first name";
+  const mockNewLastName = "new lastName name";
 
   const editUserMock = {
     request: {
       query: EditUserMutation,
       variables: {
         userInput: {
-          username: mockProps.username,
-          firstName: "new first name",
-          lastName: "new last name",
+          username: mockUser.username,
+          firstName: mockNewFirstName,
+          lastName: mockNewLastName,
         },
       },
     },
@@ -55,7 +61,11 @@ describe("DetailHolder", () => {
   test("renders detailHolder", () => {
     render(
       <MockedProvider>
-        <DetailHolder user={mockProps} card={mockCard} />
+        <UserContext.Provider value={mockUser}>
+          <CardContext.Provider value={mockCard}>
+            <DetailHolder />
+          </CardContext.Provider>
+        </UserContext.Provider>
       </MockedProvider>,
     );
   });
@@ -63,24 +73,28 @@ describe("DetailHolder", () => {
   test("updates user details on button click", async () => {
     render(
       <MockedProvider mocks={[editUserMock]}>
-        <DetailHolder user={mockProps} card={mockCard} />
+        <UserContext.Provider value={mockUser}>
+          <CardContext.Provider value={mockCard}>
+            <DetailHolder />
+          </CardContext.Provider>
+        </UserContext.Provider>
       </MockedProvider>,
     );
 
     fireEvent.change(screen.getByLabelText("First Name"), {
-      target: { value: "new first name" },
+      target: { value: mockNewFirstName },
     });
     fireEvent.change(screen.getByLabelText("Last Name"), {
-      target: { value: "new last name" },
+      target: { value: mockNewLastName },
     });
 
     fireEvent.click(screen.getByText("Update"));
 
     await waitFor(() => {
       expect(editUserMock.request.variables.userInput).toEqual({
-        username: mockProps.username,
-        firstName: "new first name",
-        lastName: "new last name",
+        username: mockUser.username,
+        firstName: mockNewFirstName,
+        lastName: mockNewLastName,
       });
     });
 
