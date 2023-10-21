@@ -15,6 +15,7 @@ import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
+import { UpdateUser } from 'src/graphql/users/users.entity';
 
 @Injectable()
 export class KeycloakService {
@@ -75,8 +76,11 @@ export class KeycloakService {
     };
   }
 
-  async editUser(id: string, userInput: object) {
+  async editUser(id: string, userInput: UpdateUser) {
     const accessToken = await this.getAdminToken();
+    if (!userInput.firstName && !userInput.lastName && !userInput.username) {
+      throw new Error('At least one field must be provided for the update.');
+    }
     const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {

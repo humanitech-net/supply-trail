@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Query, Resolver, Context, Args, Mutation } from '@nestjs/graphql';
-import { Users, updateUser } from './users.entity';
+import { Users, UpdateUser } from './users.entity';
 import { KeycloakService } from '../../auth/keycloak.service';
 import { Request } from 'express';
 
@@ -30,7 +30,7 @@ export class UsersResolver {
   @Mutation(() => String)
   async editUser(
     @Context() context: { req: Request },
-    @Args('userInput') userInput: updateUser
+    @Args('userInput') userInput: UpdateUser
   ): Promise<string> {
     const user = await this.getUser(context);
     const ID = user.id.toString();

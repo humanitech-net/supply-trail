@@ -10,6 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsOptional } from 'class-validator';
 
 @ObjectType()
 export class Users {
@@ -30,13 +31,16 @@ export class Users {
 }
 
 @InputType()
-export class updateUser {
+export class UpdateUser {
   @Field()
-  firstName?: string;
+  @IsOptional()
+  firstName: string;
 
   @Field()
-  lastName?: string;
+  @IsOptional()
+  lastName: string;
 
+  @IsOptional()
   @Field()
-  username?: string;
+  username: string;
 }

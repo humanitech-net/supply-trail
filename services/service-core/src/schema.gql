@@ -15,10 +15,10 @@ type Query {
 }
 
 type Mutation {
-  editUser(userInput: updateUser!): String!
+  editUser(userInput: UpdateUser!): String!
 }
 
-input updateUser {
+input UpdateUser {
   firstName: String!
   lastName: String!
   username: String!
