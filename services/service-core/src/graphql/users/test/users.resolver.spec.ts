@@ -9,12 +9,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-// Import necessary modules and dependencies
-// Import necessary modules and dependencies
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersResolver } from '../users.resolver';
 import { KeycloakService } from '../../../auth/keycloak.service';
 import { Request } from 'express';
+import { UpdateUser } from 'src/graphql/users/users.entity';
 
 const mockKeycloakService: Partial<KeycloakService> = {
   getUser: jest.fn(async () => {
@@ -44,7 +44,7 @@ describe('UsersResolver', () => {
     lastName: 'lastname',
     username: 'name',
     email: 'name@email.com'
-  };
+  } as UpdateUser;
 
   const MockToken = 'token';
 
@@ -77,7 +77,7 @@ describe('UsersResolver', () => {
   });
 
   describe('editUser', () => {
-    it('should call getUser and and return Successfully Updated', async () => {
+    it('should call getUser and return Successfully Updated', async () => {
       expect(mockKeycloakService.getUser).toHaveBeenCalledWith(MockToken);
       const editUser = await usersResolver.editUser(context, MockUser);
       expect(mockKeycloakService.editUser).toHaveBeenCalledWith(
@@ -91,14 +91,14 @@ describe('UsersResolver', () => {
       expect(mockKeycloakService.getUser).toHaveBeenCalledWith(MockToken);
       jest
         .spyOn(mockKeycloakService, 'editUser')
-        .mockResolvedValue('Try again failed to update');
+        .mockResolvedValue('Try again, failed to update');
 
       const editUser = await usersResolver.editUser(context, MockUser);
       expect(mockKeycloakService.editUser).toHaveBeenCalledWith(
         expect.any(String),
         MockUser
       );
-      expect(editUser).toEqual('Try again failed to update');
+      expect(editUser).toEqual('Try again, failed to update');
     });
   });
 });
