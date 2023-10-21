@@ -19,7 +19,7 @@ type Mutation {
 }
 
 input UpdateUser {
-  firstName: String!
-  lastName: String!
-  username: String!
+  firstName: String
+  lastName: String
+  username: String
 }

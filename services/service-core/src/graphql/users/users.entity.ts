@@ -32,15 +32,12 @@ export class Users {
 
 @InputType()
 export class UpdateUser {
-  @Field()
-  @IsOptional()
+  @Field({ nullable: true })
   firstName: string;
 
-  @Field()
-  @IsOptional()
+  @Field({ nullable: true })
   lastName: string;
 
-  @IsOptional()
-  @Field()
+  @Field({ nullable: true })
   username: string;
 }
