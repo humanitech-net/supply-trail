@@ -62,13 +62,13 @@ export default function DetailHolder() {
     card.setElevation(0);
   }
 
-  function FirstNameChanged(
+  function firstNameChanged(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     return setFirstname(event.target.value);
   }
 
-  function LastNameChanged(
+  function lastNameChanged(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     return setLastname(event.target.value);
@@ -84,7 +84,7 @@ export default function DetailHolder() {
                 label="First Name"
                 defaultValue={user.firstName}
                 disabled={card.editable}
-                onChange={FirstNameChanged}
+                onChange={firstNameChanged}
               />
             </FormControl>
           </Grid>
@@ -95,7 +95,7 @@ export default function DetailHolder() {
                 label="Last Name"
                 disabled={card.editable}
                 defaultValue={user.lastName}
-                onChange={LastNameChanged}
+                onChange={lastNameChanged}
               />
             </FormControl>
           </Grid>
