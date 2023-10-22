@@ -21,10 +21,12 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { styles } from "../styles/style";
+import { styles } from "../util/style";
 import { useMutation } from "@apollo/client";
 import { EditUserMutation } from "../graphql/mutation";
 import { useCardContext, useUserContext } from "../context";
+import { Link } from "react-router-dom";
+import { CHANGE_PASSWORD_URL } from "../util/constants";
 
 export default function DetailHolder() {
   const theme = useTheme();
@@ -33,8 +35,9 @@ export default function DetailHolder() {
   const user = useUserContext();
   const card = useCardContext();
 
-  const [firstname, setFirstName] = useState(user.firstName);
-  const [lastname, setLastName] = useState(user.lastName);
+  const [firstname, setFirstname] = useState(user.firstName);
+
+  const [lastname, setLastname] = useState(user.lastName);
 
   const [editUser] = useMutation(EditUserMutation);
 
@@ -43,7 +46,8 @@ export default function DetailHolder() {
     firstName: firstname,
     lastName: lastname,
   };
-  const updateUser = async () => {
+
+  async function updateUser() {
     try {
       const { data } = await editUser({
         variables: {
@@ -56,7 +60,19 @@ export default function DetailHolder() {
     }
     card.setEditable(!card.editable);
     card.setElevation(0);
-  };
+  }
+
+  function FirstNameChanged(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    return setFirstname(event.target.value);
+  }
+
+  function LastNameChanged(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    return setLastname(event.target.value);
+  }
 
   return (
     <Card elevation={card.elevation} sx={style.card}>
@@ -68,9 +84,7 @@ export default function DetailHolder() {
                 label="First Name"
                 defaultValue={user.firstName}
                 disabled={card.editable}
-                onChange={(event) => {
-                  setFirstName(event.target.value);
-                }}
+                onChange={FirstNameChanged}
               />
             </FormControl>
           </Grid>
@@ -81,9 +95,7 @@ export default function DetailHolder() {
                 label="Last Name"
                 disabled={card.editable}
                 defaultValue={user.lastName}
-                onChange={(event) => {
-                  setLastName(event.target.value);
-                }}
+                onChange={LastNameChanged}
               />
             </FormControl>
           </Grid>
@@ -130,9 +142,11 @@ export default function DetailHolder() {
               <Button variant="contained" onClick={updateUser}>
                 Update
               </Button>
-              <Button variant="contained" color="warning">
-                Change Password
-              </Button>
+              <Link to={CHANGE_PASSWORD_URL}>
+                <Button variant="contained" color="warning">
+                  Change Password
+                </Button>
+              </Link>
             </Box>
           </Box>
         )}

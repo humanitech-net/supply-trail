@@ -22,7 +22,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { styles } from "../styles/style";
+import { styles } from "../util/style";
 import { useCardContext, useUserContext } from "../context";
 
 export default function ProfileHolder() {

@@ -10,11 +10,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
-import { styles } from "./styles/style";
+import { EditableCardElevation, styles } from "./util/style";
 import { useQuery } from "@apollo/client";
 import { getUserQuery } from "./graphql/userQuery";
 import { CardContext, UserContext } from "./context";
@@ -23,35 +23,59 @@ export default function UserPage() {
   const theme = useTheme();
   const style = styles(theme).userPage;
 
-  const [enabled, setEnabled] = useState(true);
+  const [editable, setEditable] = useState(true);
   const [elevation, setElevation] = useState(0);
 
   const { data } = useQuery(getUserQuery);
   const { getUser } = data || {};
 
-  const user = {
-    username: getUser?.username,
-    firstName: getUser?.firstName,
-    lastName: getUser?.lastName,
-    email: getUser?.email,
-    phoneNumber: "123456789",
-    address: "Addis Ababa",
-    birthdate: "April 19 2001",
-    description: `Hi I am ${getUser?.username}`,
-  };
+  const username = getUser?.username;
+  const firstName = getUser?.firstName;
+  const lastName = getUser?.lastName;
+  const email = getUser?.email;
+  const phoneNumber = "123456789";
+  const address = "Addis Ababa";
+  const birthdate = "April 19 2001";
+  const description = `Hi I am ${getUser?.username}`;
+
+  const user = useMemo(() => {
+    return {
+      username,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      birthdate,
+      description,
+    };
+  }, [
+    username,
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    address,
+    birthdate,
+    description,
+  ]);
 
   const editUser = () => {
-    setEnabled((enabled) => !enabled);
-    setElevation((elevation) => (elevation === 0 ? 5 : 0));
+    setEditable((isEditable) => !isEditable);
+    setElevation((cardElevation) =>
+      cardElevation === 0 ? EditableCardElevation : 0,
+    );
   };
 
-  const card = {
-    editable: enabled,
-    setEditable: setEnabled,
-    elevation: elevation,
-    setElevation: setElevation,
-    editUser: editUser,
-  };
+  const card = useMemo(() => {
+    return {
+      editable,
+      setEditable,
+      elevation,
+      setElevation,
+      editUser,
+    };
+  }, [editable, setEditable, elevation, setElevation, editUser]);
 
   return (
     <UserContext.Provider value={user}>

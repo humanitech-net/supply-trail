@@ -15,6 +15,8 @@ import { Theme } from "@mui/material/styles";
 const minGap: number = 1;
 const maxGap: number = 2;
 
+export const EditableCardElevation = 5;
+
 export const styles = (theme: Theme) => ({
   profileholder: {
     box: {
