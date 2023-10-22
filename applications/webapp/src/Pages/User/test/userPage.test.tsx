@@ -15,6 +15,7 @@ import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import UserPage from "../userPage";
 import { MockedProvider } from "@apollo/client/testing";
 import { getUserQuery } from "../graphql/userQuery";
+import { MemoryRouter } from "react-router-dom";
 
 describe("UserPage", () => {
   const mockData = {
@@ -50,9 +51,12 @@ describe("UserPage", () => {
 
   test("editUser", async () => {
     render(
-      <MockedProvider mocks={[mockClient]}>
-        <UserPage />
-      </MockedProvider>,
+      <MemoryRouter>
+        <MockedProvider mocks={[mockClient]}>
+          <UserPage />
+        </MockedProvider>
+        ,
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
