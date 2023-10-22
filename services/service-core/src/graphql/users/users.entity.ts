@@ -10,7 +10,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
 
 @ObjectType()
 export class Users {
