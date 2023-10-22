@@ -36,9 +36,8 @@ describe('KeycloakService', () => {
 
   describe('getPublicKey', () => {
     it('should fetch and return public key', async () => {
-      const mockPublicKey = 'your_mocked_public_key';
       (axios.get as jest.Mock).mockResolvedValue({
-        data: { public_key: mockPublicKey }
+        data: { public_key: 'your_mocked_public_key' }
       });
 
       const publicKey = await keycloakService.getPublicKey();
@@ -47,7 +46,7 @@ describe('KeycloakService', () => {
         'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
       );
       expect(publicKey).toBe(
-        `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`
+        '-----BEGIN PUBLIC KEY-----\nyour_mocked_public_key\n-----END PUBLIC KEY-----'
       );
     });
 
@@ -62,12 +61,17 @@ describe('KeycloakService', () => {
 
   describe('getAdminToken', () => {
     it('returns access token when fetch is successful', async () => {
-      const mockSuccessResponse = {
-        json: jest.fn().mockResolvedValue({
+      const mockSuccessResponse = new Response(
+        JSON.stringify({
           access_token: 'access-token',
           refresh_token: 'refresh-token'
-        })
-      } as unknown as Response;
+        }),
+        {
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers({ 'Content-Type': 'application/json' })
+        }
+      );
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockSuccessResponse);
 
@@ -94,8 +98,8 @@ describe('KeycloakService', () => {
 
       const mockUserInput = {
         firstName: 'user',
-        lastName: 'lastName', // Add these properties
-        username: 'username' // Add these properties
+        lastName: 'lastName',
+        username: 'username'
       };
 
       const mockID = 'ID';
@@ -119,8 +123,8 @@ describe('KeycloakService', () => {
 
       const mockUserInput = {
         firstName: 'user',
-        lastName: 'lastName', // Add these properties
-        username: 'username' // Add these properties
+        lastName: 'lastName',
+        username: 'username'
       };
 
       const mockID = 'ID';

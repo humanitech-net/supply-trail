@@ -10,10 +10,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// config.ts
-
-// config.ts
-
 export const Config: Readonly<{
   realmUrl: string;
   adminUrl: string;

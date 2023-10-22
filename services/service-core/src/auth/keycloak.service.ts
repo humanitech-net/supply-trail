@@ -41,7 +41,6 @@ export class KeycloakService {
     });
 
     const requestBody = params.toString();
-
     try {
       const getTokenData = await fetch(
         `${Config.realmUrl}/protocol/openid-connect/token`,
@@ -54,10 +53,14 @@ export class KeycloakService {
         }
       );
 
+      if (!getTokenData.ok) {
+        throw new Error('Error: Fetch error');
+      }
+
       const tokenData = await getTokenData.json();
       return tokenData.access_token;
     } catch (error) {
-      throw error;
+      throw new Error('Error: Fetch error');
     }
   }
 
@@ -78,9 +81,18 @@ export class KeycloakService {
 
   async editUser(id: string, userInput: UpdateUser) {
     const accessToken = await this.getAdminToken();
+    if (
+      userInput.firstName?.trim() === '' ||
+      userInput.lastName?.trim() === '' ||
+      userInput.username?.trim() === ''
+    ) {
+      throw new Error('Please enter an appropriate input');
+    }
+
     if (!userInput.firstName && !userInput.lastName && !userInput.username) {
       throw new Error('At least one field must be provided for the update.');
     }
+
     const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {
