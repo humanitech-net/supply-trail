@@ -16,6 +16,7 @@ import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
 import { UpdateUser } from 'src/graphql/users/users.entity';
+import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
@@ -81,12 +82,9 @@ export class KeycloakService {
 
   async editUser(id: string, userInput: UpdateUser) {
     const accessToken = await this.getAdminToken();
-    if (
-      userInput.firstName?.trim() === '' ||
-      userInput.lastName?.trim() === '' ||
-      userInput.username?.trim() === ''
-    ) {
-      throw new Error('Please enter an appropriate input');
+    const { error } = userInputValidator.validate(userInput);
+    if (error) {
+      throw new Error(error.message);
     }
 
     if (!userInput.firstName && !userInput.lastName && !userInput.username) {
