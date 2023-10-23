@@ -14,6 +14,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
 import { verify } from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
@@ -27,7 +28,7 @@ describe('KeycloakService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [KeycloakService]
+      providers: [KeycloakService, ConfigService]
     }).compile();
 
     keycloakService = module.get<KeycloakService>(KeycloakService);
@@ -35,16 +36,17 @@ describe('KeycloakService', () => {
 
   describe('getPublicKey', () => {
     it('should fetch and return public key', async () => {
-      const mockPublicKey = 'your_mocked_public_key';
       (axios.get as jest.Mock).mockResolvedValue({
-        data: { public_key: mockPublicKey }
+        data: { public_key: 'your_mocked_public_key' }
       });
 
       const publicKey = await keycloakService.getPublicKey();
 
-      expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
+      expect(axios.get).toHaveBeenCalledWith(
+        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
+      );
       expect(publicKey).toBe(
-        `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`
+        '-----BEGIN PUBLIC KEY-----\nyour_mocked_public_key\n-----END PUBLIC KEY-----'
       );
     });
 
@@ -57,17 +59,98 @@ describe('KeycloakService', () => {
     });
   });
 
+  describe('getAdminToken', () => {
+    it('returns access token when fetch is successful', async () => {
+      const mockSuccessResponse = new Response(
+        JSON.stringify({
+          access_token: 'access-token',
+          refresh_token: 'refresh-token'
+        }),
+        {
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers({ 'Content-Type': 'application/json' })
+        }
+      );
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockSuccessResponse);
+
+      const result = await keycloakService.getAdminToken();
+      expect(result).toBe('access-token');
+    });
+
+    it('throws an error when it fails to fetch', async () => {
+      const mockError = new Error('Error: Fetch error');
+
+      jest.spyOn(global, 'fetch').mockRejectedValue(mockError);
+
+      await expect(keycloakService.getAdminToken()).rejects.toThrowError(
+        mockError
+      );
+    });
+  });
+
+  describe('editUser', () => {
+    it('calls getAdminToken and updates the user', async () => {
+      jest
+        .spyOn(keycloakService, 'getAdminToken')
+        .mockResolvedValue('mock-token');
+
+      const mockUserInput = {
+        firstName: 'user',
+        lastName: 'lastName',
+        username: 'username'
+      };
+
+      const mockID = 'ID';
+      const mockSuccessfulResponse = new Response(null, {
+        status: 200,
+        statusText: 'OK'
+      });
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockSuccessfulResponse);
+
+      const editUser = await keycloakService.editUser(mockID, mockUserInput);
+
+      expect(keycloakService.getAdminToken).toHaveBeenCalled();
+      expect(editUser).toBe('Successfully Updated');
+    });
+
+    it('returns "Try again, failed to update" if the update fails', async () => {
+      jest
+        .spyOn(keycloakService, 'getAdminToken')
+        .mockResolvedValue('mock-token');
+
+      const mockUserInput = {
+        firstName: 'user',
+        lastName: 'lastName',
+        username: 'username'
+      };
+
+      const mockID = 'ID';
+      const mockFailedResponse = new Response(null, {
+        status: 500,
+        statusText: ''
+      });
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
+
+      const editUser = await keycloakService.editUser(mockID, mockUserInput);
+
+      expect(keycloakService.getAdminToken).toHaveBeenCalled();
+      expect(editUser).toBe('Try again, failed to update');
+    });
+  });
+
   describe('getUser', () => {
     it('should decode a valid token and return user data', async () => {
       const mockToken = 'your_mocked_valid_token';
       const mockPublicKey = 'your_mocked_public_key';
 
-      // Mock the axios response for fetching the public key
       (axios.get as jest.Mock).mockResolvedValue({
         data: { public_key: mockPublicKey }
       });
 
-      // Mock the jwt.verify function to return a decoded token
       const decodedToken = {
         sub: 'sample_sid',
         given_name: 'John',
@@ -75,11 +158,14 @@ describe('KeycloakService', () => {
         email: 'john.doe@example.com',
         preferred_username: 'johndoe'
       };
+
       (verify as jest.Mock).mockReturnValue(decodedToken);
 
       const userData = await keycloakService.getUser(mockToken);
 
-      expect(axios.get).toHaveBeenCalledWith(keycloakService.realmUrl);
+      expect(axios.get).toHaveBeenCalledWith(
+        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
+      );
       expect(verify).toHaveBeenCalledWith(
         mockToken,
         `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`,
@@ -101,12 +187,10 @@ describe('KeycloakService', () => {
       const mockToken = 'your_mocked_invalid_token';
       const mockPublicKey = 'your_mocked_public_key';
 
-      // Mock the axios response for fetching the public key
       (axios.get as jest.Mock).mockResolvedValue({
         data: { public_key: mockPublicKey }
       });
 
-      // Mock the jwt.verify function to throw an error
       (verify as jest.Mock).mockImplementation(() => {
         throw new Error('Invalid Token');
       });
@@ -117,14 +201,11 @@ describe('KeycloakService', () => {
     });
 
     it('should throw an error if fetching public key fails', async () => {
-      const mockToken = 'your_mocked_valid_token';
-
-      // Mock axios to reject with an error
       (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
 
-      await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
-        errorMessage
-      );
+      await expect(
+        keycloakService.getUser('your_mocked_valid_token')
+      ).rejects.toThrow(errorMessage);
     });
   });
 });

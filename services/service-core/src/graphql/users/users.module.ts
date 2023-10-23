@@ -14,8 +14,9 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { KeycloakService } from '../../auth/keycloak.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [UsersService, UsersResolver, KeycloakService]
+  providers: [UsersService, UsersResolver, KeycloakService, ConfigService]
 })
 export class UsersModule {}
