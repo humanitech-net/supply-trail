@@ -10,65 +10,88 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
-import { styles } from "./styles/style";
+import { EditableCardElevation, styles } from "./util/style";
 import { useQuery } from "@apollo/client";
 import { getUserQuery } from "./graphql/userQuery";
+import { CardContext, UserContext } from "./context";
 
 export default function UserPage() {
   const theme = useTheme();
   const style = styles(theme).userPage;
 
-  const mockUser = {
-    phonenumber: "123456789",
-    address: "Addis Ababa",
-    birthDate: "April 19 2001",
-    description: "Hi I am Yonas",
-  };
+  const [editable, setEditable] = useState(true);
+  const [elevation, setElevation] = useState(0);
 
   const { data } = useQuery(getUserQuery);
-
   const { getUser } = data || {};
 
-  const Username = getUser?.username;
-  const FirstName = getUser?.firstName;
-  const LastName = getUser?.lastName;
-  const Email = getUser?.email;
+  const username = getUser?.username;
+  const firstName = getUser?.firstName;
+  const lastName = getUser?.lastName;
+  const email = getUser?.email;
+  const phoneNumber = "123456789";
+  const address = "Addis Ababa";
+  const birthdate = "April 19 2001";
+  const description = `Hi I am ${getUser?.username}`;
+
+  const user = useMemo(() => {
+    return {
+      username,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      birthdate,
+      description,
+    };
+  }, [
+    username,
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    address,
+    birthdate,
+    description,
+  ]);
+
+  const editUser = () => {
+    setEditable((isEditable) => !isEditable);
+    setElevation((cardElevation) =>
+      cardElevation === 0 ? EditableCardElevation : 0,
+    );
+  };
+
+  const card = useMemo(() => {
+    return {
+      editable,
+      setEditable,
+      elevation,
+      setElevation,
+      editUser,
+    };
+  }, [editable, setEditable, elevation, setElevation, editUser]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: ["column", "column", "row"],
-        margin: "0 20px 0 20px",
-      }}
-    >
-      <Box sx={style.profilePageHolder}>
-        {data && (
-          <ProfileHolder
-            aria-label="profile holder"
-            username={Username}
-            description={mockUser.description}
-          />
-        )}
-      </Box>
+    <UserContext.Provider value={user}>
+      <CardContext.Provider value={card}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: ["column", "column", "row"],
+            margin: "0 20px 0 20px",
+          }}
+        >
+          <Box sx={style.profilePageHolder}>{data && <ProfileHolder />}</Box>
 
-      <Box sx={style.DetailHolderContainer}>
-        {data && (
-          <DetailHolder
-            aria-label="detail holder"
-            firstName={FirstName}
-            lastName={LastName}
-            email={Email}
-            phoneNumber={mockUser.phonenumber}
-            address={mockUser.address}
-            birthdate={mockUser.birthDate}
-          />
-        )}
-      </Box>
-    </Box>
+          <Box sx={style.DetailHolderContainer}>{data && <DetailHolder />}</Box>
+        </Box>
+      </CardContext.Provider>
+    </UserContext.Provider>
   );
 }
