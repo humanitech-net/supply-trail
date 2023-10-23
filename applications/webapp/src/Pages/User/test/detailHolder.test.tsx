@@ -16,7 +16,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import DetailHolder from "../components/detailHolder";
 import { EditUserMutation } from "../graphql/mutation";
 import { CardContext, UserContext } from "../context";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 describe("DetailHolder", () => {
   const mockUser = {
@@ -61,7 +61,7 @@ describe("DetailHolder", () => {
 
   test("renders detailHolder", () => {
     render(
-      <MemoryRouter>
+      <BrowserRouter>
         <MockedProvider>
           <UserContext.Provider value={mockUser}>
             <CardContext.Provider value={mockCard}>
@@ -69,13 +69,13 @@ describe("DetailHolder", () => {
             </CardContext.Provider>
           </UserContext.Provider>
         </MockedProvider>
-      </MemoryRouter>,
+      </BrowserRouter>,
     );
   });
 
   test("updates user details on button click", async () => {
     render(
-      <MemoryRouter>
+      <BrowserRouter>
         <MockedProvider mocks={[editUserMock]}>
           <UserContext.Provider value={mockUser}>
             <CardContext.Provider value={mockCard}>
@@ -83,7 +83,7 @@ describe("DetailHolder", () => {
             </CardContext.Provider>
           </UserContext.Provider>
         </MockedProvider>
-      </MemoryRouter>,
+      </BrowserRouter>,
     );
 
     fireEvent.change(screen.getByLabelText("First Name"), {
