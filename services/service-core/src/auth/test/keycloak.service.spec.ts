@@ -61,7 +61,6 @@ describe('KeycloakService', () => {
 
   describe('getAdminToken', () => {
     it('returns access token when fetch is successful', async () => {
-      // Mock a successful response
       const mockSuccessResponse = new Response(
         JSON.stringify({
           access_token: 'access-token',
@@ -81,7 +80,6 @@ describe('KeycloakService', () => {
     });
 
     it('throws an error when it fails to fetch', async () => {
-      // Mock a failed response
       const mockFailedResponse = new Response(null, {
         status: 400,
         statusText: 'Bad Request'
@@ -90,12 +88,11 @@ describe('KeycloakService', () => {
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        'Bad Request' // This should match the status text from the response
+        'Bad Request'
       );
     });
 
     it('throws an error with the status text when fetch is not OK', async () => {
-      // Mock a response with a non-OK status
       const mockErrorResponse = new Response(null, {
         status: 500,
         statusText: 'Internal Server Error'
@@ -104,7 +101,7 @@ describe('KeycloakService', () => {
       jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        'Internal Server Error' // This should match the status text from the response
+        'Internal Server Error'
       );
     });
   });
@@ -166,7 +163,6 @@ describe('KeycloakService', () => {
         .mockResolvedValue('mock-token');
 
       const mockUserInput = {
-        // At least one field must be provided, but all fields are empty
         firstName: '',
         lastName: '',
         username: ''
@@ -174,7 +170,6 @@ describe('KeycloakService', () => {
 
       const mockID = 'ID';
 
-      // Mock a successful response (for coverage; this won't be used)
       const mockSuccessfulResponse = new Response(null, {
         status: 200,
         statusText: 'OK'
@@ -182,7 +177,6 @@ describe('KeycloakService', () => {
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockSuccessfulResponse);
 
-      // Test that it throws an error for inappropriate input
       await expect(
         keycloakService.editUser(mockID, mockUserInput)
       ).rejects.toThrowError('Please enter an appropriate input');
