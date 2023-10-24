@@ -25,7 +25,7 @@ describe('userInputValidator', () => {
             input: {
                 firstName: firstName,
                 lastName: lastName,
-                username: lastName
+                username: username
             },
             shouldErrorBeDefined: false,
         },
@@ -34,7 +34,7 @@ describe('userInputValidator', () => {
             input: {
                 firstName: '',
                 lastName: lastName,
-                username: lastName
+                username: username
             },
             shouldErrorBeDefined: true,
         },
@@ -43,7 +43,7 @@ describe('userInputValidator', () => {
             input: {
                 firstName: firstName,
                 lastName: '',
-                username: lastName
+                username: username
             },
             shouldErrorBeDefined: true,
         },
