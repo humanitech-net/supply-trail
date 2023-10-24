@@ -13,7 +13,7 @@
 import { userInputValidator } from '../keycloak.validator';
 import Joi from 'joi';
 
-const not_valid = 'should not validate an invalid user input';
+const nonValid = 'should not validate an invalid user input';
 
 describe('userInputValidator', () => {
     it('should validate a valid user input', () => {
@@ -26,7 +26,7 @@ describe('userInputValidator', () => {
         expect(error).toBeUndefined();
     });
 
-    it(not_valid, () => {
+    it(nonValid, () => {
         const validUserInput = {
             firstName: '',
             lastName: 'Doe',
@@ -37,7 +37,7 @@ describe('userInputValidator', () => {
         expect(error).toBeInstanceOf(Joi.ValidationError);
     });
 
-    it(not_valid, () => {
+    it(nonValid, () => {
         const validUserInput = {
             firstName: 'John',
             lastName: '',
@@ -48,7 +48,7 @@ describe('userInputValidator', () => {
         expect(error).toBeInstanceOf(Joi.ValidationError);
     });
 
-    it(not_valid, () => {
+    it(nonValid, () => {
         const validUserInput = {
             firstName: 'John',
             lastName: 'Doe',
@@ -59,7 +59,7 @@ describe('userInputValidator', () => {
         expect(error).toBeInstanceOf(Joi.ValidationError);
     });
 
-    it(not_valid, () => {
+    it(nonValid, () => {
         const invalidUserInput = {
             firstName: '',
             lastName: '',
