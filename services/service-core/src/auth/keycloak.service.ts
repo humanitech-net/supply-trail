@@ -17,6 +17,7 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
+import e from 'express';
 
 @Injectable()
 export class KeycloakService {
@@ -55,13 +56,13 @@ export class KeycloakService {
       );
 
       if (!getTokenData.ok) {
-        throw new Error('Error: Fetch error');
+        throw new Error(getTokenData.statusText);
       }
 
       const tokenData = await getTokenData.json();
       return tokenData.access_token;
     } catch (error) {
-      throw new Error('Error: Fetch error');
+      throw new Error(error.message);
     }
   }
 
