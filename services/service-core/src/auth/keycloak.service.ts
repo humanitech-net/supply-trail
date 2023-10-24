@@ -17,7 +17,6 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
-import e from 'express';
 
 @Injectable()
 export class KeycloakService {
