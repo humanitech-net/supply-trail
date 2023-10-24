@@ -80,7 +80,7 @@ describe('KeycloakService', () => {
     });
 
     it('throws an error when it fails to fetch', async () => {
-      const mockError = new Error('Error: Fetch error');
+      const mockError = new Error('Failed to fetch admin token');
 
       jest.spyOn(global, 'fetch').mockRejectedValue(mockError);
 
