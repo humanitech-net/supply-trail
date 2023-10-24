@@ -107,10 +107,10 @@ describe('KeycloakService', () => {
   });
 
   describe('editUser', () => {
+    const mockToken = 'mock-token';
+
     it('calls getAdminToken and updates the user', async () => {
-      jest
-        .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-token');
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: 'user',
@@ -133,9 +133,7 @@ describe('KeycloakService', () => {
     });
 
     it('returns "Try again, failed to update" if the update fails', async () => {
-      jest
-        .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-token');
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: 'user',
@@ -158,9 +156,7 @@ describe('KeycloakService', () => {
     });
 
     it('throws an error for inappropriate input', async () => {
-      jest
-        .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-token');
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: '',
