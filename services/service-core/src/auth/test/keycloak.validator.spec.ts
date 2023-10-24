@@ -59,7 +59,7 @@ describe('userInputValidator', () => {
         expect(error).toBeInstanceOf(Joi.ValidationError);
     });
 
-    it('should not validate an invalid user input', () => {
+    it(not_valid, () => {
         const invalidUserInput = {
             firstName: '',
             lastName: '',
