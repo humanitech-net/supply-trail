@@ -13,60 +13,69 @@
 import { userInputValidator } from '../keycloak.validator';
 import Joi from 'joi';
 
-const nonValid = 'should not validate an invalid user input';
+const notValid = 'should not validate an invalid user input';
+const firstName = 'John';
+const lastName = 'Doe';
+const username = 'johndoe';
 
 describe('userInputValidator', () => {
-    it('should validate a valid user input', () => {
-        const validUserInput = {
-            firstName: 'John',
-            lastName: 'Doe',
-            username: 'johndoe'
-        };
-        const { error } = userInputValidator.validate(validUserInput);
-        expect(error).toBeUndefined();
-    });
+    const testCases = [
+        {
+            description: 'should validate a valid user input',
+            input: {
+                firstName: firstName,
+                lastName: lastName,
+                username: lastName
+            },
+            shouldErrorBeDefined: false,
+        },
+        {
+            description: notValid,
+            input: {
+                firstName: '',
+                lastName: lastName,
+                username: lastName
+            },
+            shouldErrorBeDefined: true,
+        },
+        {
+            description: notValid,
+            input: {
+                firstName: firstName,
+                lastName: '',
+                username: lastName
+            },
+            shouldErrorBeDefined: true,
+        },
+        {
+            description: notValid,
+            input: {
+                firstName: firstName,
+                lastName: lastName,
+                username: '',
+            },
+            shouldErrorBeDefined: true,
+        },
+        {
+            description: notValid,
+            input: {
+                firstName: '',
+                lastName: '',
+                username: '',
+            },
+            shouldErrorBeDefined: true,
+        },
+    ];
 
-    it(nonValid, () => {
-        const validUserInput = {
-            firstName: '',
-            lastName: 'Doe',
-            username: 'johndoe'
-        };
-        const { error } = userInputValidator.validate(validUserInput);
-        expect(error).toBeDefined();
-        expect(error).toBeInstanceOf(Joi.ValidationError);
-    });
-
-    it(nonValid, () => {
-        const validUserInput = {
-            firstName: 'John',
-            lastName: '',
-            username: 'johndoe'
-        };
-        const { error } = userInputValidator.validate(validUserInput);
-        expect(error).toBeDefined();
-        expect(error).toBeInstanceOf(Joi.ValidationError);
-    });
-
-    it(nonValid, () => {
-        const validUserInput = {
-            firstName: 'John',
-            lastName: 'Doe',
-            username: ''
-        };
-        const { error } = userInputValidator.validate(validUserInput);
-        expect(error).toBeDefined();
-        expect(error).toBeInstanceOf(Joi.ValidationError);
-    });
-
-    it(nonValid, () => {
-        const invalidUserInput = {
-            firstName: '',
-            lastName: '',
-            username: ''
-        };
-        const { error } = userInputValidator.validate(invalidUserInput);
-        expect(error).toBeDefined();
-        expect(error).toBeInstanceOf(Joi.ValidationError);
+    testCases.forEach((testCase) => {
+        it(testCase.description, () => {
+            const { error } = userInputValidator.validate(testCase.input);
+            if (testCase.shouldErrorBeDefined) {
+                expect(error).toBeDefined();
+                expect(error).toBeInstanceOf(Joi.ValidationError);
+            } else {
+                expect(error).toBeUndefined();
+            }
+        });
     });
 });
