@@ -80,21 +80,37 @@ describe('KeycloakService', () => {
     });
 
     it('throws an error when it fails to fetch', async () => {
-      const mockError = new Error('Failed to fetch');
+      const mockFailedResponse = new Response(null, {
+        status: 400,
+        statusText: 'Bad Request'
+      });
 
-      jest.spyOn(global, 'fetch').mockRejectedValue(mockError);
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        mockError
+        'Bad Request'
+      );
+    });
+
+    it('throws an error with the status text when fetch is not OK', async () => {
+      const mockErrorResponse = new Response(null, {
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
+
+      await expect(keycloakService.getAdminToken()).rejects.toThrowError(
+        'Internal Server Error'
       );
     });
   });
 
   describe('editUser', () => {
+    const mockToken = 'mock-token';
+
     it('calls getAdminToken and updates the user', async () => {
-      jest
-        .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-token');
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: 'user',
@@ -117,9 +133,7 @@ describe('KeycloakService', () => {
     });
 
     it('returns "Try again, failed to update" if the update fails', async () => {
-      jest
-        .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-token');
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: 'user',
@@ -139,6 +153,29 @@ describe('KeycloakService', () => {
 
       expect(keycloakService.getAdminToken).toHaveBeenCalled();
       expect(editUser).toBe('Try again, failed to update');
+    });
+
+    it('throws an error for inappropriate input', async () => {
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
+
+      const mockUserInput = {
+        firstName: '',
+        lastName: '',
+        username: ''
+      };
+
+      const mockID = 'ID';
+
+      const mockSuccessfulResponse = new Response(null, {
+        status: 200,
+        statusText: 'OK'
+      });
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockSuccessfulResponse);
+
+      await expect(
+        keycloakService.editUser(mockID, mockUserInput)
+      ).rejects.toThrowError('Please enter an appropriate input');
     });
   });
 

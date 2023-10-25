@@ -20,6 +20,12 @@ import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
+  getAdminTokenParams() {
+    throw new Error('Method not implemented.');
+  }
+  getToken() {
+    throw new Error('Method not implemented.');
+  }
   constructor(private readonly configService: ConfigService) {}
 
   async getPublicKey() {
@@ -84,11 +90,7 @@ export class KeycloakService {
     const accessToken = await this.getAdminToken();
     const { error } = userInputValidator.validate(userInput);
     if (error) {
-      throw new Error(error.message);
-    }
-
-    if (!userInput.firstName && !userInput.lastName && !userInput.username) {
-      throw new Error('At least one field must be provided for the update.');
+      throw new Error('Please enter an appropriate input');
     }
 
     const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {

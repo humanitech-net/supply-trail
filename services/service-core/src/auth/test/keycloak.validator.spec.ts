@@ -19,63 +19,63 @@ const lastName = 'Doe';
 const username = 'johndoe';
 
 describe('userInputValidator', () => {
-    const testCases = [
-        {
-            description: 'should validate a valid user input',
-            input: {
-                firstName: firstName,
-                lastName: lastName,
-                username: username
-            },
-            shouldErrorBeDefined: false,
-        },
-        {
-            description: notValid,
-            input: {
-                firstName: '',
-                lastName: lastName,
-                username: username
-            },
-            shouldErrorBeDefined: true,
-        },
-        {
-            description: notValid,
-            input: {
-                firstName: firstName,
-                lastName: '',
-                username: username
-            },
-            shouldErrorBeDefined: true,
-        },
-        {
-            description: notValid,
-            input: {
-                firstName: firstName,
-                lastName: lastName,
-                username: '',
-            },
-            shouldErrorBeDefined: true,
-        },
-        {
-            description: notValid,
-            input: {
-                firstName: '',
-                lastName: '',
-                username: '',
-            },
-            shouldErrorBeDefined: true,
-        },
-    ];
+  const testCases = [
+    {
+      description: 'should validate a valid user input',
+      input: {
+        firstName: firstName,
+        lastName: lastName,
+        username: username
+      },
+      shouldErrorBeDefined: false
+    },
+    {
+      description: notValid,
+      input: {
+        firstName: '',
+        lastName: lastName,
+        username: username
+      },
+      shouldErrorBeDefined: true
+    },
+    {
+      description: notValid,
+      input: {
+        firstName: firstName,
+        lastName: '',
+        username: username
+      },
+      shouldErrorBeDefined: true
+    },
+    {
+      description: notValid,
+      input: {
+        firstName: firstName,
+        lastName: lastName,
+        username: ''
+      },
+      shouldErrorBeDefined: true
+    },
+    {
+      description: notValid,
+      input: {
+        firstName: '',
+        lastName: '',
+        username: ''
+      },
+      shouldErrorBeDefined: true
+    }
+  ];
 
-    testCases.forEach((testCase) => {
-        it(testCase.description, () => {
-            const { error } = userInputValidator.validate(testCase.input);
-            if (testCase.shouldErrorBeDefined) {
-                expect(error).toBeDefined();
-                expect(error).toBeInstanceOf(Joi.ValidationError);
-            } else {
-                expect(error).toBeUndefined();
-            }
-        });
+  testCases.forEach((testCase) => {
+    it(testCase.description, () => {
+      const { error } = userInputValidator.validate(testCase.input);
+      if (testCase.shouldErrorBeDefined) {
+        expect(error).toBeDefined();
+        expect(error).toBeInstanceOf(Joi.ValidationError);
+      } else {
+        expect(error).toBeUndefined();
+      }
     });
+  });
 });
