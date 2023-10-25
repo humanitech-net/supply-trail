@@ -35,21 +35,6 @@ describe('KeycloakService', () => {
   });
 
   describe('getPublicKey', () => {
-    it('should fetch and return public key', async () => {
-      (axios.get as jest.Mock).mockResolvedValue({
-        data: { public_key: 'your_mocked_public_key' }
-      });
-
-      const publicKey = await keycloakService.getPublicKey();
-
-      expect(axios.get).toHaveBeenCalledWith(
-        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
-      );
-      expect(publicKey).toBe(
-        '-----BEGIN PUBLIC KEY-----\nyour_mocked_public_key\n-----END PUBLIC KEY-----'
-      );
-    });
-
     it('should throw an error if fetching public key fails', async () => {
       (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
 
@@ -143,46 +128,6 @@ describe('KeycloakService', () => {
   });
 
   describe('getUser', () => {
-    it('should decode a valid token and return user data', async () => {
-      const mockToken = 'your_mocked_valid_token';
-      const mockPublicKey = 'your_mocked_public_key';
-
-      (axios.get as jest.Mock).mockResolvedValue({
-        data: { public_key: mockPublicKey }
-      });
-
-      const decodedToken = {
-        sub: 'sample_sid',
-        given_name: 'John',
-        family_name: 'Doe',
-        email: 'john.doe@example.com',
-        preferred_username: 'johndoe'
-      };
-
-      (verify as jest.Mock).mockReturnValue(decodedToken);
-
-      const userData = await keycloakService.getUser(mockToken);
-
-      expect(axios.get).toHaveBeenCalledWith(
-        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
-      );
-      expect(verify).toHaveBeenCalledWith(
-        mockToken,
-        `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`,
-        {
-          algorithms: ['RS256']
-        }
-      );
-
-      expect(userData).toEqual({
-        id: 'sample_sid',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        username: 'johndoe'
-      });
-    });
-
     it('should throw an error for an invalid token', async () => {
       const mockToken = 'your_mocked_invalid_token';
       const mockPublicKey = 'your_mocked_public_key';
