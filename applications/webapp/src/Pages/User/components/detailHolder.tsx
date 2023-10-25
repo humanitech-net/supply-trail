@@ -56,7 +56,9 @@ export default function DetailHolder() {
       });
       console.log("User:", data.editUser);
     } catch (error) {
-      console.error("Error:", error);
+      console.error(
+        `[DetailHolder.updateUser] Failed to update user information. Error: ${error}`,
+      );
     }
     card.setEditable(!card.editable);
     card.setElevation(0);
