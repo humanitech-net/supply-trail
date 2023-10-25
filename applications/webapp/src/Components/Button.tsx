@@ -41,10 +41,7 @@ const GraphQlButton: React.FC = () => {
         <Button variant="contained" onClick={handleButtonClick}>
           Click Me
         </Button>
-        <div className="show">
-          [GraphQlButton.handleButtonClick] An error occurred while fetching
-          user data: {error.message}
-        </div>
+        <div className="show">Error: {error.message}</div>
       </div>
     );
   }
