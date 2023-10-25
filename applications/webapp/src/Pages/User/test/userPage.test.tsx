@@ -14,7 +14,7 @@ import React from "react";
 import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import UserPage from "../userPage";
 import { MockedProvider } from "@apollo/client/testing";
-import { getUserQuery } from "../graphql/userQuery";
+import { GET_USER_QUERY } from "src/hooks/query";
 import { BrowserRouter } from "react-router-dom";
 
 describe("UserPage", () => {
@@ -29,7 +29,7 @@ describe("UserPage", () => {
 
   const mockClient = {
     request: {
-      query: getUserQuery,
+      query: GET_USER_QUERY,
     },
     result: {
       data: mockData,

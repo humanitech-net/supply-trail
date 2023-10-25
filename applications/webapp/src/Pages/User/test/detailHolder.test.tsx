@@ -14,7 +14,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import DetailHolder from "../components/detailHolder";
-import { EditUserMutation } from "../graphql/mutation";
+import { EditUserMutation } from "src/hooks/mutation";
 import { CardContext, UserContext } from "../context";
 import { BrowserRouter } from "react-router-dom";
 
