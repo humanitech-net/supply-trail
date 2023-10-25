@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
+import { configration } from './config/config.service';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: '.local.env'
+          load: [configration]
         })
       ],
       useFactory: (configService: ConfigService) => ({

@@ -11,36 +11,16 @@
  */
 import { Config } from '../config';
 
-describe('Config', () => {
-  it('should have the correct realmUrl', () => {
-    expect(Config.realmUrl).toBe(
-      'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
-    );
-  });
-
-  it('should have the correct adminUrl', () => {
-    expect(Config.adminUrl).toBe(
-      'https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech'
-    );
-  });
-
-  it('should have the correct grantType', () => {
-    expect(Config.grantType).toBe('password');
-  });
-
-  it('should have the correct clientId', () => {
-    expect(Config.clientId).toBe('admin-cli');
-  });
-
+describe('Config object', () => {
   it('should have the correct adminClientSecret', () => {
-    expect(Config.adminClientSecret).toBe('ADMIN_CLIENT_SECRET');
+    expect(Config.adminClientSecret).toEqual('ADMIN_CLIENT_SECRET');
   });
 
   it('should have the correct keycloakAdmin', () => {
-    expect(Config.keycloakAdmin).toBe('KEYCLOAK_ADMIN');
+    expect(Config.keycloakAdmin).toEqual('KEYCLOAK_ADMIN');
   });
 
   it('should have the correct keycloakAdminPassword', () => {
-    expect(Config.keycloakAdminPassword).toBe('KEYCLOAK_ADMIN_PASSWORD');
+    expect(Config.keycloakAdminPassword).toEqual('KEYCLOAK_ADMIN_PASSWORD');
   });
 });

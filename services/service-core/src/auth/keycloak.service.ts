@@ -20,10 +20,11 @@ import { UpdateUser } from 'src/graphql/users/users.entity';
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: ConfigService) {}
-
+  private adminUrl = this.configService.get('keycloak.adminUrl');
+  private realmUrl = this.configService.get('keycloak.realmUrl');
   async getPublicKey() {
     try {
-      const response = await axios.get(Config.realmUrl);
+      const response = await axios.get(this.realmUrl);
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
@@ -35,15 +36,15 @@ export class KeycloakService {
     const params = new URLSearchParams({
       username: this.configService.get(Config.keycloakAdmin),
       password: this.configService.get(Config.keycloakAdminPassword),
-      grant_type: Config.grantType,
-      client_id: Config.clientId,
+      grant_type: this.configService.get('keycloak.grantType'),
+      client_id: this.configService.get('keycloak.clientId'),
       client_secret: this.configService.get(Config.adminClientSecret)
     });
 
     const requestBody = params.toString();
     try {
       const getTokenData = await fetch(
-        `${Config.realmUrl}/protocol/openid-connect/token`,
+        `${this.realmUrl}/protocol/openid-connect/token`,
         {
           method: 'POST',
           headers: {
@@ -93,7 +94,7 @@ export class KeycloakService {
       throw new Error('At least one field must be provided for the update.');
     }
 
-    const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
+    const updateUser = await fetch(`${this.adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
