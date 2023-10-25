@@ -20,8 +20,8 @@ import { UpdateUser } from 'src/graphql/users/users.entity';
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: ConfigService) {}
-  private adminUrl = this.configService.get('keycloak.adminUrl');
-  private realmUrl = this.configService.get('keycloak.realmUrl');
+  private readonly adminUrl = this.configService.get('keycloak.adminUrl');
+  private readonly realmUrl = this.configService.get('keycloak.realmUrl');
   async getPublicKey() {
     try {
       const response = await axios.get(this.realmUrl);
