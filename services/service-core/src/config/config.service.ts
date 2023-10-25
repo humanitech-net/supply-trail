@@ -16,4 +16,4 @@ import { readFileSync } from 'fs';
 const envConfig = config({ path: './.local.env' });
 const jsonConfig = JSON.parse(readFileSync('./src/config/config.json', 'utf8'));
 
-export const configration = () => ({ ...envConfig, ...jsonConfig });
+export const configuration = () => ({ ...envConfig, ...jsonConfig });
