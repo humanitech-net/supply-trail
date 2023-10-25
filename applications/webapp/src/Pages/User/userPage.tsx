@@ -15,9 +15,8 @@ import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
 import { EditableCardElevation, styles } from "./util/style";
-import { useQuery } from "@apollo/client";
-import { getUserQuery } from "./graphql/userQuery";
 import { CardContext, UserContext } from "./context";
+import useCustomQuery from "src/hooks/useCustomQuery";
 
 export default function UserPage() {
   const theme = useTheme();
@@ -26,17 +25,28 @@ export default function UserPage() {
   const [editable, setEditable] = useState(true);
   const [elevation, setElevation] = useState(0);
 
-  const { data } = useQuery(getUserQuery);
-  const { getUser } = data || {};
+  const { data, loading, error } = useCustomQuery("GET_USER");
 
-  const username = getUser?.username;
-  const firstName = getUser?.firstName;
-  const lastName = getUser?.lastName;
-  const email = getUser?.email;
+  if (!data) {
+    return null; // will be changed with component
+  }
+
+  if (loading) {
+    return <div>loading</div>; // will be changed with component
+  }
+
+  if (error) {
+    return <div>error</div>; // will be changed with component
+  }
+
+  const { getUser } = data;
+
+  const { username, firstName, lastName, email } = getUser;
+
   const phoneNumber = "123456789";
   const address = "Addis Ababa";
   const birthdate = "April 19 2001";
-  const description = `Hi I am ${getUser?.username}`;
+  const description = `Hi I am ${getUser.username}`;
 
   const user = useMemo(() => {
     return {
@@ -87,9 +97,13 @@ export default function UserPage() {
             margin: "0 20px 0 20px",
           }}
         >
-          <Box sx={style.profilePageHolder}>{data && <ProfileHolder />}</Box>
+          <Box sx={style.profilePageHolder}>
+            <ProfileHolder />
+          </Box>
 
-          <Box sx={style.DetailHolderContainer}>{data && <DetailHolder />}</Box>
+          <Box sx={style.DetailHolderContainer}>
+            <DetailHolder />
+          </Box>
         </Box>
       </CardContext.Provider>
     </UserContext.Provider>
