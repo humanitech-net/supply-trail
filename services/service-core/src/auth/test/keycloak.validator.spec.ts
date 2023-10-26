@@ -12,7 +12,6 @@
 
 import { userInputValidator } from '../keycloak.validator';
 import Joi from 'joi';
-
 const notValid = 'should not validate an invalid user input';
 const firstName = 'John';
 const lastName = 'Doe';
@@ -23,9 +22,9 @@ describe('userInputValidator', () => {
     {
       description: 'should validate a valid user input',
       input: {
-        firstName: firstName,
-        lastName: lastName,
-        username: username
+        firstName,
+        lastName,
+        username
       },
       shouldErrorBeDefined: false
     },
@@ -33,25 +32,25 @@ describe('userInputValidator', () => {
       description: notValid,
       input: {
         firstName: '',
-        lastName: lastName,
-        username: username
+        lastName,
+        username
       },
       shouldErrorBeDefined: true
     },
     {
       description: notValid,
       input: {
-        firstName: firstName,
+        firstName,
         lastName: '',
-        username: username
+        username
       },
       shouldErrorBeDefined: true
     },
     {
       description: notValid,
       input: {
-        firstName: firstName,
-        lastName: lastName,
+        firstName,
+        lastName,
         username: ''
       },
       shouldErrorBeDefined: true
