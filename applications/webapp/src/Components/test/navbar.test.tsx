@@ -17,11 +17,9 @@ import { MemoryRouter } from "react-router-dom";
 
 describe("NavBar", () => {
   test("renders NavBar component", () => {
-    const openDrawerMock = jest.fn();
-
     render(
       <MemoryRouter>
-        <NavBar open={false} openDrawer={openDrawerMock} />
+        <NavBar />
       </MemoryRouter>,
     );
   });

@@ -19,7 +19,7 @@ describe("MainContent", () => {
   test("renders MainContent component", () => {
     render(
       <MemoryRouter>
-        <MainContent open={false} />
+        <MainContent />
       </MemoryRouter>,
     );
   });

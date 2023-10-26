@@ -16,7 +16,6 @@ import LeftDrawer from "../leftDrawer";
 
 describe("LeftDrawer", () => {
   test("renders LeftDrawer component", () => {
-    const closeDrawerMock = jest.fn();
-    render(<LeftDrawer open={false} closeDrawer={closeDrawerMock} />);
+    render(<LeftDrawer />);
   });
 });
