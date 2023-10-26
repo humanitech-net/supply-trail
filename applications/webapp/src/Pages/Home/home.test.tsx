@@ -13,7 +13,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Home from "../home";
+import Home from "./home";
 
 describe("Home", () => {
   test("renders navbar", () => {
