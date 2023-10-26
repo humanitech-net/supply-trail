@@ -32,34 +32,32 @@ export default function DetailHolder() {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
 
-  const user = useUserContext();
+  const { user } = useUserContext();
+  const { firstName, lastName, email, address, birthdate, phoneNumber } = user;
+
   const card = useCardContext();
+  const { editable, setEditable, setElevation } = card;
 
-  const [firstname, setFirstname] = useState(user.firstName);
+  const [firstname, setFirstname] = useState(firstName);
 
-  const [lastname, setLastname] = useState(user.lastName);
+  const [lastname, setLastname] = useState(lastName);
 
   const [editUser] = useMutation(EditUserMutation);
-
-  const userInput = {
-    username: user.username,
-    firstName: firstname,
-    lastName: lastname,
-  };
 
   async function updateUser() {
     try {
       const { data } = await editUser({
         variables: {
-          userInput,
+          firstname,
+          lastname,
         },
       });
       console.log("User:", data.editUser);
     } catch (error) {
       console.error("Error:", error);
     }
-    card.setEditable(!card.editable);
-    card.setElevation(0);
+    setEditable(!editable);
+    setElevation(0);
   }
 
   function firstNameChanged(
@@ -82,8 +80,8 @@ export default function DetailHolder() {
             <FormControl fullWidth>
               <TextField
                 label="First Name"
-                defaultValue={user.firstName}
-                disabled={card.editable}
+                defaultValue={firstName}
+                disabled={editable}
                 onChange={firstNameChanged}
               />
             </FormControl>
@@ -93,8 +91,8 @@ export default function DetailHolder() {
             <FormControl fullWidth>
               <TextField
                 label="Last Name"
-                disabled={card.editable}
-                defaultValue={user.lastName}
+                disabled={editable}
+                defaultValue={lastName}
                 onChange={lastNameChanged}
               />
             </FormControl>
@@ -104,7 +102,7 @@ export default function DetailHolder() {
         <Grid container spacing={2} sx={style.grid}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <TextField label="Email" defaultValue={user.email} disabled />
+              <TextField label="Email" defaultValue={email} disabled />
             </FormControl>
           </Grid>
 
@@ -112,7 +110,7 @@ export default function DetailHolder() {
             <FormControl fullWidth>
               <TextField
                 label="Phone Number"
-                defaultValue={user.phoneNumber}
+                defaultValue={phoneNumber}
                 disabled
               />
             </FormControl>
@@ -122,7 +120,7 @@ export default function DetailHolder() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <TextField label="Address" defaultValue={user.address} disabled />
+              <TextField label="Address" defaultValue={address} disabled />
             </FormControl>
           </Grid>
 
@@ -130,7 +128,7 @@ export default function DetailHolder() {
             <FormControl fullWidth>
               <TextField
                 label="Date of Birth"
-                defaultValue={user.birthdate}
+                defaultValue={birthdate}
                 disabled
               />
             </FormControl>
