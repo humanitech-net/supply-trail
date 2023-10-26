@@ -17,7 +17,6 @@ import DetailHolder from "../components/detailHolder";
 import { EditUserMutation } from "../graphql/mutation";
 import { CardContext, UserContext } from "../context";
 import { BrowserRouter } from "react-router-dom";
-import { DocumentNode } from "graphql";
 
 describe("DetailHolder", () => {
   const mockUser = {
@@ -42,38 +41,26 @@ describe("DetailHolder", () => {
   const mockNewFirstName = "new first name";
   const mockNewLastName = "new lastName name";
 
-  const renderComponent = (
-    mocks:
-      | {
-          request: {
-            query: DocumentNode;
-            variables: {
-              userInput: {
-                username: string;
-                firstName: string;
-                lastName: string;
-              };
-            };
-          };
-          error: Error;
-        }[]
-      | {
-          request: {
-            query: DocumentNode;
-            variables: {
-              userInput: {
-                username: string;
-                firstName: string;
-                lastName: string;
-              };
-            };
-          };
-          result: { data: { editUser: boolean } };
-        }[]
-      | readonly MockedResponse<Record<string, any>, Record<string, any>>[]
-      | undefined,
-  ) => {
-    return render(
+  const editUserMock: MockedResponse = {
+    request: {
+      query: EditUserMutation,
+      variables: {
+        userInput: {
+          username: mockUser.username,
+          firstName: mockNewFirstName,
+          lastName: mockNewLastName,
+        },
+      },
+    },
+    result: {
+      data: {
+        editUser: true,
+      },
+    },
+  };
+
+  const renderComponent = (mocks: MockedResponse[]) => {
+    render(
       <BrowserRouter>
         <MockedProvider mocks={mocks}>
           <UserContext.Provider value={mockUser}>
@@ -88,15 +75,12 @@ describe("DetailHolder", () => {
 
   test("renders detailHolder", () => {
     renderComponent([]);
-
-    // Your test assertions for rendering go here
   });
 
   test("handles error during user update", async () => {
-    // Mock console.error
     console.error = jest.fn();
 
-    const editUserErrorMock = {
+    const editUserErrorMock: MockedResponse = {
       request: {
         query: EditUserMutation,
         variables: {
@@ -107,12 +91,10 @@ describe("DetailHolder", () => {
           },
         },
       },
-      error: new Error("Update failed"), // Simulate an error
+      error: new Error("Update failed"),
     };
 
     renderComponent([editUserErrorMock]);
-
-    // Your test assertions for error handling go here
 
     fireEvent.change(screen.getByLabelText("First Name"), {
       target: { value: mockNewFirstName },
@@ -124,14 +106,16 @@ describe("DetailHolder", () => {
     fireEvent.click(screen.getByText("Update"));
 
     await waitFor(() => {
-      expect(editUserErrorMock.request.variables.userInput).toEqual({
-        username: mockUser.username,
-        firstName: mockNewFirstName,
-        lastName: mockNewLastName,
-      });
+      const variables = editUserErrorMock.request?.variables;
+      if (variables) {
+        expect(variables.userInput).toEqual({
+          username: mockUser.username,
+          firstName: mockNewFirstName,
+          lastName: mockNewLastName,
+        });
+      }
     });
 
-    // Check that console.error was called with the expected error messag
     expect(console.error).toHaveBeenCalledWith(
       expect.stringMatching(
         /\[DetailHolder\.updateUser\] Failed to update user information\. Error: ApolloError: Update failed/,
@@ -140,27 +124,7 @@ describe("DetailHolder", () => {
   });
 
   test("updates user details on button click", async () => {
-    const editUserMock = {
-      request: {
-        query: EditUserMutation,
-        variables: {
-          userInput: {
-            username: mockUser.username,
-            firstName: mockNewFirstName,
-            lastName: mockNewLastName,
-          },
-        },
-      },
-      result: {
-        data: {
-          editUser: true,
-        },
-      },
-    };
-
     renderComponent([editUserMock]);
-
-    // Your test assertions for successful user update go here
 
     fireEvent.change(screen.getByLabelText("First Name"), {
       target: { value: mockNewFirstName },
@@ -172,11 +136,14 @@ describe("DetailHolder", () => {
     fireEvent.click(screen.getByText("Update"));
 
     await waitFor(() => {
-      expect(editUserMock.request.variables.userInput).toEqual({
-        username: mockUser.username,
-        firstName: mockNewFirstName,
-        lastName: mockNewLastName,
-      });
+      const variables = editUserMock.request?.variables;
+      if (variables) {
+        expect(variables.userInput).toEqual({
+          username: mockUser.username,
+          firstName: mockNewFirstName,
+          lastName: mockNewLastName,
+        });
+      }
     });
 
     expect(mockCard.setEditable).toHaveBeenCalledWith(true);
