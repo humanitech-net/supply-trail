@@ -86,7 +86,7 @@ export default function DetailHolder() {
                 label="First Name"
                 defaultValue={user.firstName}
                 disabled={card.editable}
-                onChange={() => firstNameChanged}
+                onChange={firstNameChanged}
               />
             </FormControl>
           </Grid>
@@ -97,7 +97,7 @@ export default function DetailHolder() {
                 label="Last Name"
                 disabled={card.editable}
                 defaultValue={user.lastName}
-                onChange={() => lastNameChanged}
+                onChange={lastNameChanged}
               />
             </FormControl>
           </Grid>
@@ -141,7 +141,7 @@ export default function DetailHolder() {
         {!card.editable && (
           <Box sx={style.box}>
             <Box sx={style.buttonHolder}>
-              <Button variant="contained" onClick={() => updateUser}>
+              <Button variant="contained" onClick={updateUser}>
                 Update
               </Button>
               <Link to={CHANGE_PASSWORD_URL}>
