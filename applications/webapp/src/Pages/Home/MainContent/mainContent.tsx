@@ -11,42 +11,28 @@
  */
 
 import React, { useContext } from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled } from "@mui/material/styles";
 
 import { Routes, Route } from "react-router-dom";
-import UserPage from "../Pages/User/userPage";
+import UserPage from "../../User/userPage";
 import { DrawerContext } from "src/Pages/Home/ContextProvider/drawerProvider";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 export default function MainContent() {
-  const drawerWidth = 240;
+  const { open } = useContext(DrawerContext);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-  const { open } = useContext(DrawerContext);
-
-  const Main = styled("main", {
-    shouldForwardProp: (prop) => prop !== "open",
-  })<{
-    open?: boolean;
-  }>(({ theme }) => ({
+  const Main = styled("main")(({ theme }) => ({
+    marginLeft: open && isDesktop ? 240 : 0,
     marginTop: 80,
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-
-    ...(isDesktop && {
-      ...(open && {
-        marginLeft: drawerWidth,
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      }),
-    }),
   }));
+
   return (
     <Main>
       <Routes>
