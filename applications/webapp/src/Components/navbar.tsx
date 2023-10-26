@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
@@ -22,13 +22,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { DrawerContext } from "src/Pages/Home/ContextProvider/drawerProvider";
 
 const drawerWidth = 240;
-
-interface HandleDrawer {
-  open: boolean;
-  openDrawer: () => void;
-}
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -51,7 +47,11 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function NavBar({ open, openDrawer }: Readonly<HandleDrawer>) {
+export default function NavBar() {
+  const { open, setOpen } = useContext(DrawerContext);
+  const openDrawer = () => {
+    setOpen(true);
+  };
   return (
     <AppBar
       position="fixed"

@@ -10,27 +10,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import Drawer from "@mui/material/Drawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DrawerHeader from "./Components/drawerHeader";
 import DrawerMenu from "./Components/drawerMenu";
 import { styles } from "./util/style";
+import { DrawerContext } from "../ContextProvider/drawerProvider";
+// import { DrawerContext } from "./Components/DrawerContextProvider";
 
-interface DrawerProps {
-  open: boolean;
-  closeDrawer: () => void;
-}
-
-export default function LeftDrawer({
-  open,
-  closeDrawer,
-}: Readonly<DrawerProps>) {
+export default function LeftDrawer() {
   const theme = useTheme();
   const style = styles();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const { open } = useContext(DrawerContext);
 
   return (
     <Drawer
@@ -39,7 +35,7 @@ export default function LeftDrawer({
       variant={isDesktop ? "persistent" : "temporary"}
       open={open}
     >
-      <DrawerHeader closeDrawer={closeDrawer} />
+      <DrawerHeader />
       <DrawerMenu />
     </Drawer>
   );

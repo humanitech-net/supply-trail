@@ -10,21 +10,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { Routes, Route } from "react-router-dom";
 import UserPage from "../Pages/User/userPage";
+import { DrawerContext } from "src/Pages/Home/ContextProvider/drawerProvider";
 
-interface HandleDrawer {
-  open: boolean;
-}
-
-export default function MainContent({ open }: Readonly<HandleDrawer>) {
+export default function MainContent() {
   const drawerWidth = 240;
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const { open } = useContext(DrawerContext);
 
   const Main = styled("main", {
     shouldForwardProp: (prop) => prop !== "open",
@@ -49,7 +48,7 @@ export default function MainContent({ open }: Readonly<HandleDrawer>) {
     }),
   }));
   return (
-    <Main open={open}>
+    <Main>
       <Routes>
         <Route path="/profile" element={<UserPage />} />
       </Routes>

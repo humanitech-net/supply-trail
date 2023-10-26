@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IconButton, styled } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import { DrawerContext } from "../../ContextProvider/drawerProvider";
 
-interface DrawerHeaderProps {
-  closeDrawer: () => void;
-}
+export default function DrawerHeader() {
+  const { setOpen } = useContext(DrawerContext);
 
-export default function DrawerHeader({ closeDrawer }: DrawerHeaderProps) {
+  const closeDrawer = () => {
+    setOpen(false);
+  };
+
   const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
