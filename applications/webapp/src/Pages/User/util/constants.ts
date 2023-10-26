@@ -11,4 +11,4 @@
  */
 
 export const CHANGE_PASSWORD_URL =
-  "https://dev.supply-trail.humanitech.net/auth/realms/humanitech/protocol/openid-connect/auth?[…]&client_id=supply-trail-app&kc_action=UPDATE_PASSWORD";
+  "https://dev.supply-trail.humanitech.net/auth/realms/humanitech/protocol/openid-connect/auth?response_type=code&client_id=supply-trail-app&kc_action=UPDATE_PASSWORD";
