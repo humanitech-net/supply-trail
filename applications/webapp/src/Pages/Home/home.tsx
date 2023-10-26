@@ -13,7 +13,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import NavBar from "../../Components/navbar";
+import NavBar from "./NavBar/navbar";
 import LeftDrawer from "./LeftDrawer/leftDrawer";
 import MainContent from "./MainContent/mainContent";
 import { DrawerProvider } from "./ContextProvider/drawerProvider";
