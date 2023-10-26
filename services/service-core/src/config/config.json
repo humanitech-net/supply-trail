@@ -1,5 +1,8 @@
 {
   "keycloak": {
+    "keycloakServerUrl": "https://dev.supply-trail.humanitech.net/auth",
+    "realm": "humanitech",
+    "nestClientId": "nest-application",
     "realmUrl": "https://dev.supply-trail.humanitech.net/auth/realms/humanitech",
     "adminUrl": "https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech",
     "grantType": "password",

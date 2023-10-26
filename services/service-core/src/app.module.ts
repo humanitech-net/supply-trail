@@ -54,9 +54,9 @@ import { configuration } from './config/config.service';
     KeycloakConnectModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        authServerUrl: configService.get('KEYCLOAK_SERVER_URL'),
-        realm: 'humanitech',
-        resource: 'nest-application',
+        authServerUrl: configService.get('keycloakServerUrl'),
+        realm: configService.get('keycloak.realm'),
+        resource: configService.get('keycloak.nestClientId'),
         secret: configService.get('KEYCLOAK_SECRET'),
         'public-client': true,
         verifyTokenAudience: true,
