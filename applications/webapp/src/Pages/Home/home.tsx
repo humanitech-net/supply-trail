@@ -14,7 +14,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import NavBar from "../../Components/navbar";
-import LeftDrawer from "../../Components/leftDrawer";
+import LeftDrawer from "./LeftDrawer/leftDrawer";
 import MainContent from "../../Components/mainContent";
 
 export default function Home() {
