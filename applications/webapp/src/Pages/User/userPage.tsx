@@ -15,51 +15,30 @@ import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
 import { EditableCardElevation, styles } from "./util/style";
-import { CardContext, UserContext } from "./context";
+import { CardContext, UserContext, useUserContext } from "./context";
 import useCustomQuery from "src/hooks/useCustomQuery";
+import { User } from "../interface";
 
-export default function UserPage() {
-  const theme = useTheme();
-  const style = styles(theme).userPage;
-
-  const [editable, setEditable] = useState(true);
-  const [elevation, setElevation] = useState(0);
-
+const useCurrentUserData = () => {
   const { data, loading, error } = useCustomQuery("GET_USER");
 
-  if (!data) {
-    return null; // will be changed with component
-  }
-
-  if (loading) {
-    return <div>loading</div>; // will be changed with component
-  }
-
-  if (error) {
-    return <div>error</div>; // will be changed with component
-  }
-
-  const { getUser } = data;
-
-  const { username, firstName, lastName, email } = getUser;
+  const { username, firstName, lastName, email } = data?.getUser || {};
 
   const phoneNumber = "123456789";
   const address = "Addis Ababa";
   const birthdate = "April 19 2001";
-  const description = `Hi I am ${getUser.username}`;
+  const description = `Hi I am ${username}`;
 
-  const user = useMemo(() => {
-    return {
-      username,
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      address,
-      birthdate,
-      description,
-    };
-  }, [
+  const user = useMemo<User>(() => ({
+    username: username || "",
+    firstName: firstName || "",
+    lastName: lastName || "",
+    email: email || "",
+    phoneNumber,
+    address,
+    birthdate,
+    description,
+  }), [
     username,
     firstName,
     lastName,
@@ -69,6 +48,78 @@ export default function UserPage() {
     birthdate,
     description,
   ]);
+
+  return [user, loading, error];
+}
+
+function UserPageContextProvider({ children }: { children: React.ReactNode }) {
+  const [user, loading, error] = useCurrentUserData();
+
+  return (
+    <UserContext.Provider value={{ user, loading, error }}>
+      {children}
+    </UserContext.Provider>
+  )
+}
+
+function LoadingOverlay({ children }: { children: React.ReactNode }) {
+  const [user, loading] = useUserContext();
+
+  return loading
+    ? <>Overlay spinner goes here</>
+    : children;
+}
+
+export default function UserPage() {
+  const theme = useTheme();
+  const style = styles(theme).userPage;
+
+  const [editable, setEditable] = useState(true);
+  const [elevation, setElevation] = useState(0);
+
+  // const { data, loading, error } = useCustomQuery("GET_USER");
+
+  // if (!data) {
+  //   return null; // will be changed with component
+  // }
+
+  // if (loading) {
+  //   return <div>loading</div>; // will be changed with component
+  // }
+
+  // if (error) {
+  //   return <div>error</div>; // will be changed with component
+  // }
+
+  // const { getUser } = data;
+  // const { username, firstName, lastName, email } = getUser;
+
+  // const phoneNumber = "123456789";
+  // const address = "Addis Ababa";
+  // const birthdate = "April 19 2001";
+  // const description = `Hi I am ${getUser.username}`;
+
+  // const user = useMemo(() => {
+  //   return {
+  //     username,
+  //     firstName,
+  //     lastName,
+  //     email,
+  //     phoneNumber,
+  //     address,
+  //     birthdate,
+  //     description,
+  //   };
+  // }, [
+  //   username,
+  //   firstName,
+  //   lastName,
+  //   email,
+  //   phoneNumber,
+  //   address,
+  //   birthdate,
+  //   description,
+  // ]);
 
   const editUser = () => {
     setEditable((isEditable) => !isEditable);
@@ -88,24 +139,27 @@ export default function UserPage() {
   }, [editable, setEditable, elevation, setElevation, editUser]);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserPageContextProvider>
       <CardContext.Provider value={card}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: ["column", "column", "row"],
-            margin: "0 20px 0 20px",
-          }}
-        >
-          <Box sx={style.profilePageHolder}>
-            <ProfileHolder />
-          </Box>
+        <LoadingOverlay>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: ["column", "column", "row"],
+              margin: "0 20px 0 20px",
+            }}
+          >
+            <Box sx={style.profilePageHolder}>
+              <ProfileHolder />
+            </Box>
 
-          <Box sx={style.DetailHolderContainer}>
-            <DetailHolder />
+            <Box sx={style.DetailHolderContainer}>
+              <DetailHolder />
+            </Box>
+
           </Box>
-        </Box>
+        </LoadingOverlay>
       </CardContext.Provider>
-    </UserContext.Provider>
+    </UserPageContextProvider>
   );
 }
