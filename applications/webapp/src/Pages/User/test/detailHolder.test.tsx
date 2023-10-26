@@ -12,11 +12,12 @@
 
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MockedProvider } from "@apollo/client/testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import DetailHolder from "../components/detailHolder";
 import { EditUserMutation } from "../graphql/mutation";
 import { CardContext, UserContext } from "../context";
 import { BrowserRouter } from "react-router-dom";
+import { DocumentNode } from "graphql";
 
 describe("DetailHolder", () => {
   const mockUser = {
@@ -41,28 +42,40 @@ describe("DetailHolder", () => {
   const mockNewFirstName = "new first name";
   const mockNewLastName = "new lastName name";
 
-  const editUserMock = {
-    request: {
-      query: EditUserMutation,
-      variables: {
-        userInput: {
-          username: mockUser.username,
-          firstName: mockNewFirstName,
-          lastName: mockNewLastName,
-        },
-      },
-    },
-    result: {
-      data: {
-        editUser: true,
-      },
-    },
-  };
-
-  test("renders detailHolder", () => {
-    render(
+  const renderComponent = (
+    mocks:
+      | {
+          request: {
+            query: DocumentNode;
+            variables: {
+              userInput: {
+                username: string;
+                firstName: string;
+                lastName: string;
+              };
+            };
+          };
+          error: Error;
+        }[]
+      | {
+          request: {
+            query: DocumentNode;
+            variables: {
+              userInput: {
+                username: string;
+                firstName: string;
+                lastName: string;
+              };
+            };
+          };
+          result: { data: { editUser: boolean } };
+        }[]
+      | readonly MockedResponse<Record<string, any>, Record<string, any>>[]
+      | undefined,
+  ) => {
+    return render(
       <BrowserRouter>
-        <MockedProvider>
+        <MockedProvider mocks={mocks}>
           <UserContext.Provider value={mockUser}>
             <CardContext.Provider value={mockCard}>
               <DetailHolder />
@@ -71,6 +84,12 @@ describe("DetailHolder", () => {
         </MockedProvider>
       </BrowserRouter>,
     );
+  };
+
+  test("renders detailHolder", () => {
+    renderComponent([]);
+
+    // Your test assertions for rendering go here
   });
 
   test("handles error during user update", async () => {
@@ -91,17 +110,9 @@ describe("DetailHolder", () => {
       error: new Error("Update failed"), // Simulate an error
     };
 
-    render(
-      <BrowserRouter>
-        <MockedProvider mocks={[editUserErrorMock]}>
-          <UserContext.Provider value={mockUser}>
-            <CardContext.Provider value={mockCard}>
-              <DetailHolder />
-            </CardContext.Provider>
-          </UserContext.Provider>
-        </MockedProvider>
-      </BrowserRouter>,
-    );
+    renderComponent([editUserErrorMock]);
+
+    // Your test assertions for error handling go here
 
     fireEvent.change(screen.getByLabelText("First Name"), {
       target: { value: mockNewFirstName },
@@ -120,8 +131,7 @@ describe("DetailHolder", () => {
       });
     });
 
-    // Check that console.error was called with the expected error message
-    // Check that console.error was called with the expected error message using a regular expression
+    // Check that console.error was called with the expected error messag
     expect(console.error).toHaveBeenCalledWith(
       expect.stringMatching(
         /\[DetailHolder\.updateUser\] Failed to update user information\. Error: ApolloError: Update failed/,
@@ -130,17 +140,27 @@ describe("DetailHolder", () => {
   });
 
   test("updates user details on button click", async () => {
-    render(
-      <BrowserRouter>
-        <MockedProvider mocks={[editUserMock]}>
-          <UserContext.Provider value={mockUser}>
-            <CardContext.Provider value={mockCard}>
-              <DetailHolder />
-            </CardContext.Provider>
-          </UserContext.Provider>
-        </MockedProvider>
-      </BrowserRouter>,
-    );
+    const editUserMock = {
+      request: {
+        query: EditUserMutation,
+        variables: {
+          userInput: {
+            username: mockUser.username,
+            firstName: mockNewFirstName,
+            lastName: mockNewLastName,
+          },
+        },
+      },
+      result: {
+        data: {
+          editUser: true,
+        },
+      },
+    };
+
+    renderComponent([editUserMock]);
+
+    // Your test assertions for successful user update go here
 
     fireEvent.change(screen.getByLabelText("First Name"), {
       target: { value: mockNewFirstName },
