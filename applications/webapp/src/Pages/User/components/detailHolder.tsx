@@ -142,11 +142,11 @@ export default function DetailHolder() {
               <Button variant="contained" onClick={updateUser}>
                 Update
               </Button>
-              <Link to={CHANGE_PASSWORD_URL}>
+              <a href={CHANGE_PASSWORD_URL}>
                 <Button variant="contained" color="warning">
                   Change Password
                 </Button>
-              </Link>
+              </a>
             </Box>
           </Box>
         )}
