@@ -11,7 +11,7 @@
  */
 
 import React from "react";
-import { useCurrentCardState } from "src/hooks/useCurrentCardState";
+import { useCurrentCardState } from "../../../../hooks/useCurrentCardState";
 import { CardContext } from "../../context";
 
 export function CardContextProvider({

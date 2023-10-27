@@ -11,7 +11,7 @@
  */
 
 import { useMemo, useState } from "react";
-import { EditableCardElevation } from "src/Pages/User/util/style";
+import { EditableCardElevation } from "../Pages/User/util/style";
 
 export function useCurrentCardState() {
   const [editable, setEditable] = useState(true);

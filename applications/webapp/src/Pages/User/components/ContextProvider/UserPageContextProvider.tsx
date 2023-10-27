@@ -11,7 +11,7 @@
  */
 
 import React from "react";
-import { useCurrentUserData } from "src/hooks/useCurrentUserData";
+import { useCurrentUserData } from "../../../../hooks/useCurrentUserData";
 import { UserContext } from "../../context";
 
 export function UserPageContextProvider({

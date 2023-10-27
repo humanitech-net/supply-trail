@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { styles } from "../util/style";
 import { useMutation } from "@apollo/client";
-import { EditUserMutation } from "src/hooks/mutation";
+import { EditUserMutation } from "../../../hooks/mutation";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
 import { CHANGE_PASSWORD_URL } from "../util/constants";

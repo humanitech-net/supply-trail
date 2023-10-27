@@ -14,34 +14,15 @@ import React from "react";
 import { render } from "@testing-library/react";
 
 import ProfileHolder from "../components/profileHolder";
-import { UserContext, CardContext } from "../context";
+import { UserPageContextProvider } from "../components/ContextProvider/UserPageContextProvider";
+import { CardContextProvider } from "../components/ContextProvider/CardContextProvider";
 
-describe("ProfileHolder", () => {
-  const mockUser = {
-    username: "username",
-    firstName: "name",
-    lastName: "fname",
-    email: "test@test.com",
-    phoneNumber: "123456",
-    address: "address",
-    birthdate: "test",
-    description: "description",
-  };
-
-  const mockCard = {
-    editable: false,
-    elevation: 0,
-    setEditable: jest.fn(),
-    setElevation: jest.fn(),
-    editUser: jest.fn(),
-  };
-  test("renders profileHolder", () => {
-    render(
-      <UserContext.Provider value={mockUser}>
-        <CardContext.Provider value={mockCard}>
-          <ProfileHolder />
-        </CardContext.Provider>
-      </UserContext.Provider>,
-    );
-  });
+test("renders profileHolder", () => {
+  render(
+    <UserPageContextProvider>
+      <CardContextProvider>
+        <ProfileHolder />
+      </CardContextProvider>
+    </UserPageContextProvider>,
+  );
 });
