@@ -16,9 +16,9 @@ import { UserContext } from "../../context";
 
 export function UserPageContextProvider({
   children,
-}: {
-  children: Readonly<React.ReactNode>;
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const { user, loading, error } = useCurrentUserData();
 
   const userpagecontext = useMemo(

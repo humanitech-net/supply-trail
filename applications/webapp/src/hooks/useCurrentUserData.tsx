@@ -16,7 +16,7 @@ import useCustomQuery from "./useGenericQuery";
 export const useCurrentUserData = () => {
   const { data, loading, error } = useCustomQuery("GET_USER");
 
-  const { username, firstName, lastName, email } = data?.getUser || {};
+  const { username, firstName, lastName, email } = data?.getUser ?? {};
 
   const phoneNumber = "123456789";
   const address = "Addis Ababa";

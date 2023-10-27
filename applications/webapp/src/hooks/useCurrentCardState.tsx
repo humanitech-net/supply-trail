@@ -24,7 +24,7 @@ export function useCurrentCardState() {
     );
   };
 
-  const card = useMemo(
+  return useMemo(
     () => ({
       editable,
       setEditable,
@@ -34,6 +34,4 @@ export function useCurrentCardState() {
     }),
     [editable, setEditable, elevation, setElevation, editUser],
   );
-
-  return card;
 }
