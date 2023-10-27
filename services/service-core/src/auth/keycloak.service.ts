@@ -20,12 +20,6 @@ import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
-  getAdminTokenParams() {
-    throw new Error('Method not implemented.');
-  }
-  getToken() {
-    throw new Error('Method not implemented.');
-  }
   constructor(private readonly configService: ConfigService) {}
 
   async getPublicKey() {
