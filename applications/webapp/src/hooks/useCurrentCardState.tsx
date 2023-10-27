@@ -24,15 +24,16 @@ export function useCurrentCardState() {
     );
   };
 
-  const card = useMemo(() => {
-    return {
+  const card = useMemo(
+    () => ({
       editable,
       setEditable,
       elevation,
       setElevation,
       editUser,
-    };
-  }, [editable, setEditable, elevation, setElevation, editUser]);
+    }),
+    [editable, setEditable, elevation, setElevation, editUser],
+  );
 
   return card;
 }

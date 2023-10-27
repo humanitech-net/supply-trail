@@ -17,7 +17,7 @@ import { CardContext } from "../../context";
 export function CardContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: Readonly<React.ReactNode>;
 }) {
   const card = useCurrentCardState();
   return <CardContext.Provider value={card}>{children}</CardContext.Provider>;

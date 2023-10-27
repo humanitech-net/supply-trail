@@ -10,19 +10,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useCurrentUserData } from "../../../../hooks/useCurrentUserData";
 import { UserContext } from "../../context";
 
 export function UserPageContextProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: Readonly<React.ReactNode>;
 }) {
   const { user, loading, error } = useCurrentUserData();
 
+  const userpagecontext = useMemo(
+    () => ({
+      user,
+      loading,
+      error,
+    }),
+    [user, loading, error],
+  );
+
   return (
-    <UserContext.Provider value={{ user, loading, error }}>
+    <UserContext.Provider value={userpagecontext}>
       {children}
     </UserContext.Provider>
   );

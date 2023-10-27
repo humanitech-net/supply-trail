@@ -12,9 +12,9 @@
 
 import { renderHook } from "@testing-library/react";
 import { useCurrentUserData } from "../useCurrentUserData";
-import useCustomQuery from "../useCustomQuery";
+import useCustomQuery from "../useGenericQuery";
 
-jest.mock("../useCustomQuery");
+jest.mock("../useGenericQuery");
 
 describe("useCurrentUserData", () => {
   const mockUserData = {
@@ -32,7 +32,7 @@ describe("useCurrentUserData", () => {
     (useCustomQuery as jest.Mock).mockImplementation(() => ({
       data: { getUser: mockUserData },
       loading: false,
-      error: undefined,
+      error: null,
     }));
 
     const { result } = renderHook(() => useCurrentUserData());
@@ -41,14 +41,14 @@ describe("useCurrentUserData", () => {
     expect(user).toEqual(mockUserData);
 
     expect(loading).toBe(false);
-    expect(error).toBeUndefined();
+    expect(error).toBeNull();
   });
 
   it("should return error if failed to get user data", () => {
     const errorMessage = "Failed to get user data";
 
     (useCustomQuery as jest.Mock).mockImplementation(() => ({
-      data: undefined,
+      data: null,
       loading: false,
       error: errorMessage,
     }));

@@ -11,7 +11,7 @@
  */
 
 import { useMemo } from "react";
-import useCustomQuery from "./useCustomQuery";
+import useCustomQuery from "./useGenericQuery";
 
 export const useCurrentUserData = () => {
   const { data, loading, error } = useCustomQuery("GET_USER");
@@ -25,10 +25,10 @@ export const useCurrentUserData = () => {
 
   const user = useMemo(
     () => ({
-      username: username || "",
-      firstName: firstName || "",
-      lastName: lastName || "",
-      email: email || "",
+      username: username ?? "",
+      firstName: firstName ?? "",
+      lastName: lastName ?? "",
+      email: email ?? "",
       phoneNumber,
       address,
       birthdate,
