@@ -16,13 +16,38 @@ import { render } from "@testing-library/react";
 import ProfileHolder from "../components/profileHolder";
 import { UserPageContextProvider } from "../components/ContextProvider/UserPageContextProvider";
 import { CardContextProvider } from "../components/ContextProvider/CardContextProvider";
+import { MockedProvider } from "@apollo/client/testing";
+import { GET_USER_QUERY } from "../../../hooks/query";
 
-test("renders profileHolder", () => {
-  render(
-    <UserPageContextProvider>
-      <CardContextProvider>
-        <ProfileHolder />
-      </CardContextProvider>
-    </UserPageContextProvider>,
-  );
+describe("ProfileHolder", () => {
+  const mockData = {
+    getUser: {
+      id: "id",
+      username: "username",
+      firstName: "firstName",
+      lastName: "lastName",
+      email: "email@email.com",
+    },
+  };
+
+  const mockClient = {
+    request: {
+      query: GET_USER_QUERY,
+    },
+    result: {
+      data: mockData,
+    },
+  };
+  test("renders profileHolder", () => {
+    render(
+      <MockedProvider mocks={[mockClient]}>
+        <UserPageContextProvider>
+          <CardContextProvider>
+            <ProfileHolder />
+          </CardContextProvider>
+        </UserPageContextProvider>
+        ,
+      </MockedProvider>,
+    );
+  });
 });
