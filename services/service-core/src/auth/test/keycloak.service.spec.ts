@@ -32,6 +32,13 @@ describe('KeycloakService', () => {
     }).compile();
 
     keycloakService = module.get<KeycloakService>(KeycloakService);
+
+    keycloakService['keycloak'] = {
+      grantType: 'your-grant-type',
+      clientId: 'your-client-id',
+      realmUrl: 'your-realm-url'
+      // Add other properties as needed for your test
+    };
   });
 
   describe('getPublicKey', () => {

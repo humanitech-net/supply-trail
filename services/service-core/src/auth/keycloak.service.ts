@@ -20,11 +20,12 @@ import { UpdateUser } from 'src/graphql/users/users.entity';
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: ConfigService) {}
-  private readonly adminUrl = this.configService.get('keycloak.adminUrl');
-  private readonly realmUrl = this.configService.get('keycloak.realmUrl');
+  private keycloak = this.configService.get('keycloak');
+
   async getPublicKey() {
     try {
-      const response = await axios.get(this.realmUrl);
+      const { realmUrl } = this.keycloak;
+      const response = await axios.get(realmUrl);
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
@@ -33,18 +34,19 @@ export class KeycloakService {
   }
 
   async getAdminToken() {
+    const { grantType, clientId, realmUrl } = this.keycloak;
     const params = new URLSearchParams({
       username: this.configService.get(Config.keycloakAdmin),
       password: this.configService.get(Config.keycloakAdminPassword),
-      grant_type: this.configService.get('keycloak.grantType'),
-      client_id: this.configService.get('keycloak.clientId'),
+      grant_type: grantType,
+      client_id: clientId,
       client_secret: this.configService.get(Config.adminClientSecret)
     });
 
     const requestBody = params.toString();
     try {
       const getTokenData = await fetch(
-        `${this.realmUrl}/protocol/openid-connect/token`,
+        `${realmUrl}/protocol/openid-connect/token`,
         {
           method: 'POST',
           headers: {
@@ -81,6 +83,7 @@ export class KeycloakService {
   }
 
   async editUser(id: string, userInput: UpdateUser) {
+    const { adminUrl } = this.keycloak;
     const accessToken = await this.getAdminToken();
     if (
       userInput.firstName?.trim() === '' ||
@@ -94,7 +97,7 @@ export class KeycloakService {
       throw new Error('At least one field must be provided for the update.');
     }
 
-    const updateUser = await fetch(`${this.adminUrl}/users/${id}`, {
+    const updateUser = await fetch(`${adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
