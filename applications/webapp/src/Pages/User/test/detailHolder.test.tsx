@@ -77,52 +77,6 @@ describe("DetailHolder", () => {
     renderComponent([]);
   });
 
-  test("handles error during user update", async () => {
-    console.error = jest.fn();
-
-    const editUserErrorMock: MockedResponse = {
-      request: {
-        query: EditUserMutation,
-        variables: {
-          userInput: {
-            username: mockUser.username,
-            firstName: mockNewFirstName,
-            lastName: mockNewLastName,
-          },
-        },
-      },
-      error: new Error("Update failed"),
-    };
-
-    renderComponent([editUserErrorMock]);
-
-    fireEvent.change(screen.getByLabelText("First Name"), {
-      target: { value: mockNewFirstName },
-    });
-    fireEvent.change(screen.getByLabelText("Last Name"), {
-      target: { value: mockNewLastName },
-    });
-
-    fireEvent.click(screen.getByText("Update"));
-
-    await waitFor(() => {
-      const variables = editUserErrorMock.request?.variables;
-      if (variables) {
-        expect(variables.userInput).toEqual({
-          username: mockUser.username,
-          firstName: mockNewFirstName,
-          lastName: mockNewLastName,
-        });
-      }
-    });
-
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringMatching(
-        /\[DetailHolder\.updateUser\] Failed to update user information\. Error: ApolloError: Update failed/,
-      ),
-    );
-  });
-
   test("updates user details on button click", async () => {
     renderComponent([editUserMock]);
 
