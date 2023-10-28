@@ -41,7 +41,7 @@ initKeycloak()
     setInterval(refreshToken, intervalTime);
   })
   .catch((error) => {
-    console.log(
+    throw new Error(
       `[index.initKeycloak()] An error occurred during keycloak initialization:`,
       error,
     );
