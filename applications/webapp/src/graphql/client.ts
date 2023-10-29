@@ -31,10 +31,12 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const httpLink = new HttpLink({
   uri: "https://dev.supply-trail.humanitech.net/api/graphql",
-  fetch: fetch,
+  fetch,
 });
 
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    addTypename: false,
+  }),
 });
