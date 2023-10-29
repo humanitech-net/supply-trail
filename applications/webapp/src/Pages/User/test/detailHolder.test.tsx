@@ -103,4 +103,7 @@ describe("DetailHolder", () => {
     expect(mockCard.setEditable).toHaveBeenCalledWith(true);
     expect(mockCard.setElevation).toHaveBeenCalledWith(0);
   });
+  test("handles error when updating user details", async () => {
+    const error = new Error("Failed to update user information");
+  });
 });
