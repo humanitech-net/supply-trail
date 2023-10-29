@@ -14,8 +14,7 @@ import React from "react";
 import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
-import LoadingOverlay from "./components/loadingOverlay";
-import ErrorOverlay from "./components/errorOverlay";
+import Overlay from "./components/overlay";
 import { styles } from "./util/style";
 import { UserPageContextProvider } from "./components/ContextProvider/UserPageContextProvider";
 import { CardContextProvider } from "./components/ContextProvider/CardContextProvider";
@@ -26,27 +25,25 @@ export default function UserPage() {
 
   return (
     <UserPageContextProvider>
-      <LoadingOverlay>
-        <ErrorOverlay>
-          <CardContextProvider>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: ["column", "column", "row"],
-                margin: "0 20px 0 20px",
-              }}
-            >
-              <Box sx={style.profilePageHolder}>
-                <ProfileHolder />
-              </Box>
-
-              <Box sx={style.DetailHolderContainer}>
-                <DetailHolder />
-              </Box>
+      <Overlay>
+        <CardContextProvider>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: ["column", "column", "row"],
+              margin: "0 20px 0 20px",
+            }}
+          >
+            <Box sx={style.profilePageHolder}>
+              <ProfileHolder />
             </Box>
-          </CardContextProvider>
-        </ErrorOverlay>
-      </LoadingOverlay>
+
+            <Box sx={style.DetailHolderContainer}>
+              <DetailHolder />
+            </Box>
+          </Box>
+        </CardContextProvider>
+      </Overlay>
     </UserPageContextProvider>
   );
 }

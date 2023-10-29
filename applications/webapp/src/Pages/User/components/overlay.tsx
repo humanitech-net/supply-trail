@@ -13,12 +13,15 @@
 import React from "react";
 import { useUserContext } from "../context";
 
-export default function LoadingOverlay({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { loading } = useUserContext();
+export default function Overlay({ children }: { children: React.ReactNode }) {
+  const { loading, error } = useUserContext();
 
-  return loading ? <>Overlay spinner goes here</> : <>{children}</>;
+  if (loading) {
+    return <>Overlay spinner goes here</>;
+  }
+
+  if (error) {
+    return <>Error Message</>;
+  }
+  return <>{children}</>;
 }
