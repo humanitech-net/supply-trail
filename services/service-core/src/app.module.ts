@@ -53,15 +53,19 @@ import { configuration } from './config/config.service';
 
     KeycloakConnectModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        authServerUrl: configService.get('keycloakServerUrl'),
-        realm: configService.get('keycloak').realm,
-        resource: configService.get('keycloak').nestClientId,
-        secret: configService.get('KEYCLOAK_SECRET'),
-        'public-client': true,
-        verifyTokenAudience: true,
-        'confidential-port': 0
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const { realm, nestClientId, authServerUrl } =
+          configService.get('keycloak');
+        return {
+          authServerUrl,
+          realm,
+          resource: nestClientId,
+          secret: configService.get('KEYCLOAK_SECRET'),
+          'public-client': true,
+          verifyTokenAudience: true,
+          'confidential-port': 0
+        };
+      },
       inject: [ConfigService]
     }),
 
