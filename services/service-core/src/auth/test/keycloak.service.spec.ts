@@ -15,6 +15,7 @@ import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
 import { verify } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import Joi from 'joi';
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
@@ -155,13 +156,13 @@ describe('KeycloakService', () => {
       expect(editUser).toBe('Try again, failed to update');
     });
 
-    it('throws an error for inappropriate input', async () => {
+    it('firstName is not allowed to be empty', async () => {
       jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
         firstName: '',
-        lastName: '',
-        username: ''
+        lastName: 'lastName',
+        username: 'username'
       };
 
       const mockID = 'ID';
@@ -175,7 +176,7 @@ describe('KeycloakService', () => {
 
       await expect(
         keycloakService.editUser(mockID, mockUserInput)
-      ).rejects.toThrowError('Please enter an appropriate input');
+      ).rejects.toThrowError('"firstName" is not allowed to be empty'); // Modify the error message to match the required string
     });
   });
 

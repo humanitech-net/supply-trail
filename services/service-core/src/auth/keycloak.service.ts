@@ -84,7 +84,7 @@ export class KeycloakService {
     const accessToken = await this.getAdminToken();
     const { error } = userInputValidator.validate(userInput);
     if (error) {
-      throw new Error('Please enter an appropriate input');
+      throw new Error(error.details[0].message);
     }
 
     const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
