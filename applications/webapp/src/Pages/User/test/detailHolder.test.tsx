@@ -105,5 +105,24 @@ describe("DetailHolder", () => {
   });
   test("handles error when updating user details", async () => {
     const error = new Error("Failed to update user information");
+    const editUserErrorMock: MockedResponse = {
+      request: {
+        query: EditUserMutation,
+        variables: {
+          userInput: {
+            username: mockUser.username,
+            firstName: mockNewFirstName,
+            lastName: mockNewLastName,
+          },
+        },
+      },
+      error, // Simulate an error response
+    };
+
+    // Mock console.error to avoid unexpected error output
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    consoleErrorSpy.mockRestore();
   });
 });
