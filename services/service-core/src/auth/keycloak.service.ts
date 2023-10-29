@@ -35,12 +35,13 @@ export class KeycloakService {
 
   async getAdminToken() {
     const { grantType, clientId, realmUrl } = this.keycloak;
+    const { keycloakAdmin, keycloakAdminPassword, adminClientSecret } = Config;
     const params = new URLSearchParams({
-      username: this.configService.get(Config.keycloakAdmin),
-      password: this.configService.get(Config.keycloakAdminPassword),
+      username: this.configService.get(keycloakAdmin),
+      password: this.configService.get(keycloakAdminPassword),
       grant_type: grantType,
       client_id: clientId,
-      client_secret: this.configService.get(Config.adminClientSecret)
+      client_secret: this.configService.get(adminClientSecret)
     });
 
     const requestBody = params.toString();
