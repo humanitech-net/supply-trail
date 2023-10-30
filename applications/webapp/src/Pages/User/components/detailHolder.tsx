@@ -54,9 +54,7 @@ export default function DetailHolder() {
       });
       console.log("User:", data.editUser);
     } catch (error) {
-      throw new Error(
-        `[DetailHolder.updateUser] Failed to update user information. Error: ${error}`,
-      );
+      console.error("Error:", error);
     }
     setEditable(!editable);
     setElevation(0);
