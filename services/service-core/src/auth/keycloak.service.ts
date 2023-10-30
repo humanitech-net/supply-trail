@@ -54,13 +54,17 @@ export class KeycloakService {
       );
 
       if (!getTokenData.ok) {
-        throw new Error('Error: Fetch error');
+        throw new Error(
+          `[KeycloakService.getAdminToken] Failed to retrieve the admin token. HTTP Status: ${getTokenData.statusText}`
+        );
       }
 
       const tokenData = await getTokenData.json();
       return tokenData.access_token;
     } catch (error) {
-      throw new Error('Error: Fetch error');
+      throw new Error(
+        `[KeycloakService.getAdminToken] Failed to get the admin token. Error: ${error.message}`
+      );
     }
   }
 
