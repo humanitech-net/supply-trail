@@ -14,34 +14,40 @@ import React from "react";
 import { render } from "@testing-library/react";
 
 import ProfileHolder from "../components/profileHolder";
-import { UserContext, CardContext } from "../context";
+import { UserPageContextProvider } from "../components/ContextProvider/UserPageContextProvider";
+import { CardContextProvider } from "../components/ContextProvider/CardContextProvider";
+import { MockedProvider } from "@apollo/client/testing";
+import { GET_USER_QUERY } from "../../../hooks/query";
 
 describe("ProfileHolder", () => {
-  const mockUser = {
-    username: "username",
-    firstName: "name",
-    lastName: "fname",
-    email: "test@test.com",
-    phoneNumber: "123456",
-    address: "address",
-    birthdate: "test",
-    description: "description",
+  const mockData = {
+    getUser: {
+      id: "id",
+      username: "username",
+      firstName: "firstName",
+      lastName: "lastName",
+      email: "email@email.com",
+    },
   };
 
-  const mockCard = {
-    editable: false,
-    elevation: 0,
-    setEditable: jest.fn(),
-    setElevation: jest.fn(),
-    editUser: jest.fn(),
+  const mockClient = {
+    request: {
+      query: GET_USER_QUERY,
+    },
+    result: {
+      data: mockData,
+    },
   };
   test("renders profileHolder", () => {
     render(
-      <UserContext.Provider value={mockUser}>
-        <CardContext.Provider value={mockCard}>
-          <ProfileHolder />
-        </CardContext.Provider>
-      </UserContext.Provider>,
+      <MockedProvider mocks={[mockClient]}>
+        <UserPageContextProvider>
+          <CardContextProvider>
+            <ProfileHolder />
+          </CardContextProvider>
+        </UserPageContextProvider>
+        ,
+      </MockedProvider>,
     );
   });
 });
