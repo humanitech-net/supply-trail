@@ -55,7 +55,7 @@ export class KeycloakService {
       );
 
       if (!getTokenData.ok) {
-        throw new Error(getTokenData.statusText);
+        throw new Error("Couldn't get token");
       }
 
       const tokenData = await getTokenData.json();

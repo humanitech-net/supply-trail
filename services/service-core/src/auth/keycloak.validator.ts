@@ -15,4 +15,4 @@ export const userInputValidator = Joi.object({
   firstName: Joi.string().trim().min(1),
   lastName: Joi.string().trim().min(1),
   username: Joi.string().trim().min(1)
-});
+}).or('firstName', 'lastName', 'username');

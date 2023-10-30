@@ -83,26 +83,26 @@ describe('KeycloakService', () => {
     it('throws an error when it fails to fetch', async () => {
       const mockFailedResponse = new Response(null, {
         status: 400,
-        statusText: 'Bad Request'
+        statusText: "Couldn't get token"
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        'Bad Request'
+        "Couldn't get token"
       );
     });
 
     it('throws an error with the status text when fetch is not OK', async () => {
       const mockErrorResponse = new Response(null, {
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: "Couldn't get token"
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        'Internal Server Error'
+        "Couldn't get token"
       );
     });
   });
