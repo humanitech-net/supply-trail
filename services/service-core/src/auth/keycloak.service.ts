@@ -15,6 +15,7 @@ import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 import { ConfigService } from '../config/config.service';
 import { UpdateUser } from 'src/graphql/users/users.entity';
+import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
@@ -55,13 +56,17 @@ export class KeycloakService {
       );
 
       if (!getTokenData.ok) {
-        throw new Error('Error: Fetch error');
+        throw new Error(
+          `[KeycloakService.getAdminToken] Failed to retrieve the admin token. HTTP Status: ${getTokenData.statusText}`
+        );
       }
 
       const tokenData = await getTokenData.json();
       return tokenData.access_token;
     } catch (error) {
-      throw new Error('Error: Fetch error');
+      throw new Error(
+        `[KeycloakService.getAdminToken] Failed to get the admin token. Error: ${error.message}`
+      );
     }
   }
 
@@ -83,16 +88,9 @@ export class KeycloakService {
   async editUser(id: string, userInput: UpdateUser) {
     const { adminUrl } = this.keycloak;
     const accessToken = await this.getAdminToken();
-    if (
-      userInput.firstName?.trim() === '' ||
-      userInput.lastName?.trim() === '' ||
-      userInput.username?.trim() === ''
-    ) {
-      throw new Error('Please enter an appropriate input');
-    }
-
-    if (!userInput.firstName && !userInput.lastName && !userInput.username) {
-      throw new Error('At least one field must be provided for the update.');
+    const { error } = userInputValidator.validate(userInput);
+    if (error) {
+      throw new Error(error.details[0].message);
     }
 
     const updateUser = await fetch(`${adminUrl}/users/${id}`, {

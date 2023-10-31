@@ -10,5 +10,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export const CHANGE_PASSWORD_URL =
-  "https://dev.supply-trail.humanitech.net/auth/realms/humanitech/protocol/openid-connect/auth?response_type=code&client_id=supply-trail-app&kc_action=UPDATE_PASSWORD";
+import Joi from "joi";
+
+export const userSchema = Joi.object({
+  getUser: {
+    id: Joi.string().required(),
+    username: Joi.string().required(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    email: Joi.string().required(),
+  },
+});

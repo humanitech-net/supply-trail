@@ -10,5 +10,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export const CHANGE_PASSWORD_URL =
-  "https://dev.supply-trail.humanitech.net/auth/realms/humanitech/protocol/openid-connect/auth?response_type=code&client_id=supply-trail-app&kc_action=UPDATE_PASSWORD";
+import { GET_USER_QUERY } from "./query";
+import { userSchema } from "./schema";
+import { QueryConfigs, UserData } from "./types";
+
+export const queryConfigs: QueryConfigs = {
+  GET_USER: {
+    query: GET_USER_QUERY,
+    schema: userSchema,
+    data: {} as UserData,
+  },
+};

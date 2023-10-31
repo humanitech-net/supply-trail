@@ -29,8 +29,11 @@ export default function ProfileHolder() {
   const theme = useTheme();
   const style = styles(theme).profileholder;
 
-  const user = useUserContext();
+  const { user } = useUserContext();
+  const { username, description } = user;
+
   const card = useCardContext();
+  const { editUser } = card;
 
   return (
     <Card elevation={0} sx={style.card}>
@@ -41,17 +44,17 @@ export default function ProfileHolder() {
               <Avatar alt="user" src="" sx={style.avatar} />
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="h6">{user.username}</Typography>
+              <Typography variant="h6">{username}</Typography>
             </Grid>
             <Grid item xs={10} sx={style.grid}>
-              <Typography>{user.description}</Typography>
+              <Typography>{description}</Typography>
             </Grid>
             <Grid item xs={10} md={10}>
               <Button
                 aria-label="edit user"
                 variant="contained"
                 color="primary"
-                onClick={card.editUser}
+                onClick={editUser}
               >
                 Edit Profile
               </Button>
