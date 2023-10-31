@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
+import { CustomConfigService } from './config/config.service';
 
 @Module({
   imports: [
@@ -51,14 +52,15 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
 
     KeycloakConnectModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async () => {
+        const configService = new CustomConfigService();
         const { realm, nestClientId, authServerUrl } =
-          configService.get('keycloak');
+          configService.getKcConfig();
         return {
           authServerUrl,
           realm,
           resource: nestClientId,
-          secret: configService.get('KEYCLOAK_SECRET'),
+          secret: configService.getLocalConfig().ADMIN_CLIENT_SECRET,
           'public-client': true,
           verifyTokenAudience: true,
           'confidential-port': 0

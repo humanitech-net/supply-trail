@@ -19,13 +19,14 @@ import {
   ILocalConfiguration,
   localConfigSchema
 } from './config.validator';
+import Joi from 'joi';
 
 interface IAppConfiguration {
   keycloak: IKeycloakConfiguration;
   local: ILocalConfiguration;
 }
 
-export class ConfigService {
+export class CustomConfigService {
   private readonly configuration: IAppConfiguration;
 
   constructor() {

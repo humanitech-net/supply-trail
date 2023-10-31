@@ -13,13 +13,13 @@
 import { Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
-import { ConfigService } from '../config/config.service';
+import { CustomConfigService } from '../config/config.service';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: CustomConfigService) {}
   private keycloak = this.configService.getKcConfig();
   private local = this.configService.getLocalConfig();
 

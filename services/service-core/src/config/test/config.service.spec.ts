@@ -1,57 +1,92 @@
-import { ConfigService } from '../config.service';
-import * as dotenv from 'dotenv';
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-dotenv.config();
+import { CustomConfigService } from '../config.service';
+import * as yaml from 'js-yaml';
+
+jest.mock('js-yaml', () => ({
+  load: jest.fn()
+}));
+
+const commonConfig = {
+  DB_HOST: 'localhost',
+  DB_PORT: '5432',
+  DB_USERNAME: 'my-username',
+  DB_PASSWORD: 'my-password',
+  DB_DATABASE: 'my-database',
+  POSTGRES_DATA: '/var/lib/postgresql/data',
+  KEYCLOAK_ADMIN: 'admin',
+  KEYCLOAK_ADMIN_PASSWORD: 'admin-password',
+  KEYCLOAK_DATA: '/opt/keycloak/data',
+  ADMIN_CLIENT_SECRET: 'my-client-secret'
+};
+
+const mockConfig = {
+  authServerUrl: 'http://localhost:8080/auth',
+  clientId: 'my-client-id',
+  realm: 'my-realm',
+  nestClientId: 'my-nest-client-id',
+  realmUrl: 'http://localhost:8080/auth/realms/my-realm',
+  adminUrl: 'http://localhost:8080/auth/admin/realms/my-realm',
+  grantType: 'password'
+};
+
+const setMockYamlLoad = (mock) => {
+  const mockYamlLoad = yaml.load as jest.Mock;
+  mockYamlLoad.mockReturnValue({ keycloak: mock });
+};
 
 describe('ConfigService', () => {
-  let configService: ConfigService;
+  const originalEnv = process.env;
 
   beforeEach(() => {
-    configService = new ConfigService();
+    jest.resetAllMocks();
+    process.env = {
+      ...originalEnv,
+      ...commonConfig
+    };
   });
 
-  describe('loadConfiguration', () => {
-    it('should load the configuration from the config.yaml file', () => {
-      const config = configService['loadConfiguration']();
-      expect(config).toBeDefined();
-      expect(config.keycloak).toBeDefined();
-      expect(config.local).toBeDefined();
-    });
-
-    it('should throw an error if the configuration is invalid', () => {
-      const configService = new ConfigService();
-      jest
-        .spyOn(configService as any, 'loadConfiguration')
-        .mockImplementation(() => {
-          throw new Error('Invalid configuration');
-        });
-      expect(() => (configService as any)['loadConfiguration']()).toThrow(
-        'Invalid configuration'
-      );
-    });
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
-  describe('getKcConfig', () => {
-    it('should return the Keycloak configuration', () => {
-      const kcConfig = configService.getKcConfig();
-      expect(kcConfig).toBeDefined();
-    });
+  it('should load configuration properly', () => {
+    setMockYamlLoad(mockConfig);
+    const configService = new CustomConfigService();
+
+    expect(yaml.load).toHaveBeenCalledWith(expect.any(String));
+    expect(configService.getKcConfig()).toEqual(mockConfig);
   });
 
-  describe('getLocalConfig', () => {
-    it('should return the local configuration', () => {
-      const localConfig = configService.getLocalConfig();
-      expect(localConfig).toBeDefined();
-      expect(localConfig.DB_HOST).toBeDefined();
-      expect(localConfig.DB_PORT).toBeDefined();
-      expect(localConfig.DB_USERNAME).toBeDefined();
-      expect(localConfig.DB_PASSWORD).toBeDefined();
-      expect(localConfig.DB_DATABASE).toBeDefined();
-      expect(localConfig.POSTGRES_DATA).toBeDefined();
-      expect(localConfig.KEYCLOAK_ADMIN).toBeDefined();
-      expect(localConfig.KEYCLOAK_ADMIN_PASSWORD).toBeDefined();
-      expect(localConfig.KEYCLOAK_DATA).toBeDefined();
-      expect(localConfig.ADMIN_CLIENT_SECRET).toBeDefined();
-    });
+  it('should throw error on invalid configuration', () => {
+    setMockYamlLoad({ invalidKey: 'invalidValue' });
+    expect(() => new CustomConfigService()).toThrow('Config validation error');
+  });
+
+  it('should get local configuration properly', () => {
+    setMockYamlLoad(mockConfig);
+    const configService = new CustomConfigService();
+    const result = configService.getLocalConfig();
+
+    expect(result).toEqual(commonConfig);
+  });
+
+  it('should throw error on invalid local configuration', () => {
+    process.env = {
+      DB_HOST: ''
+    };
+
+    setMockYamlLoad(mockConfig);
+    expect(() => new CustomConfigService()).toThrow('Config validation error');
   });
 });
