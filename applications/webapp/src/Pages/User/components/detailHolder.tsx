@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import {
   Card,
   CardContent,
-  FormControl,
   Grid,
   useTheme,
   TextField,
@@ -27,10 +26,12 @@ import { EditUserMutation } from "../../../hooks/mutation";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
 import { CHANGE_PASSWORD_URL } from "../util/constants";
+// import useGenericMutation from "src/hooks/useGenericMutation";
 
 export default function DetailHolder() {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
+  const boxStyle = styles(theme).userPage;
 
   const { user } = useUserContext();
   const { firstName, lastName, email, address, birthdate, phoneNumber } = user;
@@ -48,8 +49,11 @@ export default function DetailHolder() {
     try {
       const { data } = await editUser({
         variables: {
-          firstname,
-          lastname,
+          userInput: {
+            username: user.username,
+            firstName: firstname,
+            lastName: lastname,
+          },
         },
       });
       console.log("User:", data.editUser);
@@ -72,83 +76,86 @@ export default function DetailHolder() {
     return setLastname(event.target.value);
   }
 
+  // const mutate = useGenericMutation("EDIT_USER");
+  // console.log(mutate);
+
   return (
-    <Card elevation={card.elevation} sx={style.card}>
-      <CardContent>
-        <Grid container spacing={2} marginTop={1} sx={style.grid}>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
+    <Box sx={boxStyle.DetailHolderContainer}>
+      <Card elevation={card.elevation} sx={style.card}>
+        <CardContent>
+          <Grid container spacing={2} marginTop={1}>
+            <Grid item xs={6}>
               <TextField
+                fullWidth
                 label="First Name"
                 defaultValue={firstName}
                 disabled={editable}
                 onChange={firstNameChanged}
               />
-            </FormControl>
-          </Grid>
+            </Grid>
 
-          <Grid item xs={6}>
-            <FormControl fullWidth>
+            <Grid item xs={6}>
               <TextField
+                fullWidth
                 label="Last Name"
-                disabled={editable}
                 defaultValue={lastName}
+                disabled={editable}
                 onChange={lastNameChanged}
               />
-            </FormControl>
-          </Grid>
-        </Grid>
+            </Grid>
 
-        <Grid container spacing={2} sx={style.grid}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <TextField label="Email" defaultValue={email} disabled />
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
+            <Grid item xs={12} sm={6}>
               <TextField
+                fullWidth
+                label="Email"
+                defaultValue={email}
+                disabled
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
                 label="Phone Number"
                 defaultValue={phoneNumber}
                 disabled
               />
-            </FormControl>
-          </Grid>
-        </Grid>
+            </Grid>
 
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <TextField label="Address" defaultValue={address} disabled />
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={6}>
-            <FormControl fullWidth>
+            <Grid item xs={6}>
               <TextField
+                fullWidth
+                label="Address"
+                defaultValue={address}
+                disabled
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
                 label="Date of Birth"
                 defaultValue={birthdate}
                 disabled
               />
-            </FormControl>
+            </Grid>
           </Grid>
-        </Grid>
-        {!card.editable && (
-          <Box sx={style.box}>
-            <Box sx={style.buttonHolder}>
-              <Button variant="contained" onClick={updateUser}>
-                Update
-              </Button>
-              <Link to={CHANGE_PASSWORD_URL}>
-                <Button variant="contained" color="warning">
-                  Change Password
+          {!card.editable && (
+            <Box sx={style.box}>
+              <Box sx={style.buttonHolder}>
+                <Button variant="contained" onClick={updateUser}>
+                  Update
                 </Button>
-              </Link>
+                <Link to={CHANGE_PASSWORD_URL}>
+                  <Button variant="contained" color="warning">
+                    Change Password
+                  </Button>
+                </Link>
+              </Box>
             </Box>
-          </Box>
-        )}
-      </CardContent>
-    </Card>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

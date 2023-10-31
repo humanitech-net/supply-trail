@@ -15,32 +15,20 @@ import { Box, useTheme } from "@mui/material";
 import ProfileHolder from "./components/profileHolder";
 import DetailHolder from "./components/detailHolder";
 import Overlay from "./components/overlay";
-import { styles } from "./util/style";
 import { UserPageContextProvider } from "./components/ContextProvider/UserPageContextProvider";
 import { CardContextProvider } from "./components/ContextProvider/CardContextProvider";
+import { styles } from "./util/style";
 
 export default function UserPage() {
   const theme = useTheme();
   const style = styles(theme).userPage;
-
   return (
     <UserPageContextProvider>
       <Overlay>
         <CardContextProvider>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: ["column", "column", "row"],
-              margin: "0 20px 0 20px",
-            }}
-          >
-            <Box sx={style.profilePageHolder}>
-              <ProfileHolder />
-            </Box>
-
-            <Box sx={style.DetailHolderContainer}>
-              <DetailHolder />
-            </Box>
+          <Box sx={style.userPageContainer}>
+            <ProfileHolder />
+            <DetailHolder />
           </Box>
         </CardContextProvider>
       </Overlay>
