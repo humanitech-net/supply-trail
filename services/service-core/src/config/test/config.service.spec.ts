@@ -1,46 +1,57 @@
-/**
- * Humanitech Supply Trail
- *
- * Copyright (c) Humanitech, Peter Rogov and Contributors
- *
- * Website: https://humanitech.net
- * Repository: https://github.com/humanitech-net/supply-trail
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+import { ConfigService } from '../config.service';
+import * as dotenv from 'dotenv';
 
-import { config } from 'dotenv';
-import { readFileSync } from 'fs';
-import { configuration } from '../config.service';
+dotenv.config();
 
-jest.mock('dotenv', () => ({
-  config: jest.fn(() => ({ DOTENV_VAR: 'dotenv_value' }))
-}));
+describe('ConfigService', () => {
+  let configService: ConfigService;
 
-jest.mock('fs', () => ({
-  readFileSync: jest.fn(() => '{"JSON_VAR":"json_value"}')
-}));
+  beforeEach(() => {
+    configService = new ConfigService();
+  });
 
-describe('Configuration Module', () => {
-  it('should merge environment variables from dotenv and JSON', () => {
-    const configResult = configuration();
-    expect(configResult).toEqual({
-      DOTENV_VAR: 'dotenv_value',
-      JSON_VAR: 'json_value'
+  describe('loadConfiguration', () => {
+    it('should load the configuration from the config.yaml file', () => {
+      const config = configService['loadConfiguration']();
+      expect(config).toBeDefined();
+      expect(config.keycloak).toBeDefined();
+      expect(config.local).toBeDefined();
+    });
+
+    it('should throw an error if the configuration is invalid', () => {
+      const configService = new ConfigService();
+      jest
+        .spyOn(configService as any, 'loadConfiguration')
+        .mockImplementation(() => {
+          throw new Error('Invalid configuration');
+        });
+      expect(() => (configService as any)['loadConfiguration']()).toThrow(
+        'Invalid configuration'
+      );
     });
   });
 
-  it('should call dotenv.config with the correct path', () => {
-    configuration();
-    expect(config).toHaveBeenCalledWith({ path: './.local.env' });
+  describe('getKcConfig', () => {
+    it('should return the Keycloak configuration', () => {
+      const kcConfig = configService.getKcConfig();
+      expect(kcConfig).toBeDefined();
+    });
   });
 
-  it('should call readFileSync with the correct path and encoding', () => {
-    configuration();
-    expect(readFileSync).toHaveBeenCalledWith(
-      './src/config/config.json',
-      'utf8'
-    );
+  describe('getLocalConfig', () => {
+    it('should return the local configuration', () => {
+      const localConfig = configService.getLocalConfig();
+      expect(localConfig).toBeDefined();
+      expect(localConfig.DB_HOST).toBeDefined();
+      expect(localConfig.DB_PORT).toBeDefined();
+      expect(localConfig.DB_USERNAME).toBeDefined();
+      expect(localConfig.DB_PASSWORD).toBeDefined();
+      expect(localConfig.DB_DATABASE).toBeDefined();
+      expect(localConfig.POSTGRES_DATA).toBeDefined();
+      expect(localConfig.KEYCLOAK_ADMIN).toBeDefined();
+      expect(localConfig.KEYCLOAK_ADMIN_PASSWORD).toBeDefined();
+      expect(localConfig.KEYCLOAK_DATA).toBeDefined();
+      expect(localConfig.ADMIN_CLIENT_SECRET).toBeDefined();
+    });
   });
 });

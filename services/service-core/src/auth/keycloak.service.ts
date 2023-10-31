@@ -13,19 +13,18 @@
 import { Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
-import { ConfigService } from '@nestjs/config';
-import { Config } from './config';
+import { ConfigService } from '../config/config.service';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: ConfigService) {}
-  private keycloak = this.configService.get('keycloak');
+  private keycloak = this.configService.getKcConfig();
+  private local = this.configService.getLocalConfig();
 
   async getPublicKey() {
     try {
-      const { realmUrl } = this.keycloak;
-      const response = await axios.get(realmUrl);
+      const response = await axios.get(this.keycloak.realmUrl);
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
@@ -34,20 +33,18 @@ export class KeycloakService {
   }
 
   async getAdminToken() {
-    const { grantType, clientId, realmUrl } = this.keycloak;
-    const { keycloakAdmin, keycloakAdminPassword, adminClientSecret } = Config;
     const params = new URLSearchParams({
-      username: this.configService.get(keycloakAdmin),
-      password: this.configService.get(keycloakAdminPassword),
-      grant_type: grantType,
-      client_id: clientId,
-      client_secret: this.configService.get(adminClientSecret)
+      username: this.local.KEYCLOAK_ADMIN,
+      password: this.local.KEYCLOAK_ADMIN_PASSWORD,
+      grant_type: this.keycloak.grantType,
+      client_id: this.keycloak.clientId,
+      client_secret: this.local.ADMIN_CLIENT_SECRET
     });
 
     const requestBody = params.toString();
     try {
       const getTokenData = await fetch(
-        `${realmUrl}/protocol/openid-connect/token`,
+        `${this.keycloak.realmUrl}/protocol/openid-connect/token`,
         {
           method: 'POST',
           headers: {
