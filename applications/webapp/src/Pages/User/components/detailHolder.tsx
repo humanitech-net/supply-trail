@@ -21,12 +21,10 @@ import {
   Box,
 } from "@mui/material";
 import { styles } from "../util/style";
-import { useMutation } from "@apollo/client";
-import { EditUserMutation } from "../../../hooks/mutation";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
 import { CHANGE_PASSWORD_URL } from "../util/constants";
-// import useGenericMutation from "src/hooks/useGenericMutation";
+import useUpdateUser from "../../../hooks/useUpdateUser";
 
 export default function DetailHolder() {
   const theme = useTheme();
@@ -37,32 +35,22 @@ export default function DetailHolder() {
   const { firstName, lastName, email, address, birthdate, phoneNumber } = user;
 
   const card = useCardContext();
-  const { editable, setEditable, setElevation } = card;
+  const { editable } = card;
 
   const [firstname, setFirstname] = useState(firstName);
 
   const [lastname, setLastname] = useState(lastName);
 
-  const [editUser] = useMutation(EditUserMutation);
+  const userInput = {
+    userInput: {
+      username: user.username,
+      firstName: firstname,
+      lastName: lastname,
+    },
+  };
 
-  async function updateUser() {
-    try {
-      const { data } = await editUser({
-        variables: {
-          userInput: {
-            username: user.username,
-            firstName: firstname,
-            lastName: lastname,
-          },
-        },
-      });
-      console.log("User:", data.editUser);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    setEditable(!editable);
-    setElevation(0);
-  }
+  const { updateUser, data } = useUpdateUser(userInput);
+  console.log(data);
 
   function firstNameChanged(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -75,9 +63,6 @@ export default function DetailHolder() {
   ) {
     return setLastname(event.target.value);
   }
-
-  // const mutate = useGenericMutation("EDIT_USER");
-  // console.log(mutate);
 
   return (
     <Box sx={boxStyle.DetailHolderContainer}>
