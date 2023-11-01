@@ -32,3 +32,19 @@ export type QueryConfigs = {
     schema: Joi.ObjectSchema;
   };
 };
+
+export type EditUserVariable = {
+  userInput: {
+    username: string;
+    firstName: string;
+    lastName: string;
+  };
+};
+
+export type MutationConfigs = {
+  EDIT_USER: {
+    mutation: DocumentNode;
+    data: string;
+    variables: EditUserVariable;
+  };
+};
