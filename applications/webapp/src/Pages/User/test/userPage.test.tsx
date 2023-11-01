@@ -14,7 +14,7 @@ import React from "react";
 import { render, fireEvent, screen, waitFor } from "@testing-library/react";
 import UserPage from "../userPage";
 import { MockedProvider } from "@apollo/client/testing";
-import { GET_USER_QUERY } from "../../../hooks/query";
+import { GET_USER_QUERY } from "../../../hooks/util/query";
 import { BrowserRouter } from "react-router-dom";
 
 describe("UserPage", () => {

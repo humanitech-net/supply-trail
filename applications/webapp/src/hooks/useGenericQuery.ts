@@ -10,8 +10,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { queryConfigs } from "./configs";
-import { QueryConfigs } from "./types";
+import { queryConfigs } from "./util/configs";
+import { QueryConfigs } from "./util/types";
 import { ApolloError, useQuery } from "@apollo/client";
 
 export default function useGenericQuery<T extends keyof QueryConfigs>(

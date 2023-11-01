@@ -11,8 +11,8 @@
  */
 
 import { ApolloError, useMutation } from "@apollo/client";
-import { MutationConfigs } from "./types";
-import { mutationConfigs } from "./configs";
+import { MutationConfigs } from "./util/types";
+import { mutationConfigs } from "./util/configs";
 
 export function useGenericMutation<T extends keyof MutationConfigs>(
   mutationType: T,
@@ -26,8 +26,7 @@ export function useGenericMutation<T extends keyof MutationConfigs>(
   const config = mutationConfigs[mutationType];
   const [mutate, { data, loading, error }] = useMutation(config.mutation);
 
-  console.log(variables);
-  const callMutation = () => {
+  const callMutation = async () => {
     mutate({
       variables: variables,
     });
