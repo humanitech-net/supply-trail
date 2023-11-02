@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
@@ -105,5 +105,36 @@ export class KeycloakService {
     return updateUser.ok
       ? 'Successfully Updated'
       : 'Try again, failed to update';
+  }
+
+  async getRoles(token: string) {
+    const publicKey = await this.getPublicKey();
+    const decodedToken = verify(token, publicKey, {
+      algorithms: ['RS256']
+    });
+
+    return decodedToken;
+  }
+
+  async getUserList(accessToken: string) {
+    const role = await this.getRoles(accessToken);
+    if (role !== 'admin') {
+      throw new BadRequestException('unauthorized user');
+    }
+
+    const response = await fetch(`${Config.adminUrl}/users`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user list. Status: ${response.status}`);
+    }
+
+    const userList = await response.json();
+    return userList;
   }
 }

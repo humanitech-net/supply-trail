@@ -27,6 +27,15 @@ export class UsersResolver {
     return this.keycloakService.getUser(token);
   }
 
+  @Query(() => [Users])
+  async getUserList(@Context() context: { req: Request }) {
+    const { req } = context;
+
+    const token = req.headers['authorization'].split(' ')[1];
+
+    return this.keycloakService.getUserList(token);
+  }
+
   @Mutation(() => String)
   async editUser(
     @Context() context: { req: Request },
