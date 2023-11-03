@@ -10,16 +10,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import React from "react";
 import { useCardContext } from "src/Pages/User/context";
 import { useGenericMutation } from "./useGenericMutation";
+import { User } from "../Pages/interface";
 
 type UserInput = {
   userInput: { username: string; firstName: string; lastName: string };
 };
 
-export default function useUpdateUser(userInput: UserInput) {
+export default function useUpdateUser(newUserData: User) {
+  const userInput: UserInput = {
+    userInput: {
+      username: newUserData.username,
+      firstName: newUserData.firstName,
+      lastName: newUserData.lastName,
+    },
+  };
+
   const mutate = useGenericMutation("EDIT_USER", userInput);
-  const { callMutation, data } = mutate;
+
+  const { callMutation, data, loading, error } = mutate;
 
   const card = useCardContext();
 
@@ -27,9 +38,16 @@ export default function useUpdateUser(userInput: UserInput) {
 
   const updateUser = () => {
     callMutation();
-    setEditable(!editable);
-    setElevation(0);
+    if (data) {
+      setEditable(!editable);
+      setElevation(0);
+      return <>data</>;
+    }
+    if (loading) {
+      <>loading</>;
+    }
+    return <>error</>;
   };
 
-  return { updateUser, data };
+  return { updateUser, data, loading, error };
 }

@@ -16,15 +16,17 @@ import {
   CardContent,
   Grid,
   useTheme,
-  TextField,
+  // TextField,
   Button,
   Box,
 } from "@mui/material";
 import { styles } from "../util/style";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
-import { CHANGE_PASSWORD_URL } from "../util/constants";
+import { CHANGE_PASSWORD_URL, fields } from "../util/constants";
 import useUpdateUser from "../../../hooks/useUpdateUser";
+import { UserDetailGridItem } from "./userDetailHolderGridItem";
+import { User } from "../../interface";
 
 export default function DetailHolder() {
   const theme = useTheme();
@@ -32,98 +34,34 @@ export default function DetailHolder() {
   const boxStyle = styles(theme).userPage;
 
   const { user } = useUserContext();
-  const { firstName, lastName, email, address, birthdate, phoneNumber } = user;
 
   const card = useCardContext();
-  const { editable } = card;
+  const { elevation } = card;
 
-  const [firstname, setFirstname] = useState(firstName);
+  const [updatedUser, setUpdatedUser] = useState(user);
 
-  const [lastname, setLastname] = useState(lastName);
+  const { updateUser } = useUpdateUser(updatedUser);
 
-  const userInput = {
-    userInput: {
-      username: user.username,
-      firstName: firstname,
-      lastName: lastname,
-    },
+  const handleFieldChange = (field: keyof User, value: string) => {
+    setUpdatedUser((prevUserData) => ({
+      ...prevUserData,
+      [field]: value,
+    }));
   };
-
-  const { updateUser, data } = useUpdateUser(userInput);
-  console.log(data);
-
-  function firstNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setFirstname(event.target.value);
-  }
-
-  function lastNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setLastname(event.target.value);
-  }
 
   return (
     <Box sx={boxStyle.DetailHolderContainer}>
-      <Card elevation={card.elevation} sx={style.card}>
+      <Card elevation={elevation} sx={style.card}>
         <CardContent>
           <Grid container spacing={2} marginTop={1}>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="First Name"
-                defaultValue={firstName}
-                disabled={editable}
-                onChange={firstNameChanged}
+            {fields.map((field, index) => (
+              <UserDetailGridItem
+                key={index}
+                user={user}
+                field={field}
+                onChange={handleFieldChange}
               />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                defaultValue={lastName}
-                disabled={editable}
-                onChange={lastNameChanged}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Email"
-                defaultValue={email}
-                disabled
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Phone Number"
-                defaultValue={phoneNumber}
-                disabled
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Address"
-                defaultValue={address}
-                disabled
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                defaultValue={birthdate}
-                disabled
-              />
-            </Grid>
+            ))}
           </Grid>
           {!card.editable && (
             <Box sx={style.box}>
