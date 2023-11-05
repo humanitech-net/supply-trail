@@ -20,7 +20,7 @@ import { userInputValidator } from './keycloak.validator';
 @Injectable()
 export class KeycloakService {
   constructor(private readonly configService: CustomConfigService) {}
-  private config = this.configService.get();
+  private readonly config = this.configService.get();
 
   async getPublicKey() {
     const { realmUrl } = this.config.keycloak;

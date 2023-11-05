@@ -35,6 +35,7 @@ describe('KeycloakService', () => {
   let keycloakService: KeycloakService;
   const realmUrl =
     'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
+  const notGetToken = "Couldn't get token";
 
   // Define a mock configuration with the expected structure
   const mockConfig = {
@@ -109,26 +110,26 @@ describe('KeycloakService', () => {
     it('throws an error when it fails to fetch', async () => {
       const mockFailedResponse = new Response(null, {
         status: 400,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
 
     it('throws an error with the status text when fetch is not OK', async () => {
       const mockErrorResponse = new Response(null, {
         status: 500,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
   });

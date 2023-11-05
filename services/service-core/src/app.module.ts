@@ -24,7 +24,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
 import { CustomConfigService } from './config/config.service';
-import { loadavg } from 'os';
 
 @Module({
   imports: [
