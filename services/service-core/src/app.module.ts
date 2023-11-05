@@ -24,6 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
 import { CustomConfigService } from './config/config.service';
+import { loadavg } from 'os';
 
 @Module({
   imports: [
@@ -51,22 +52,20 @@ import { CustomConfigService } from './config/config.service';
     }),
 
     KeycloakConnectModule.registerAsync({
-      imports: [ConfigModule],
       useFactory: async () => {
         const configService = new CustomConfigService();
-        const { realm, nestClientId, authServerUrl } =
-          configService.getKcConfig();
+        const { keycloak, local } = configService.get();
+
         return {
-          authServerUrl,
-          realm,
-          resource: nestClientId,
-          secret: configService.getLocalConfig().ADMIN_CLIENT_SECRET,
+          authServerUrl: keycloak.authServerUrl,
+          realm: keycloak.realm,
+          resource: keycloak.nestClientId,
+          secret: local.ADMIN_CLIENT_SECRET,
           'public-client': true,
           verifyTokenAudience: true,
           'confidential-port': 0
         };
-      },
-      inject: [ConfigService]
+      }
     }),
 
     DatabaseModule,

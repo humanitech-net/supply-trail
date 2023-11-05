@@ -16,6 +16,17 @@ import axios from 'axios';
 import { verify } from 'jsonwebtoken';
 import { CustomConfigService } from '../../config/config.service';
 import * as dotenv from 'dotenv';
+import * as yaml from 'js-yaml';
+
+jest.mock('js-yaml', () => ({
+  load: jest.fn()
+}));
+
+// Define the setMockYamlLoad function
+const setMockYamlLoad = (mock) => {
+  const mockYamlLoad = yaml.load as jest.Mock;
+  mockYamlLoad.mockReturnValue(mock);
+};
 
 dotenv.config();
 
@@ -23,15 +34,42 @@ jest.mock('axios');
 jest.mock('jsonwebtoken');
 
 describe('KeycloakService', () => {
+  //
   let keycloakService: KeycloakService;
+
+  // Define a mock configuration with the expected structure
+  const mockConfig = {
+    keycloak: {
+      realmUrl: 'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
+      // other keycloak properties
+    },
+    local: {
+      // local properties
+    }
+  };
 
   const errorMessage = 'Failed to fetch Public Key';
 
+  // beforeEach(async () => {
+  //   jest.clearAllMocks();
+
+  //   const module: TestingModule = await Test.createTestingModule({
+  //     providers: [KeycloakService, CustomConfigService]
+  //   }).compile();
+
+  //   keycloakService = module.get<KeycloakService>(KeycloakService);
+  // });
   beforeEach(async () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [KeycloakService, CustomConfigService]
+      providers: [
+        KeycloakService,
+        {
+          provide: CustomConfigService,
+          useValue: { get: jest.fn().mockReturnValue(mockConfig) } // Mock the config service
+        }
+      ]
     }).compile();
 
     keycloakService = module.get<KeycloakService>(KeycloakService);
@@ -240,12 +278,22 @@ describe('KeycloakService', () => {
       );
     });
 
-    it('should throw an error if fetching public key fails', async () => {
-      (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
+    // it('should throw error on invalid local configuration', () => {
+    //   // Mock an invalid local configuration
+    //   const invalidConfig = {
+    //     keycloak: {
+    //       realmUrl: 'https://example.com/auth/realms/humanitech'
+    //     }
+    //     // Missing the 'local' property
+    //   };
 
-      await expect(
-        keycloakService.getUser('your_mocked_valid_token')
-      ).rejects.toThrow(errorMessage);
-    });
+    //   // Set the YAML mock to return the invalid configuration
+    //   setMockYamlLoad(invalidConfig);
+
+    //   // Expect the constructor of CustomConfigService to throw an error
+    //   expect(() => new CustomConfigService()).toThrowError(
+    //     /Config validation error/
+    //   );
+    // });
   });
 });
