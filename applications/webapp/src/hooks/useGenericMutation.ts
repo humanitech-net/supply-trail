@@ -16,7 +16,7 @@ import { mutationConfigs } from "./util/configs";
 
 export function useGenericMutation<T extends keyof MutationConfigs>(
   mutationType: T,
-  variables?: MutationConfigs[T]["variables"],
+  mutationVariables?: MutationConfigs[T]["variables"],
 ): {
   callMutation: () => void;
   data: MutationConfigs[T]["data"];
@@ -28,7 +28,7 @@ export function useGenericMutation<T extends keyof MutationConfigs>(
 
   const callMutation = async () => {
     mutate({
-      variables: variables,
+      variables: mutationVariables,
     });
   };
   return { callMutation, data, loading, error };

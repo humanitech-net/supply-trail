@@ -10,7 +10,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { ReactNode, createContext, useState } from "react";
+import React, { ReactNode, createContext, useState, useMemo } from "react";
 
 interface DrawerContextProps {
   open: boolean;
@@ -29,9 +29,9 @@ export const DrawerContext = createContext<DrawerContextProps>({
 export const DrawerProvider: React.FC<DrawerProviderProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
 
+  const props = useMemo(() => ({ open, setOpen }), [open, setOpen]);
+
   return (
-    <DrawerContext.Provider value={{ open, setOpen }}>
-      {children}
-    </DrawerContext.Provider>
+    <DrawerContext.Provider value={props}>{children}</DrawerContext.Provider>
   );
 };

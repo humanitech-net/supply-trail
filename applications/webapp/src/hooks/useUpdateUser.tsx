@@ -44,7 +44,7 @@ export default function useUpdateUser(newUserData: User) {
       return <>data</>;
     }
     if (loading) {
-      <>loading</>;
+      return <>loading</>;
     }
     return <>error</>;
   };

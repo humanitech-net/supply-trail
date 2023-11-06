@@ -23,8 +23,10 @@ export default function MainContent() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
+  const leftMargin = 240;
+
   const Main = styled("main")(({ theme }) => ({
-    marginLeft: open && isDesktop ? 240 : 0,
+    marginLeft: open && isDesktop ? leftMargin : 0,
     marginTop: 80,
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
