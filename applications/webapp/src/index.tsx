@@ -18,6 +18,7 @@ import reportWebVitals from "./reportWebVitals";
 import { client } from "./graphql/client";
 import { ApolloProvider } from "@apollo/client";
 import { initKeycloak, refreshToken } from "./Authentication/Keycloak";
+import KeycloakError from "./keycloakError";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -33,6 +34,14 @@ const renderRoot = () => {
   );
 };
 
+const renderKeycloakErrorPage = () => {
+  return root.render(
+    <React.StrictMode>
+      <KeycloakError />
+    </React.StrictMode>,
+  );
+};
+
 initKeycloak()
   .then(() => {
     renderRoot();
@@ -40,11 +49,8 @@ initKeycloak()
     const intervalTime = 300000;
     setInterval(refreshToken, intervalTime);
   })
-  .catch((error) => {
-    throw new Error(
-      `[index.initKeycloak()] An error occurred during keycloak initialization:`,
-      error,
-    );
+  .catch(() => {
+    renderKeycloakErrorPage();
   });
 
 reportWebVitals();
