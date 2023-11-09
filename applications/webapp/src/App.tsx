@@ -16,7 +16,7 @@ import Home from "./Pages/Home/home";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/app">
       <Home />
     </BrowserRouter>
   );
