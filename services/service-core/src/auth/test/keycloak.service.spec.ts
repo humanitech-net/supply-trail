@@ -25,7 +25,38 @@ describe('KeycloakService', () => {
   let keycloakService: KeycloakService;
   const notGetToken = "Couldn't get token";
   const mockUserToken = 'mock-user-token';
+  const mockAdminToken = 'mock-admin-token';
   const errorMessage = 'Failed to fetch Public Key';
+  const decodedToken = {
+    exp: 555,
+    iat: 555,
+    auth_time: 555,
+    jti: 'jti',
+    iss: 'origin',
+    aud: ['realm-management', 'account'],
+    sub: 'id',
+    typ: 'Bearer',
+    azp: 'app',
+    nonce: 'nonce',
+    session_state: 'states',
+    acr: '0',
+    'allowed-origins': ['allowed origin'],
+    realm_access: {
+      roles: ['offline_access', 'uma_authorization', 'default-roles-humanitech']
+    },
+    resource_access: {
+      'realm-management': { roles: [Array] },
+      account: { roles: [Array] }
+    },
+    scope: 'openid profile email',
+    sid: 'sid',
+    email_verified: true,
+    name: 'name',
+    preferred_username: 'nick name',
+    given_name: 'name',
+    family_name: 'lastname',
+    email: 'email'
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -193,6 +224,29 @@ describe('KeycloakService', () => {
         keycloakService.editUser(mockToken, mockInvalidUserInput)
       ).rejects.toThrowError('"firstName" is not allowed to be empty');
     });
+
+    it('throws an error if the update fails', async () => {
+      jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
+
+      const mockUserInput = {
+        firstName: 'user',
+        lastName: 'lastName',
+        username: 'username'
+      };
+
+      const mockID = 'ID';
+      const mockFailedResponse = new Response(null, {
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
+
+      jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
+
+      // Expect the function to throw an error
+      await expect(
+        keycloakService.editUser(mockID, mockUserInput)
+      ).rejects.toThrowError('Failed to fetch Public Key');
+    });
   });
 
   describe('getDecodedToken', () => {
@@ -203,41 +257,6 @@ describe('KeycloakService', () => {
       (axios.get as jest.Mock).mockResolvedValue({
         data: { public_key: mockPublicKey }
       });
-
-      const decodedToken = {
-        exp: 555,
-        iat: 555,
-        auth_time: 555,
-        jti: 'jti',
-        iss: 'origin',
-        aud: ['realm-management', 'account'],
-        sub: 'id',
-        typ: 'Bearer',
-        azp: 'app',
-        nonce: 'nonce',
-        session_state: 'states',
-        acr: '0',
-        'allowed-origins': ['allowed origin'],
-        realm_access: {
-          roles: [
-            'offline_access',
-            'uma_authorization',
-            'default-roles-humanitech'
-          ]
-        },
-        resource_access: {
-          'realm-management': { roles: [Array] },
-          account: { roles: [Array] }
-        },
-        scope: 'openid profile email',
-        sid: 'sid',
-        email_verified: true,
-        name: 'name',
-        preferred_username: 'nick name',
-        given_name: 'name',
-        family_name: 'lastname',
-        email: 'email'
-      };
 
       (verify as jest.Mock).mockReturnValue(decodedToken);
 
@@ -254,40 +273,7 @@ describe('KeycloakService', () => {
         }
       );
 
-      expect(userData).toEqual({
-        exp: 555,
-        iat: 555,
-        auth_time: 555,
-        jti: 'jti',
-        iss: 'origin',
-        aud: ['realm-management', 'account'],
-        sub: 'id',
-        typ: 'Bearer',
-        azp: 'app',
-        nonce: 'nonce',
-        session_state: 'states',
-        acr: '0',
-        'allowed-origins': ['allowed origin'],
-        realm_access: {
-          roles: [
-            'offline_access',
-            'uma_authorization',
-            'default-roles-humanitech'
-          ]
-        },
-        resource_access: {
-          'realm-management': { roles: [Array] },
-          account: { roles: [Array] }
-        },
-        scope: 'openid profile email',
-        sid: 'sid',
-        email_verified: true,
-        name: 'name',
-        preferred_username: 'nick name',
-        given_name: 'name',
-        family_name: 'lastname',
-        email: 'email'
-      });
+      expect(userData).toEqual(decodedToken);
     });
 
     it('should throw an error for an invalid token', async () => {
@@ -321,7 +307,7 @@ describe('KeycloakService', () => {
       // Mock getUser token and decoded token
       jest
         .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-admin-token');
+        .mockResolvedValue(mockAdminToken);
       jest
         .spyOn(keycloakService, 'getDecodedToken')
         .mockResolvedValue({ sub: 'mock-sub' });
@@ -367,7 +353,7 @@ describe('KeycloakService', () => {
       // Mock getUser token and decoded token
       jest
         .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-admin-token');
+        .mockResolvedValue(mockAdminToken);
       jest
         .spyOn(keycloakService, 'getDecodedToken')
         .mockResolvedValue({ sub: 'mock-sub' });
@@ -389,7 +375,7 @@ describe('KeycloakService', () => {
       // Mock getUser token and decoded token
       jest
         .spyOn(keycloakService, 'getAdminToken')
-        .mockResolvedValue('mock-admin-token');
+        .mockResolvedValue(mockAdminToken);
       jest
         .spyOn(keycloakService, 'getDecodedToken')
         .mockResolvedValue({ sub: 'mock-sub' });

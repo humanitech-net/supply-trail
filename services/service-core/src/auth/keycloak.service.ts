@@ -132,6 +132,6 @@ export class KeycloakService {
         `Keycloak API request failed with status ${updateUser.status}. Details: ${errorMessage}`
       );
     }
-    return await this.getUser(token);
+    return this.getUser(token);
   }
 }
