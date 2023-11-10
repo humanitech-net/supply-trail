@@ -17,7 +17,6 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
 import { UpdateUser, Users } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
-import { User } from 'src/database/users/users.entity';
 
 @Injectable()
 export class KeycloakService {
@@ -35,10 +34,9 @@ export class KeycloakService {
 
   async getDecodedToken(token: string) {
     const publicKey = await this.getPublicKey();
-    const decodedToken = verify(token, publicKey, {
+    return verify(token, publicKey, {
       algorithms: ['RS256']
     });
-    return decodedToken;
   }
 
   async getAdminToken() {
@@ -134,7 +132,6 @@ export class KeycloakService {
         `Keycloak API request failed with status ${updateUser.status}. Details: ${errorMessage}`
       );
     }
-    const user = await this.getUser(token);
-    return user;
+    return await this.getUser(token);
   }
 }

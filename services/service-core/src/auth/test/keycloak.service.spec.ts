@@ -23,7 +23,8 @@ jest.mock('jsonwebtoken');
 
 describe('KeycloakService', () => {
   let keycloakService: KeycloakService;
-
+  const notGetToken = "Couldn't get token";
+  const mockUserToken = 'mock-user-token';
   const errorMessage = 'Failed to fetch Public Key';
 
   beforeEach(async () => {
@@ -84,26 +85,26 @@ describe('KeycloakService', () => {
     it('throws an error when it fails to fetch', async () => {
       const mockFailedResponse = new Response(null, {
         status: 400,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
 
     it('throws an error with the status text when fetch is not OK', async () => {
       const mockErrorResponse = new Response(null, {
         status: 500,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
   });
@@ -318,7 +319,6 @@ describe('KeycloakService', () => {
   describe('getUser', () => {
     it('should return user data on successful API request', async () => {
       // Mock getUser token and decoded token
-      const mockUserToken = 'mock-user-token';
       jest
         .spyOn(keycloakService, 'getAdminToken')
         .mockResolvedValue('mock-admin-token');
@@ -365,7 +365,6 @@ describe('KeycloakService', () => {
 
     it('should throw an error on unsuccessful API request', async () => {
       // Mock getUser token and decoded token
-      const mockUserToken = 'mock-user-token';
       jest
         .spyOn(keycloakService, 'getAdminToken')
         .mockResolvedValue('mock-admin-token');
@@ -388,7 +387,6 @@ describe('KeycloakService', () => {
 
     it('should throw an error if fetch throws an exception', async () => {
       // Mock getUser token and decoded token
-      const mockUserToken = 'mock-user-token';
       jest
         .spyOn(keycloakService, 'getAdminToken')
         .mockResolvedValue('mock-admin-token');
