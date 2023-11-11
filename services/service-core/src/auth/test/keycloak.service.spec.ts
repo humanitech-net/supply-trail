@@ -226,6 +226,7 @@ describe('KeycloakService', () => {
     });
 
     it('throws an error if the update fails', async () => {
+      // Mocking necessary dependencies and data
       jest.spyOn(keycloakService, 'getAdminToken').mockResolvedValue(mockToken);
 
       const mockUserInput = {
@@ -235,17 +236,29 @@ describe('KeycloakService', () => {
       };
 
       const mockID = 'ID';
-      const mockFailedResponse = new Response(null, {
+      const mockFailedResponse = new Response('Some error message', {
         status: 500,
         statusText: 'Internal Server Error'
       });
 
+      // Mocking the fetch function to simulate an unsuccessful response
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
-      // Expect the function to throw an error
+      // Mocking the getPublicKey function to avoid unnecessary errors in the stack
+      jest.spyOn(keycloakService, 'getPublicKey').mockResolvedValue('');
+
+      // Mocking the getDecodedToken to return a valid object with a 'sub' property
+      jest.spyOn(keycloakService, 'getDecodedToken').mockResolvedValue({
+        sub: 'user123',
+        name: 'John Doe'
+      });
+
+      // Expect the function to throw an error with the correct message
       await expect(
         keycloakService.editUser(mockID, mockUserInput)
-      ).rejects.toThrowError('Failed to fetch Public Key');
+      ).rejects.toThrowError(
+        `Keycloak API request failed with status 500. Details: Some error message`
+      );
     });
   });
 
