@@ -13,9 +13,14 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 
 describe("App", () => {
   test("renders App", () => {
-    render(<App />);
+    render(
+      <BrowserRouter basename="/app">
+        <App />
+      </BrowserRouter>,
+    );
   });
 });
