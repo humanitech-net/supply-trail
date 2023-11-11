@@ -19,21 +19,19 @@ export class UsersResolver {
   constructor(private readonly keycloakService: KeycloakService) {}
 
   @Query(() => Users)
-  async getUser(@Context() context: { req: Request }) {
+  async getUser(@Context() context: { req: Request }): Promise<Users> {
     const { req } = context;
-
     const token = req.headers['authorization'].split(' ')[1];
-
     return this.keycloakService.getUser(token);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Users || String)
   async editUser(
     @Context() context: { req: Request },
     @Args('userInput') userInput: UpdateUser
-  ): Promise<string> {
-    const user = await this.getUser(context);
-    const ID = user.id.toString();
-    return this.keycloakService.editUser(ID, userInput);
+  ): Promise<string | Users> {
+    const { req } = context;
+    const token = req.headers['authorization'].split(' ')[1];
+    return this.keycloakService.editUser(token, userInput);
   }
 }

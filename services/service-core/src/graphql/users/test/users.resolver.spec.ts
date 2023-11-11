@@ -16,19 +16,22 @@ import { KeycloakService } from '../../../auth/keycloak.service';
 import { Request } from 'express';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 
+// Mock KeycloakService
 const mockKeycloakService: Partial<KeycloakService> = {
-  getUser: jest.fn(async () => {
-    return {
-      id: '1',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'johndoe@example.com',
-      username: 'johndoe'
-    };
-  }),
-  editUser: jest.fn(async () => {
-    return 'Successfully Updated';
-  })
+  getUser: jest.fn(async () => ({
+    id: '1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@example.com',
+    username: 'johndoe'
+  })),
+  editUser: jest.fn(async () => ({
+    id: 'id',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    username: 'username',
+    email: 'email'
+  }))
 };
 
 describe('UsersResolver', () => {
@@ -38,15 +41,13 @@ describe('UsersResolver', () => {
     req: { headers: { authorization: 'Bearer token' } } as Request
   };
 
-  const MockUser = {
+  const mockUser = {
     id: 'id',
     firstName: 'firstname',
     lastName: 'lastname',
     username: 'name',
     email: 'name@email.com'
   } as UpdateUser;
-
-  const MockToken = 'token';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -64,8 +65,11 @@ describe('UsersResolver', () => {
 
   describe('getUser', () => {
     it('should return user data', async () => {
+      // Act
       const user = await usersResolver.getUser(context);
-      expect(mockKeycloakService.getUser).toHaveBeenCalledWith(MockToken);
+
+      // Assert
+      expect(mockKeycloakService.getUser).toHaveBeenCalledWith('token');
       expect(user).toEqual({
         id: '1',
         firstName: 'John',
@@ -77,28 +81,39 @@ describe('UsersResolver', () => {
   });
 
   describe('editUser', () => {
-    it('should call getUser and return Successfully Updated', async () => {
-      expect(mockKeycloakService.getUser).toHaveBeenCalledWith(MockToken);
-      const editUser = await usersResolver.editUser(context, MockUser);
+    it('should call getUser and return "Successfully Updated"', async () => {
+      // Act
+      const result = await usersResolver.editUser(context, mockUser);
+
+      // Assert
+      expect(mockKeycloakService.getUser).toHaveBeenCalledWith('token');
       expect(mockKeycloakService.editUser).toHaveBeenCalledWith(
-        expect.any(String),
-        MockUser
+        'token',
+        mockUser
       );
-      expect(editUser).toEqual('Successfully Updated');
+      expect(result).toEqual({
+        email: 'email',
+        firstName: 'firstName',
+        id: 'id',
+        lastName: 'lastName',
+        username: 'username'
+      });
     });
 
-    it('should return "Try again failed to update"', async () => {
-      expect(mockKeycloakService.getUser).toHaveBeenCalledWith(MockToken);
-      jest
-        .spyOn(mockKeycloakService, 'editUser')
-        .mockResolvedValue('Try again, failed to update');
+    it('should return "Try again, failed to update"', async () => {
+      // Arrange
+      jest.spyOn(mockKeycloakService, 'editUser').mockResolvedValue(undefined);
 
-      const editUser = await usersResolver.editUser(context, MockUser);
+      // Act
+      const result = await usersResolver.editUser(context, mockUser);
+
+      // Assert
+      expect(mockKeycloakService.getUser).toHaveBeenCalledWith('token');
       expect(mockKeycloakService.editUser).toHaveBeenCalledWith(
-        expect.any(String),
-        MockUser
+        'token',
+        mockUser
       );
-      expect(editUser).toEqual('Try again, failed to update');
+      expect(result).toEqual(undefined);
     });
   });
 });

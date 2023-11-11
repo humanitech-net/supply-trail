@@ -15,7 +15,7 @@ import { verify } from 'jsonwebtoken';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config';
-import { UpdateUser } from 'src/graphql/users/users.entity';
+import { UpdateUser, Users } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
@@ -30,6 +30,13 @@ export class KeycloakService {
     } catch (error) {
       throw new Error('Failed to fetch Public Key');
     }
+  }
+
+  async getDecodedToken(token: string) {
+    const publicKey = await this.getPublicKey();
+    return verify(token, publicKey, {
+      algorithms: ['RS256']
+    });
   }
 
   async getAdminToken() {
@@ -69,29 +76,49 @@ export class KeycloakService {
     }
   }
 
-  async getUser(token: string) {
-    const publicKey = await this.getPublicKey();
-    const decodedToken = verify(token, publicKey, {
-      algorithms: ['RS256']
-    });
+  async getUser(token: string): Promise<Users> {
+    const adminToken = await this.getAdminToken();
+    const userInfo = await this.getDecodedToken(token);
+    try {
+      const response = await fetch(`${Config.adminUrl}/users/${userInfo.sub}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-    return {
-      id: decodedToken['sub'],
-      firstName: decodedToken['given_name'],
-      lastName: decodedToken['family_name'],
-      email: decodedToken['email'],
-      username: decodedToken['preferred_username']
-    };
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(
+          `Keycloak API request failed with status ${response.status}. Details: ${errorMessage}`
+        );
+      }
+
+      const { id, firstName, lastName, username, email } =
+        await response.json();
+      return {
+        id,
+        firstName,
+        lastName,
+        username,
+        email
+      };
+    } catch (error) {
+      throw new Error(`Keycloak API request failed: ${error.message}`);
+    }
   }
 
-  async editUser(id: string, userInput: UpdateUser) {
+  async editUser(token: string, userInput: UpdateUser): Promise<Users> {
     const accessToken = await this.getAdminToken();
+    const userInfo = await this.getDecodedToken(token);
+
     const { error } = userInputValidator.validate(userInput);
     if (error) {
       throw new Error(error.details[0].message);
     }
 
-    const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
+    const updateUser = await fetch(`${Config.adminUrl}/users/${userInfo.sub}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -99,9 +126,12 @@ export class KeycloakService {
       },
       body: JSON.stringify(userInput)
     });
-
-    return updateUser.ok
-      ? 'Successfully Updated'
-      : 'Try again, failed to update';
+    if (!updateUser.ok) {
+      const errorMessage = await updateUser.text();
+      throw new Error(
+        `Keycloak API request failed with status ${updateUser.status}. Details: ${errorMessage}`
+      );
+    }
+    return this.getUser(token);
   }
 }
