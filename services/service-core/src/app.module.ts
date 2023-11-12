@@ -20,7 +20,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DatabaseModule } from './database/database.module';
 import { User } from './database/users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
 import { CustomConfigService } from './config/config.service';
