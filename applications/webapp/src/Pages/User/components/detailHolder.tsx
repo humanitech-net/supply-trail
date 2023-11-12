@@ -11,20 +11,11 @@
  */
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Grid,
-  useTheme,
-  // TextField,
-  Button,
-  Box,
-} from "@mui/material";
+import { Card, CardContent, Grid, useTheme, Button, Box } from "@mui/material";
 import { styles } from "../util/style";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
 import { CHANGE_PASSWORD_URL, fields } from "../util/constants";
-import useUpdateUser from "../../../hooks/useUpdateUser";
 import { UserDetailGridItem } from "./userDetailHolderGridItem";
 import { User } from "../../interface";
 
@@ -33,20 +24,32 @@ export default function DetailHolder() {
   const style = styles(theme).detailHolder;
   const boxStyle = styles(theme).userPage;
 
-  const { user } = useUserContext();
-
-  const card = useCardContext();
-  const { elevation } = card;
-
+  const { user, update, setUserUpdated } = useUserContext();
+  const { elevation } = useCardContext();
   const [updatedUser, setUpdatedUser] = useState(user);
+  const { editable, setEditable, setElevation } = useCardContext();
 
-  const { updateUser } = useUpdateUser(updatedUser);
+  const newUserData = {
+    userInput: {
+      username: updatedUser.username,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+    },
+  };
 
   const handleFieldChange = (field: keyof User, value: string) => {
     setUpdatedUser((prevUserData) => ({
       ...prevUserData,
       [field]: value,
     }));
+  };
+
+  const onClickUpdate = async () => {
+    await update(newUserData).then(() => {
+      setEditable(!editable);
+      setElevation(0);
+      setUserUpdated(true);
+    });
   };
 
   return (
@@ -63,10 +66,10 @@ export default function DetailHolder() {
               />
             ))}
           </Grid>
-          {!card.editable && (
+          {!editable && (
             <Box sx={style.box}>
               <Box sx={style.buttonHolder}>
-                <Button variant="contained" onClick={updateUser}>
+                <Button variant="contained" onClick={onClickUpdate}>
                   Update
                 </Button>
                 <Link to={CHANGE_PASSWORD_URL}>
