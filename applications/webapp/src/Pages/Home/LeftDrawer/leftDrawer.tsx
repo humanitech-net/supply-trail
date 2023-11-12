@@ -18,7 +18,6 @@ import DrawerHeader from "./Components/drawerHeader";
 import DrawerMenu from "./Components/drawerMenu";
 import { styles } from "./util/style";
 import { DrawerContext } from "../ContextProvider/drawerProvider";
-// import { DrawerContext } from "./Components/DrawerContextProvider";
 
 export default function LeftDrawer() {
   const theme = useTheme();

@@ -1,3 +1,15 @@
+/**
+ * Humanitech Supply Trail
+ *
+ * Copyright (c) Humanitech, Peter Rogov and Contributors
+ *
+ * Website: https://humanitech.net
+ * Repository: https://github.com/humanitech-net/supply-trail
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React, { useContext } from "react";
 import { IconButton, styled } from "@mui/material";
 
@@ -11,7 +23,7 @@ export default function DrawerHeader() {
     setOpen(false);
   };
 
-  const DrawerHeader = styled("div")(({ theme }) => ({
+  const Header = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
@@ -22,7 +34,7 @@ export default function DrawerHeader() {
   }));
 
   return (
-    <DrawerHeader>
+    <Header>
       <IconButton
         color="inherit"
         aria-label="close drawer"
@@ -32,6 +44,6 @@ export default function DrawerHeader() {
       >
         <MenuIcon />
       </IconButton>
-    </DrawerHeader>
+    </Header>
   );
 }

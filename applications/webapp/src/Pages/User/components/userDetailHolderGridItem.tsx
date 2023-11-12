@@ -16,11 +16,13 @@ import { User } from "../../../Pages/interface";
 import { useCardContext } from "../context";
 import { labels } from "../util/constants";
 
-export function UserDetailGridItem(props: {
-  user: User;
-  field: keyof User;
-  onChange: (field: keyof User, val: string) => void;
-}) {
+export function UserDetailGridItem(
+  props: Readonly<{
+    user: User;
+    field: keyof User;
+    onChange: (field: keyof User, val: string) => void;
+  }>,
+) {
   const { user, field, onChange } = props;
   const card = useCardContext();
 
