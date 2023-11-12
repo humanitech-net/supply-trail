@@ -11,144 +11,80 @@
  */
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  FormControl,
-  Grid,
-  useTheme,
-  TextField,
-  Button,
-  Box,
-} from "@mui/material";
+import { Card, CardContent, Grid, useTheme, Button, Box } from "@mui/material";
 import { styles } from "../util/style";
-import { useMutation } from "@apollo/client";
-import { EditUserMutation } from "../../../hooks/mutation";
 import { useCardContext, useUserContext } from "../context";
 import { Link } from "react-router-dom";
-import { CHANGE_PASSWORD_URL } from "../util/constants";
+import { CHANGE_PASSWORD_URL, fields } from "../util/constants";
+import { UserDetailGridItem } from "./userDetailHolderGridItem";
+import { User } from "../../interface";
 
 export default function DetailHolder() {
   const theme = useTheme();
   const style = styles(theme).detailHolder;
+  const boxStyle = styles(theme).userPage;
 
-  const { user } = useUserContext();
-  const { firstName, lastName, email, address, birthdate, phoneNumber } = user;
+  const { user, update, setUserUpdated } = useUserContext();
+  const { elevation } = useCardContext();
+  const [updatedUser, setUpdatedUser] = useState(user);
+  const { editable, setEditable, setElevation } = useCardContext();
 
-  const card = useCardContext();
-  const { editable, setEditable, setElevation } = card;
+  const newUserData = {
+    userInput: {
+      username: updatedUser.username,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+    },
+  };
 
-  const [firstname, setFirstname] = useState(firstName);
+  const handleFieldChange = React.useCallback(
+    (field: keyof User, value: string) => {
+      setUpdatedUser((prevUserData) => ({
+        ...prevUserData,
+        [field]: value,
+      }));
+    },
+    [setUpdatedUser],
+  );
 
-  const [lastname, setLastname] = useState(lastName);
-
-  const [editUser] = useMutation(EditUserMutation);
-
-  async function updateUser() {
-    try {
-      const { data } = await editUser({
-        variables: {
-          firstname,
-          lastname,
-        },
-      });
-      console.log("User:", data.editUser);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    setEditable(!editable);
-    setElevation(0);
-  }
-
-  function firstNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setFirstname(event.target.value);
-  }
-
-  function lastNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setLastname(event.target.value);
-  }
+  const onClickUpdate = React.useCallback(async () => {
+    await update(newUserData).then(() => {
+      setEditable(!editable);
+      setElevation(0);
+      setUserUpdated(true);
+    });
+  }, [newUserData]);
 
   return (
-    <Card elevation={card.elevation} sx={style.card}>
-      <CardContent>
-        <Grid container spacing={2} marginTop={1} sx={style.grid}>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <TextField
-                label="First Name"
-                defaultValue={firstName}
-                disabled={editable}
-                onChange={firstNameChanged}
+    <Box sx={boxStyle.DetailHolderContainer}>
+      <Card elevation={elevation} sx={style.card}>
+        <CardContent>
+          <Grid container spacing={2} marginTop={1}>
+            {fields.map((field, index) => (
+              <UserDetailGridItem
+                key={index}
+                user={user}
+                field={field}
+                onChange={handleFieldChange}
               />
-            </FormControl>
+            ))}
           </Grid>
-
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <TextField
-                label="Last Name"
-                disabled={editable}
-                defaultValue={lastName}
-                onChange={lastNameChanged}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={2} sx={style.grid}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <TextField label="Email" defaultValue={email} disabled />
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <TextField
-                label="Phone Number"
-                defaultValue={phoneNumber}
-                disabled
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <TextField label="Address" defaultValue={address} disabled />
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <TextField
-                label="Date of Birth"
-                defaultValue={birthdate}
-                disabled
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
-        {!card.editable && (
-          <Box sx={style.box}>
-            <Box sx={style.buttonHolder}>
-              <Button variant="contained" onClick={updateUser}>
-                Update
-              </Button>
-              <Link to={CHANGE_PASSWORD_URL}>
-                <Button variant="contained" color="warning">
-                  Change Password
+          {!editable && (
+            <Box sx={style.box}>
+              <Box sx={style.buttonHolder}>
+                <Button variant="contained" onClick={onClickUpdate}>
+                  Update
                 </Button>
-              </Link>
+                <Link to={CHANGE_PASSWORD_URL}>
+                  <Button variant="contained" color="warning">
+                    Change Password
+                  </Button>
+                </Link>
+              </Box>
             </Box>
-          </Box>
-        )}
-      </CardContent>
-    </Card>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

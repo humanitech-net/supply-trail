@@ -17,7 +17,7 @@ import ProfileHolder from "../components/profileHolder";
 import { UserPageContextProvider } from "../components/ContextProvider/UserPageContextProvider";
 import { CardContextProvider } from "../components/ContextProvider/CardContextProvider";
 import { MockedProvider } from "@apollo/client/testing";
-import { GET_USER_QUERY } from "../../../hooks/query";
+import { GET_USER_QUERY } from "../../../hooks/util/query";
 
 describe("ProfileHolder", () => {
   const mockData = {

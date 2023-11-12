@@ -28,6 +28,7 @@ import { useCardContext, useUserContext } from "../context";
 export default function ProfileHolder() {
   const theme = useTheme();
   const style = styles(theme).profileholder;
+  const boxStyle = styles(theme).userPage;
 
   const { user } = useUserContext();
   const { username, description } = user;
@@ -36,32 +37,34 @@ export default function ProfileHolder() {
   const { editUser } = card;
 
   return (
-    <Card elevation={0} sx={style.card}>
-      <CardContent>
-        <Box sx={style.box}>
-          <Grid container spacing={1} sx={style.grid}>
-            <Grid item xs={10} sx={style.grid}>
-              <Avatar alt="user" src="" sx={style.avatar} />
+    <Box sx={boxStyle.profilePageHolder}>
+      <Card elevation={0} sx={style.card}>
+        <CardContent>
+          <Box sx={style.box}>
+            <Grid container spacing={1} sx={style.grid}>
+              <Grid item xs={10} sx={style.grid}>
+                <Avatar alt="user" src="" sx={style.avatar} />
+              </Grid>
+              <Grid item xs={10}>
+                <Typography variant="h6">{username}</Typography>
+              </Grid>
+              <Grid item xs={10} sx={style.grid}>
+                <Typography>{description}</Typography>
+              </Grid>
+              <Grid item xs={10} md={10}>
+                <Button
+                  aria-label="edit user"
+                  variant="contained"
+                  color="primary"
+                  onClick={editUser}
+                >
+                  Edit Profile
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={10}>
-              <Typography variant="h6">{username}</Typography>
-            </Grid>
-            <Grid item xs={10} sx={style.grid}>
-              <Typography>{description}</Typography>
-            </Grid>
-            <Grid item xs={10} md={10}>
-              <Button
-                aria-label="edit user"
-                variant="contained"
-                color="primary"
-                onClick={editUser}
-              >
-                Edit Profile
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </CardContent>
-    </Card>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

@@ -10,10 +10,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { gql } from "@apollo/client";
-
-export const EditUserMutation = gql`
-  mutation EditUser($userInput: UpdateUser!) {
-    editUser(userInput: $userInput)
-  }
-`;
+export const drawerMenu = [
+  "Supply",
+  "Tracking",
+  "Inventory",
+  "Logistics",
+  "Schools",
+  "Analytics",
+  "Contact List",
+];

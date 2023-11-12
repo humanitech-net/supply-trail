@@ -69,12 +69,11 @@ export const styles = (theme: Theme) => ({
   userPage: {
     userPageContainer: {
       display: "flex",
-      flexDirection: ["column", "column", "row"],
+      flexDirection: { xs: "column", md: "row" },
       margin: "0 20px 0 20px",
     },
     profilePageHolder: {
       display: "grid",
-      gridTemplateRows: ["auto", "auto", "repeat(2, 0.2fr)"],
       gap: [minGap, minGap, maxGap],
       width: ["100%", "100%", "30%"],
       margin: ["0 0 20px", "0 0 20px", "0 20px 0 0"],

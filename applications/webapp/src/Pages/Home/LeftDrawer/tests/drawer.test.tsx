@@ -12,17 +12,10 @@
 
 import React from "react";
 import { render } from "@testing-library/react";
-import NavBar from "../navbar";
-import { MemoryRouter } from "react-router-dom";
+import LeftDrawer from "../leftDrawer";
 
-describe("NavBar", () => {
-  test("renders NavBar component", () => {
-    const openDrawerMock = jest.fn();
-
-    render(
-      <MemoryRouter>
-        <NavBar open={false} openDrawer={openDrawerMock} />
-      </MemoryRouter>,
-    );
+describe("LeftDrawer", () => {
+  test("renders LeftDrawer component", () => {
+    render(<LeftDrawer />);
   });
 });

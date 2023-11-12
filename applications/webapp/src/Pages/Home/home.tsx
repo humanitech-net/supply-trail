@@ -13,27 +13,20 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import NavBar from "../../Components/navbar";
-import LeftDrawer from "../../Components/leftDrawer";
-import MainContent from "../../Components/mainContent";
+import NavBar from "./NavBar/navbar";
+import LeftDrawer from "./LeftDrawer/leftDrawer";
+import MainContent from "./MainContent/mainContent";
+import { DrawerProvider } from "./ContextProvider/drawerProvider";
 
 export default function Home() {
-  const [open, setOpen] = React.useState(false);
-
-  function openDrawer() {
-    setOpen(true);
-  }
-
-  function closeDrawer() {
-    setOpen(false);
-  }
-
   return (
-    <Box>
-      <CssBaseline />
-      <NavBar open={open} openDrawer={openDrawer} />
-      <LeftDrawer open={open} closeDrawer={closeDrawer} />
-      <MainContent open={open} />
-    </Box>
+    <DrawerProvider>
+      <Box>
+        <CssBaseline />
+        <NavBar />
+        <LeftDrawer />
+        <MainContent />
+      </Box>
+    </DrawerProvider>
   );
 }

@@ -10,46 +10,33 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import React, { useContext } from "react";
+import { styled } from "@mui/material/styles";
 
 import { Routes, Route } from "react-router-dom";
-import UserPage from "../Pages/User/userPage";
+import UserPage from "../../User/userPage";
+import { DrawerContext } from "src/Pages/Home/ContextProvider/drawerProvider";
+import { useMediaQuery, useTheme } from "@mui/material";
 
-interface HandleDrawer {
-  open: boolean;
-}
-
-export default function MainContent({ open }: Readonly<HandleDrawer>) {
-  const drawerWidth = 240;
+export default function MainContent() {
+  const { open } = useContext(DrawerContext);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-  const Main = styled("main", {
-    shouldForwardProp: (prop) => prop !== "open",
-  })<{
-    open?: boolean;
-  }>(({ theme }) => ({
+  const leftMargin = 240;
+
+  const Main = styled("main")(({ theme }) => ({
+    marginLeft: open && isDesktop ? leftMargin : 0,
     marginTop: 80,
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-
-    ...(isDesktop && {
-      ...(open && {
-        marginLeft: drawerWidth,
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      }),
-    }),
   }));
+
   return (
-    <Main open={open}>
+    <Main>
       <Routes>
         <Route path="/profile" element={<UserPage />} />
       </Routes>

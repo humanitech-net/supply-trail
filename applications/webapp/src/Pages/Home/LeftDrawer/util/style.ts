@@ -10,13 +10,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { render } from "@testing-library/react";
-import LeftDrawer from "../leftDrawer";
-
-describe("LeftDrawer", () => {
-  test("renders LeftDrawer component", () => {
-    const closeDrawerMock = jest.fn();
-    render(<LeftDrawer open={false} closeDrawer={closeDrawerMock} />);
-  });
+export const styles = () => ({
+  drawer: {
+    width: 240,
+    flexShrink: 0,
+    "& .MuiDrawer-paper": {
+      width: 240,
+      boxSizing: "border-box",
+      backgroundColor: "#011C27",
+    },
+  },
 });

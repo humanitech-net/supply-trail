@@ -13,9 +13,10 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Home from "../home";
+import Home from "./home";
 
 describe("Home", () => {
+  const openDrawerLabel = "open drawer";
   test("renders navbar", () => {
     const { getByLabelText } = render(
       <MemoryRouter>
@@ -32,7 +33,7 @@ describe("Home", () => {
         <Home />
       </MemoryRouter>,
     );
-    const OpenDrawerButton = getByLabelText("open drawer");
+    const OpenDrawerButton = getByLabelText(openDrawerLabel);
     fireEvent.click(OpenDrawerButton);
 
     const Drawer = getByLabelText("drawer");
@@ -46,7 +47,7 @@ describe("Home", () => {
       </MemoryRouter>,
     );
 
-    const OpenDrawerButton = getByLabelText("open drawer");
+    const OpenDrawerButton = getByLabelText(openDrawerLabel);
     fireEvent.click(OpenDrawerButton);
 
     const CloseDrawerButton = getByLabelText("close drawer");
