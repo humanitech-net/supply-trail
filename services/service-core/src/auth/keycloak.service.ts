@@ -34,9 +34,14 @@ export class KeycloakService {
   }
 
   async getAdminToken() {
-    const { KEYCLOAK_ADMIN, KEYCLOAK_ADMIN_PASSWORD, ADMIN_CLIENT_SECRET } =
-      this.config.local;
-    const { realmUrl, grantType, clientId } = this.config.keycloak;
+    const {
+      realmUrl,
+      grantType,
+      clientId,
+      KEYCLOAK_ADMIN,
+      KEYCLOAK_ADMIN_PASSWORD,
+      ADMIN_CLIENT_SECRET
+    } = this.config.keycloak;
     const params = new URLSearchParams({
       username: KEYCLOAK_ADMIN,
       password: KEYCLOAK_ADMIN_PASSWORD,

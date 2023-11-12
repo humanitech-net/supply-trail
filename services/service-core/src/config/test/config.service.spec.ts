@@ -35,19 +35,19 @@ describe('CustomConfigService', () => {
       adminUrl:
         'https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech',
       grantType: 'password',
-      clientId: 'admin-cli'
+      clientId: 'admin-cli',
+      KEYCLOAK_ADMIN: 'admin-user',
+      KEYCLOAK_ADMIN_PASSWORD: 'admin-password',
+      KEYCLOAK_DATA: '/path/to/keycloak/data',
+      ADMIN_CLIENT_SECRET: 'client-secret'
     },
-    local: {
+    database: {
       DB_HOST: 'localhost',
       DB_PORT: '5432',
       DB_USERNAME: 'myuser',
       DB_PASSWORD: 'mypassword',
       DB_DATABASE: 'mydb',
-      POSTGRES_DATA: '/path/to/postgres/data',
-      KEYCLOAK_ADMIN: 'admin-user',
-      KEYCLOAK_ADMIN_PASSWORD: 'admin-password',
-      KEYCLOAK_DATA: '/path/to/keycloak/data',
-      ADMIN_CLIENT_SECRET: 'client-secret'
+      POSTGRES_DATA: '/path/to/postgres/data'
     }
   };
 
@@ -87,7 +87,7 @@ describe('CustomConfigService', () => {
     const configService = new CustomConfigService();
 
     // Assert
-    expect(configService.get().local.DB_HOST).toBe('env_db_host');
+    expect(configService.get().database.DB_HOST).toBe('env_db_host');
     // Add assertions for other environment variables as needed
   });
 });

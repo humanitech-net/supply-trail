@@ -13,6 +13,7 @@ import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { join } from 'path';
 import { AppConfigDto } from './config.dto';
+import { NotFoundException } from '@nestjs/common';
 
 export class CustomConfigService {
   private readonly configuration: AppConfigDto;
@@ -27,16 +28,20 @@ export class CustomConfigService {
       readFileSync(join(__dirname, yamlFilePath), 'utf8')
     ) as AppConfigDto;
 
-    for (const key in yamlConfig.local) {
-      if (process.env[key]) {
-        yamlConfig.local[key] = process.env[key];
+    for (const section in yamlConfig) {
+      if (yamlConfig && typeof yamlConfig === 'object') {
+        for (const key in yamlConfig[section]) {
+          if (process.env[key]) {
+            yamlConfig[section][key] = process.env[key];
+          }
+        }
       }
     }
 
     return yamlConfig;
   }
 
-  get(): AppConfigDto {
+  get() {
     return this.configuration;
   }
 }

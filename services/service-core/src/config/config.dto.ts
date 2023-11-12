@@ -39,6 +39,22 @@ export class KeycloakConfigurationDto {
   @IsString()
   @IsNotEmpty()
   grantType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  KEYCLOAK_ADMIN: string;
+
+  @IsString()
+  @IsNotEmpty()
+  KEYCLOAK_ADMIN_PASSWORD: string;
+
+  @IsString()
+  @IsNotEmpty()
+  KEYCLOAK_DATA: string;
+
+  @IsString()
+  @IsNotEmpty()
+  ADMIN_CLIENT_SECRET: string;
 }
 export class LocalConfigurationDto {
   @IsString()
@@ -64,27 +80,11 @@ export class LocalConfigurationDto {
   @IsString()
   @IsNotEmpty()
   POSTGRES_DATA: string;
-
-  @IsString()
-  @IsNotEmpty()
-  KEYCLOAK_ADMIN: string;
-
-  @IsString()
-  @IsNotEmpty()
-  KEYCLOAK_ADMIN_PASSWORD: string;
-
-  @IsString()
-  @IsNotEmpty()
-  KEYCLOAK_DATA: string;
-
-  @IsString()
-  @IsNotEmpty()
-  ADMIN_CLIENT_SECRET: string;
 }
 export class AppConfigDto {
   @IsNotEmpty()
   keycloak: KeycloakConfigurationDto;
 
   @IsNotEmpty()
-  local: LocalConfigurationDto;
+  database: LocalConfigurationDto;
 }

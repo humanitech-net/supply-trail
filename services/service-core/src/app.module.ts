@@ -33,17 +33,20 @@ import { CustomConfigService } from './config/config.service';
           isGlobal: true
         })
       ],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: Number(configService.get('DB_PORT')),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [User],
-        synchronize: true
-      }),
-      inject: [ConfigService]
+      useFactory: () => {
+        const configService = new CustomConfigService();
+        const { database } = configService.get();
+        return {
+          type: 'postgres',
+          host: database.DB_HOST,
+          port: Number(database.DB_PORT),
+          username: database.DB_USERNAME,
+          password: database.DB_PASSWORD,
+          database: database.DB_DATABASE,
+          entities: [User],
+          synchronize: true
+        };
+      }
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -53,13 +56,13 @@ import { CustomConfigService } from './config/config.service';
     KeycloakConnectModule.registerAsync({
       useFactory: async () => {
         const configService = new CustomConfigService();
-        const { keycloak, local } = configService.get();
+        const { keycloak } = configService.get();
 
         return {
           authServerUrl: keycloak.authServerUrl,
           realm: keycloak.realm,
           resource: keycloak.nestClientId,
-          secret: local.ADMIN_CLIENT_SECRET,
+          secret: keycloak.ADMIN_CLIENT_SECRET,
           'public-client': true,
           verifyTokenAudience: true,
           'confidential-port': 0

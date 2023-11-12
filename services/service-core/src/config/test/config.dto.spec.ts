@@ -20,7 +20,7 @@ describe('AppConfigDto', () => {
   it('should validate a valid AppConfigDto object', async () => {
     const validAppConfigDto = new AppConfigDto();
     validAppConfigDto.keycloak = new KeycloakConfigurationDto();
-    validAppConfigDto.local = new LocalConfigurationDto();
+    validAppConfigDto.database = new LocalConfigurationDto();
 
     const errors = await validate(validAppConfigDto);
 
@@ -29,7 +29,7 @@ describe('AppConfigDto', () => {
 
   it('should invalidate an AppConfigDto object with missing keycloak property', async () => {
     const invalidAppConfigDto = new AppConfigDto();
-    invalidAppConfigDto.local = new LocalConfigurationDto();
+    invalidAppConfigDto.database = new LocalConfigurationDto();
 
     const errors = await validate(invalidAppConfigDto);
 
@@ -47,7 +47,9 @@ describe('AppConfigDto', () => {
     const errors = await validate(invalidAppConfigDto);
 
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toBe('local');
-    expect(errors[0].constraints.isNotEmpty).toBe('local should not be empty');
+    expect(errors[0].property).toBe('database');
+    expect(errors[0].constraints.isNotEmpty).toBe(
+      'database should not be empty'
+    );
   });
 });
