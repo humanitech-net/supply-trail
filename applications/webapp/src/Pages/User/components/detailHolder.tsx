@@ -44,7 +44,7 @@ export default function DetailHolder() {
 
   const [editUser] = useMutation(EditUserMutation);
 
-  async function updateUser() {
+  const updateUser = React.useCallback(async () => {
     try {
       const { data } = await editUser({
         variables: {
@@ -58,19 +58,21 @@ export default function DetailHolder() {
     }
     setEditable(!editable);
     setElevation(0);
-  }
+  }, [firstname, lastname, editUser, setEditable, setElevation]);
 
-  function firstNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setFirstname(event.target.value);
-  }
+  const firstNameChanged = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      return setFirstname(event.target.value);
+    },
+    [setFirstname],
+  );
 
-  function lastNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setLastname(event.target.value);
-  }
+  const lastNameChanged = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      return setLastname(event.target.value);
+    },
+    [setLastname],
+  );
 
   return (
     <Card elevation={card.elevation} sx={style.card}>
