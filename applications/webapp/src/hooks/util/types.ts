@@ -12,6 +12,8 @@
 
 import Joi from "joi";
 import { DocumentNode } from "@apollo/client";
+import { ApolloError } from "@apollo/client";
+import { User } from "../../Pages/interface";
 
 export type UserData = {
   getUser: {
@@ -44,7 +46,29 @@ export type EditUserVariable = {
 export type MutationConfigs = {
   EDIT_USER: {
     mutation: DocumentNode;
-    data: string;
+    data: EditData;
     variables: EditUserVariable;
   };
+};
+
+export type UserContextType = {
+  user: User;
+  loading: boolean;
+  error: ApolloError | undefined;
+  update: (newUserData: EditUserVariable) => Promise<void>;
+  setUserUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type EditData = {
+  editUser: {
+    id?: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+  };
+};
+
+export type UserInput = {
+  userInput: { username: string; firstName: string; lastName: string };
 };

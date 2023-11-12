@@ -18,6 +18,7 @@ import {
   QueryConfigs,
   UserData,
   EditUserVariable,
+  EditData,
 } from "./types";
 
 export const queryConfigs: QueryConfigs = {
@@ -31,7 +32,7 @@ export const queryConfigs: QueryConfigs = {
 export const mutationConfigs: MutationConfigs = {
   EDIT_USER: {
     mutation: EditUserMutation,
-    data: "",
+    data: {} as EditData,
     variables: {} as EditUserVariable,
   },
 };

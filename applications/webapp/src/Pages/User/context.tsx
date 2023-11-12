@@ -12,15 +12,8 @@
 
 import { createContext, useContext } from "react";
 
-import { Card, User } from "../interface";
-import { ApolloError } from "@apollo/client";
-
-type UserContextType = {
-  user: User;
-  loading: boolean;
-  error: ApolloError | undefined;
-};
-
+import { Card } from "../interface";
+import { UserContextType } from "../../hooks/util/types";
 export const UserContext = createContext<UserContextType | undefined>(
   undefined,
 );
