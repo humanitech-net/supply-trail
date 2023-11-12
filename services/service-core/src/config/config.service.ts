@@ -28,11 +28,12 @@ export class CustomConfigService {
     ) as AppConfigDto;
 
     for (const section in yamlConfig) {
-      for (const key in yamlConfig[section]) {
-        if (process.env[key]) {
-          yamlConfig[section][key] = process.env[key];
+      if (yamlConfig && typeof yamlConfig === 'object')
+        for (const key in yamlConfig[section]) {
+          if (process.env[key]) {
+            yamlConfig[section][key] = process.env[key];
+          }
         }
-      }
     }
 
     return yamlConfig;
