@@ -13,18 +13,19 @@
 import { Injectable } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import axios from 'axios';
-import { ConfigService } from '@nestjs/config';
-import { Config } from './config';
+import { CustomConfigService } from '../config/config.service';
 import { UpdateUser } from 'src/graphql/users/users.entity';
 import { userInputValidator } from './keycloak.validator';
 
 @Injectable()
 export class KeycloakService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: CustomConfigService) {}
+  private readonly config = this.configService.get();
 
   async getPublicKey() {
+    const { realmUrl } = this.config.keycloak;
     try {
-      const response = await axios.get(Config.realmUrl);
+      const response = await axios.get(realmUrl);
       const publicKey = response.data.public_key;
       return `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`;
     } catch (error) {
@@ -33,18 +34,26 @@ export class KeycloakService {
   }
 
   async getAdminToken() {
+    const {
+      realmUrl,
+      grantType,
+      clientId,
+      KEYCLOAK_ADMIN,
+      KEYCLOAK_ADMIN_PASSWORD,
+      ADMIN_CLIENT_SECRET
+    } = this.config.keycloak;
     const params = new URLSearchParams({
-      username: this.configService.get(Config.keycloakAdmin),
-      password: this.configService.get(Config.keycloakAdminPassword),
-      grant_type: Config.grantType,
-      client_id: Config.clientId,
-      client_secret: this.configService.get(Config.adminClientSecret)
+      username: KEYCLOAK_ADMIN,
+      password: KEYCLOAK_ADMIN_PASSWORD,
+      grant_type: grantType,
+      client_id: clientId,
+      client_secret: ADMIN_CLIENT_SECRET
     });
 
     const requestBody = params.toString();
     try {
       const getTokenData = await fetch(
-        `${Config.realmUrl}/protocol/openid-connect/token`,
+        `${realmUrl}/protocol/openid-connect/token`,
         {
           method: 'POST',
           headers: {
@@ -85,13 +94,14 @@ export class KeycloakService {
   }
 
   async editUser(id: string, userInput: UpdateUser) {
+    const { adminUrl } = this.config.keycloak;
     const accessToken = await this.getAdminToken();
     const { error } = userInputValidator.validate(userInput);
     if (error) {
       throw new Error(error.details[0].message);
     }
 
-    const updateUser = await fetch(`${Config.adminUrl}/users/${id}`, {
+    const updateUser = await fetch(`${adminUrl}/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

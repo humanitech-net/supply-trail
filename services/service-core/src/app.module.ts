@@ -20,30 +20,33 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DatabaseModule } from './database/database.module';
 import { User } from './database/users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { KeycloakAuthGuard } from './auth/keycloak.guard';
+import { CustomConfigService } from './config/config.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [
         ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: '.local.env'
+          isGlobal: true
         })
       ],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: Number(configService.get('DB_PORT')),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [User],
-        synchronize: true
-      }),
-      inject: [ConfigService]
+      useFactory: () => {
+        const configService = new CustomConfigService();
+        const { database } = configService.get();
+        return {
+          type: 'postgres',
+          host: database.DB_HOST,
+          port: Number(database.DB_PORT),
+          username: database.DB_USERNAME,
+          password: database.DB_PASSWORD,
+          database: database.DB_DATABASE,
+          entities: [User],
+          synchronize: true
+        };
+      }
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -51,17 +54,20 @@ import { KeycloakAuthGuard } from './auth/keycloak.guard';
     }),
 
     KeycloakConnectModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        authServerUrl: configService.get('KEYCLOAK_SERVER_URL'),
-        realm: 'humanitech',
-        resource: 'nest-application',
-        secret: configService.get('KEYCLOAK_SECRET'),
-        'public-client': true,
-        verifyTokenAudience: true,
-        'confidential-port': 0
-      }),
-      inject: [ConfigService]
+      useFactory: async () => {
+        const configService = new CustomConfigService();
+        const { keycloak } = configService.get();
+
+        return {
+          authServerUrl: keycloak.authServerUrl,
+          realm: keycloak.realm,
+          resource: keycloak.nestClientId,
+          secret: keycloak.ADMIN_CLIENT_SECRET,
+          'public-client': true,
+          verifyTokenAudience: true,
+          'confidential-port': 0
+        };
+      }
     }),
 
     DatabaseModule,

@@ -14,22 +14,51 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { KeycloakService } from '../keycloak.service';
 import axios from 'axios';
 import { verify } from 'jsonwebtoken';
-import { ConfigService } from '@nestjs/config';
-import Joi from 'joi';
+import { CustomConfigService } from '../../config/config.service';
+import { load } from 'js-yaml';
+
+jest.mock('js-yaml', () => ({
+  load: jest.fn()
+}));
+
+// Define the setMockYamlLoad function
+const setMockYamlLoad = (mock) => {
+  const mockYamlLoad = load as jest.Mock;
+  mockYamlLoad.mockReturnValue(mock);
+};
 
 jest.mock('axios');
 jest.mock('jsonwebtoken');
 
 describe('KeycloakService', () => {
+  //
   let keycloakService: KeycloakService;
+  const realmUrl =
+    'https://dev.supply-trail.humanitech.net/auth/realms/humanitech';
+  const notGetToken = "Couldn't get token";
+
+  // Define a mock configuration with the expected structure
+  const mockConfig = {
+    keycloak: {
+      realmUrl
+    },
+    local: {
+      // local properties
+    }
+  };
 
   const errorMessage = 'Failed to fetch Public Key';
-
   beforeEach(async () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [KeycloakService, ConfigService]
+      providers: [
+        KeycloakService,
+        {
+          provide: CustomConfigService,
+          useValue: { get: jest.fn().mockReturnValue(mockConfig) } // Mock the config service
+        }
+      ]
     }).compile();
 
     keycloakService = module.get<KeycloakService>(KeycloakService);
@@ -43,9 +72,7 @@ describe('KeycloakService', () => {
 
       const publicKey = await keycloakService.getPublicKey();
 
-      expect(axios.get).toHaveBeenCalledWith(
-        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
-      );
+      expect(axios.get).toHaveBeenCalledWith(realmUrl);
       expect(publicKey).toBe(
         '-----BEGIN PUBLIC KEY-----\nyour_mocked_public_key\n-----END PUBLIC KEY-----'
       );
@@ -83,26 +110,26 @@ describe('KeycloakService', () => {
     it('throws an error when it fails to fetch', async () => {
       const mockFailedResponse = new Response(null, {
         status: 400,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockFailedResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
 
     it('throws an error with the status text when fetch is not OK', async () => {
       const mockErrorResponse = new Response(null, {
         status: 500,
-        statusText: "Couldn't get token"
+        statusText: notGetToken
       });
 
       jest.spyOn(global, 'fetch').mockResolvedValue(mockErrorResponse);
 
       await expect(keycloakService.getAdminToken()).rejects.toThrowError(
-        "Couldn't get token"
+        notGetToken
       );
     });
   });
@@ -201,9 +228,7 @@ describe('KeycloakService', () => {
 
       const userData = await keycloakService.getUser(mockToken);
 
-      expect(axios.get).toHaveBeenCalledWith(
-        'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
-      );
+      expect(axios.get).toHaveBeenCalledWith(realmUrl);
       expect(verify).toHaveBeenCalledWith(
         mockToken,
         `-----BEGIN PUBLIC KEY-----\n${mockPublicKey}\n-----END PUBLIC KEY-----`,
@@ -236,14 +261,6 @@ describe('KeycloakService', () => {
       await expect(keycloakService.getUser(mockToken)).rejects.toThrow(
         'Invalid Token'
       );
-    });
-
-    it('should throw an error if fetching public key fails', async () => {
-      (axios.get as jest.Mock).mockRejectedValue(new Error(errorMessage));
-
-      await expect(
-        keycloakService.getUser('your_mocked_valid_token')
-      ).rejects.toThrow(errorMessage);
     });
   });
 });

@@ -1,0 +1,20 @@
+keycloak:
+  authServerUrl: 'https://dev.supply-trail.humanitech.net/auth'
+  realm: 'humanitech'
+  nestClientId: 'nest-application'
+  realmUrl: 'https://dev.supply-trail.humanitech.net/auth/realms/humanitech'
+  adminUrl: 'https://dev.supply-trail.humanitech.net/auth/admin/realms/humanitech'
+  grantType: 'password'
+  clientId: 'admin-cli'
+  KEYCLOAK_ADMIN: 'admin-user'
+  KEYCLOAK_ADMIN_PASSWORD: 'admin-password'
+  KEYCLOAK_DATA: '/path/to/keycloak/data'
+  ADMIN_CLIENT_SECRET: 'client-secret'
+
+database:
+  DB_HOST: 'localhost'
+  DB_PORT: '5432'
+  DB_USERNAME: 'myuser'
+  DB_PASSWORD: 'mypassword'
+  DB_DATABASE: 'mydb'
+  POSTGRES_DATA: '/path/to/postgres/data'
