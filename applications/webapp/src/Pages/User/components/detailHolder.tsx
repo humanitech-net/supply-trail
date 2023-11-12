@@ -20,12 +20,12 @@ import {
   TextField,
   Button,
   Box,
+  Link,
 } from "@mui/material";
 import { styles } from "../util/style";
 import { useMutation } from "@apollo/client";
 import { EditUserMutation } from "../../../hooks/mutation";
 import { useCardContext, useUserContext } from "../context";
-import { Link } from "react-router-dom";
 import { CHANGE_PASSWORD_URL } from "../util/constants";
 
 export default function DetailHolder() {
@@ -44,7 +44,7 @@ export default function DetailHolder() {
 
   const [editUser] = useMutation(EditUserMutation);
 
-  async function updateUser() {
+  const updateUser = React.useCallback(async () => {
     try {
       const { data } = await editUser({
         variables: {
@@ -58,19 +58,21 @@ export default function DetailHolder() {
     }
     setEditable(!editable);
     setElevation(0);
-  }
+  }, [firstname, lastname, editUser, setEditable, setElevation]);
 
-  function firstNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setFirstname(event.target.value);
-  }
+  const firstNameChanged = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      return setFirstname(event.target.value);
+    },
+    [setFirstname],
+  );
 
-  function lastNameChanged(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    return setLastname(event.target.value);
-  }
+  const lastNameChanged = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      return setLastname(event.target.value);
+    },
+    [setLastname],
+  );
 
   return (
     <Card elevation={card.elevation} sx={style.card}>
@@ -140,7 +142,7 @@ export default function DetailHolder() {
               <Button variant="contained" onClick={updateUser}>
                 Update
               </Button>
-              <Link to={CHANGE_PASSWORD_URL}>
+              <Link href={CHANGE_PASSWORD_URL}>
                 <Button variant="contained" color="warning">
                   Change Password
                 </Button>
