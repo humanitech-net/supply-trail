@@ -37,20 +37,23 @@ export default function DetailHolder() {
     },
   };
 
-  const handleFieldChange = (field: keyof User, value: string) => {
-    setUpdatedUser((prevUserData) => ({
-      ...prevUserData,
-      [field]: value,
-    }));
-  };
+  const handleFieldChange = React.useCallback(
+    (field: keyof User, value: string) => {
+      setUpdatedUser((prevUserData) => ({
+        ...prevUserData,
+        [field]: value,
+      }));
+    },
+    [setUpdatedUser],
+  );
 
-  const onClickUpdate = async () => {
+  const onClickUpdate = React.useCallback(async () => {
     await update(newUserData).then(() => {
       setEditable(!editable);
       setElevation(0);
       setUserUpdated(true);
     });
-  };
+  }, [newUserData]);
 
   return (
     <Box sx={boxStyle.DetailHolderContainer}>

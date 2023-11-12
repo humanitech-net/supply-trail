@@ -17,11 +17,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { DrawerContext } from "../../ContextProvider/drawerProvider";
 
 export default function DrawerHeader() {
-  const { setOpen } = useContext(DrawerContext);
+  const { open, setOpen } = useContext(DrawerContext);
 
-  const closeDrawer = () => {
+  const closeDrawer = React.useCallback(() => {
     setOpen(false);
-  };
+  }, [open]);
 
   const Header = styled("div")(({ theme }) => ({
     display: "flex",

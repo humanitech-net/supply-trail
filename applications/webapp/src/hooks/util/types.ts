@@ -11,8 +11,7 @@
  */
 
 import Joi from "joi";
-import { DocumentNode } from "@apollo/client";
-import { ApolloError } from "@apollo/client";
+import { DocumentNode, ApolloError } from "@apollo/client";
 import { User } from "../../Pages/interface";
 
 export type UserData = {

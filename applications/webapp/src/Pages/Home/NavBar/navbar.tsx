@@ -49,9 +49,9 @@ const AppBar = styled(MuiAppBar, {
 
 export default function NavBar() {
   const { open, setOpen } = useContext(DrawerContext);
-  const openDrawer = () => {
+  const openDrawer = React.useCallback(() => {
     setOpen(true);
-  };
+  }, [open]);
   return (
     <AppBar
       position="fixed"

@@ -26,6 +26,13 @@ export function UserDetailGridItem(
   const { user, field, onChange } = props;
   const card = useCardContext();
 
+  const updateValue = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      onChange(field, event.target.value);
+    },
+    [field],
+  );
+
   return (
     <Grid item xs={6}>
       <TextField
@@ -33,7 +40,7 @@ export function UserDetailGridItem(
         label={labels[field] ?? "N/A"}
         defaultValue={user[field]}
         disabled={card.editable}
-        onChange={(e) => onChange(field, e.target.value)}
+        onChange={updateValue}
       />
     </Grid>
   );
